@@ -60,5 +60,7 @@ code . # vs code 시작
 
 ***
 
-## TODO
-- [ ] 
+## TODO 
+- [x] this is a complete item
+- [ ] this is an incomplete item
+- [x] @mentions, #refs, [links](),
