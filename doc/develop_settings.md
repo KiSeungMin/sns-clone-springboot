@@ -61,6 +61,7 @@ code . # vs code 시작
 ***
 
 ## TODO 
-- [x] this is a complete item
-- [ ] this is an incomplete item
-- [x] @mentions, #refs, [links](),
+- [x] wsl
+- [x] docker
+- [x] VS Code
+- [ ] start java and spring in docker
