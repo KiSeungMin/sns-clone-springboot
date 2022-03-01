@@ -1,4 +1,4 @@
 package afoc.snsclonespringboot.service;
 
-public class BoardServiceImpl {
+public class BoardServiceImpl implements BoardService {
 }
