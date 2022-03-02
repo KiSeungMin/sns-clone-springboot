@@ -1,4 +1,4 @@
 package afoc.snsclonespringboot.controller;
 
-public interface UserController {
+public interface MemberController {
 }
