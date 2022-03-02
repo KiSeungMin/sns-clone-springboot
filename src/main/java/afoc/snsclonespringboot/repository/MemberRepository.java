@@ -11,6 +11,9 @@ public interface MemberRepository {
     // Member id 이용해 유저 조회
     Optional<Member> findByMemberId(Long memberId);
 
+    // Member username 이용해 유저 조회
+    Optional<Member> findByMemberId(String username);
+
     // Member id 이용해 수정
     Optional<Member> updateByMemberId(Long memberId);
 

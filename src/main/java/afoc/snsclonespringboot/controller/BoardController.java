@@ -1,5 +1,5 @@
 package afoc.snsclonespringboot.controller;
 
-public interface BoardController {
+public class BoardController {
 
 }
