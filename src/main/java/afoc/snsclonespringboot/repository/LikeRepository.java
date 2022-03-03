@@ -15,5 +15,5 @@ public interface LikeRepository {
 
     // 좋아요 취소
     // return 값 성공/실패
-    Boolean deleteLike(Long boardId, Long userId);
+    Boolean deleteLike(Long boardId, Long memberId);
 }
