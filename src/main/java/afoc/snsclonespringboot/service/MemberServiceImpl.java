@@ -1,4 +1,4 @@
 package afoc.snsclonespringboot.service;
 
-public class UserServiceImpl {
+public class MemberServiceImpl {
 }

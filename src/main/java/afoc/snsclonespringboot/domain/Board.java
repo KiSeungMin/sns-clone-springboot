@@ -9,7 +9,7 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private Long userId;
+    private Long memberId;
     private String dataPath;
 
 }
