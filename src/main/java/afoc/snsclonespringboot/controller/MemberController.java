@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+/*
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
@@ -27,7 +28,6 @@ public class MemberController {
     @PostMapping("/signup")
     public String signup(MemberForm memberForm) {
         Member member = new Member(
-                memberForm.getId(),
                 memberForm.getUsername(),
                 memberForm.getPassword(),
                 memberForm.getNickname(),
@@ -36,14 +36,16 @@ public class MemberController {
                 AccountRole.MEMBER
         );
 
-        boolean isSuccess = memberService.join(member);
+        boolean isSuccess = true;
+        //isSuccess= memberService.join(member);
         if (isSuccess) {
             return "redirect:/";
         }
         else {
-            return
+            return "";
         }
 
     }
 
 }
+*/
