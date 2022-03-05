@@ -1,6 +1,7 @@
 package afoc.snsclonespringboot.member;
 
 import afoc.snsclonespringboot.board.Board;
+import afoc.snsclonespringboot.member.follow.Follow;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,6 +40,12 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Board> boardList = new ArrayList<>();
+
+    //@OneToMany()
+    //private List<Follow> followerList =  new ArrayList<>();
+
+    //@OneToMany()
+    //private List<Follow> followeeList = new ArrayList<>();
 
     public Member(){
 

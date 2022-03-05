@@ -1,5 +1,6 @@
 package afoc.snsclonespringboot.member.follow;
 
+import afoc.snsclonespringboot.member.Member;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,5 +21,9 @@ public class Follow {
     private Long followerId;
 
     private Long followeeId;
+
+    //@ManyToOne
+    //@JoinColumn(name = "MEMBER_ID")
+    //private Member member;
 
 }
