@@ -1,6 +1,9 @@
 package afoc.snsclonespringboot.member;
 
+import afoc.snsclonespringboot.board.Board;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,24 +23,29 @@ public class MemoryMemberRepository implements MemberRepository{
     }
 
     @Override
-    public Optional<Member> findByMemberId(Long id) {
+    public Optional<Member> findMemberByMemberId(Long id) {
         return Optional.ofNullable(store.get(id));
     }
 
     @Override
-    public Optional<Member> findByMemberEmail(String email) {
+    public Optional<Member> findMemberByMemberEmail(String email) {
         return store.values().stream()
                 .filter(member -> member.getEmail().equals(email))
                 .findAny();
     }
 
     @Override
-    public Optional<Member> updateByMemberId(Long memberId) {
+    public List<Board> findBoardListByMemberId(Long memberId){
+        return null;
+    }
+
+    @Override
+    public Optional<Member> updateMemberByMemberId(Long memberId) {
         return Optional.empty();
     }
 
     @Override
-    public Boolean deleteByMemberId(Long memberId) {
+    public Boolean deleteMemberByMemberId(Long memberId) {
         Member returnValue = store.remove(memberId);
 
         return returnValue != null;
