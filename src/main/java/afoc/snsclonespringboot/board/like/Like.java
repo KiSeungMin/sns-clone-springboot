@@ -1,4 +1,4 @@
-package afoc.snsclonespringboot.domain;
+package afoc.snsclonespringboot.board.like;
 
 import lombok.Getter;
 import lombok.Setter;

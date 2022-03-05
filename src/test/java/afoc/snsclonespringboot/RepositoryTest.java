@@ -1,8 +1,7 @@
 package afoc.snsclonespringboot;
 
-import afoc.snsclonespringboot.domain.AccountRole;
-import afoc.snsclonespringboot.domain.Member;
-import afoc.snsclonespringboot.repository.MemberRepositoryImpl;
+import afoc.snsclonespringboot.member.Member;
+import afoc.snsclonespringboot.member.JpaMemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -22,13 +21,13 @@ public class RepositoryTest {
     @Transactional
     public void testMemberRepository(){
 
-        MemberRepositoryImpl memberRepositoryImpl = new MemberRepositoryImpl(em);
+        JpaMemberRepository jpaMemberRepository = new JpaMemberRepository(em);
 
         Member member = new Member("KSM", "1234", "ksm", "ss@email.com", "..", AccountRole.MEMBER);
         Member member2 = new Member("sss", "22" ,"ddd", "dd@email.com" , "...", AccountRole.MEMBER);
 
-        memberRepositoryImpl.save(member);
-        memberRepositoryImpl.save(member2);
+        jpaMemberRepository.save(member);
+        jpaMemberRepository.save(member2);
 
         System.out.println(member.getId());
 

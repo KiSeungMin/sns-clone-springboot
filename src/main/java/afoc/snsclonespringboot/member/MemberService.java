@@ -1,4 +1,4 @@
-package afoc.snsclonespringboot.service;
+package afoc.snsclonespringboot.member;
 
 public interface MemberService {
     /*

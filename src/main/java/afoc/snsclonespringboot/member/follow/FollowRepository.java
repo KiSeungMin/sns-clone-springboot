@@ -1,6 +1,4 @@
-package afoc.snsclonespringboot.repository;
-
-import afoc.snsclonespringboot.domain.Follow;
+package afoc.snsclonespringboot.member.follow;
 
 import java.util.List;
 

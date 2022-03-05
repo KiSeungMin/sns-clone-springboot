@@ -1,4 +1,4 @@
-package afoc.snsclonespringboot.domain;
+package afoc.snsclonespringboot.member;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,11 +11,10 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
+@Getter @Setter
 @ToString
 @Table(name = "MEMBER")
-public class Member implements UserDetails {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,52 +35,18 @@ public class Member implements UserDetails {
     @Column(name = "profilepicturepath")
     private String profilePicturePath;
 
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    private AccountRole role;
-
     @Builder
     public Member(
             String username,
             String password,
             String nickname,
             String email,
-            String profilePicturePath,
-            AccountRole role
+            String profilePicturePath
     ) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.email = email;
         this.profilePicturePath = profilePicturePath;
-        this.role = role;
-    }
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority(AccountRole.MEMBER.getValue()));
-        return authorities;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }

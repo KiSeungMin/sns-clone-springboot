@@ -1,6 +1,5 @@
-package afoc.snsclonespringboot.repository;
+package afoc.snsclonespringboot.board;
 
-import afoc.snsclonespringboot.domain.Board;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -9,12 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class BoardRepositoryImpl implements BoardRepository {
+public class JpaBoardRepository implements BoardRepository {
 
     @PersistenceContext
     private EntityManager em;
 
-    public BoardRepositoryImpl(EntityManager em) {
+    public JpaBoardRepository(EntityManager em) {
         this.em = em;
     }
 

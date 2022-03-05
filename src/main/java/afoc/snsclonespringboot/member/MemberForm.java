@@ -1,12 +1,7 @@
-package afoc.snsclonespringboot.controller;
+package afoc.snsclonespringboot.member;
 
-import afoc.snsclonespringboot.domain.AccountRole;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 @Getter
 @Setter

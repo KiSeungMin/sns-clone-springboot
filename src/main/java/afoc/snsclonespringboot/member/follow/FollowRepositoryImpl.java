@@ -1,6 +1,5 @@
-package afoc.snsclonespringboot.repository;
+package afoc.snsclonespringboot.member.follow;
 
-import afoc.snsclonespringboot.domain.Follow;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
