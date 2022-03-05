@@ -27,7 +27,7 @@ public class JpaMemberRepository implements MemberRepository{
     }
 
     // member의 boardList에 인수로 받은 board 객체 추가
-    //
+    // 인수로 받은 board 객체에도 board가 어떤 member 객체의 board인지 세팅
     public void setBoardItem(Member member, Board board){
 
         List<Board> boardList = member.getBoardList();
@@ -37,6 +37,7 @@ public class JpaMemberRepository implements MemberRepository{
         board.setMember(member);
     }
 
+    // memberId를 이용해 member 서칭
     @Override
     public Optional<Member> findMemberByMemberId(Long MemberId) {
 
@@ -45,6 +46,7 @@ public class JpaMemberRepository implements MemberRepository{
         return Optional.of(findMember);
     }
 
+    //
     @Override
     public Optional<Member> findMemberByMemberEmail(String email){
 

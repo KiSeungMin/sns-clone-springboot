@@ -7,12 +7,12 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-public class FollowRepositoryImpl implements FollowRepository {
+public class JpaFollowRepositoryImpl implements JpaFollowRepository {
 
     @PersistenceContext
     private EntityManager em;
 
-    public FollowRepositoryImpl(EntityManager em) {
+    public JpaFollowRepositoryImpl(EntityManager em) {
         this.em = em;
     }
 

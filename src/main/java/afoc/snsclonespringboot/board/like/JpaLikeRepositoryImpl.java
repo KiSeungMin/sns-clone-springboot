@@ -8,12 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 
 @Repository
-public class LikeRepositoryImpl implements LikeRepository{
+public class JpaLikeRepositoryImpl implements JpaLikeRepository {
 
     @PersistenceContext
     private EntityManager em;
 
-    public LikeRepositoryImpl(EntityManager em){
+    public JpaLikeRepositoryImpl(EntityManager em){
         this.em = em;
     }
 
@@ -23,7 +23,6 @@ public class LikeRepositoryImpl implements LikeRepository{
 
         return like;
     }
-
 
     @Override
     public List<Like> findLikeListByBoardId(Long boardId) {
