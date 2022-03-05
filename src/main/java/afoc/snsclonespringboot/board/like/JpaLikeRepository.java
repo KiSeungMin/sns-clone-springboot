@@ -1,18 +1,43 @@
 package afoc.snsclonespringboot.board.like;
 
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Arrays;
 import java.util.List;
 
-public interface JpaLikeRepository {
-    // 등록
-    Like save(Like like);
+@Repository
+public class JpaLikeRepository implements LikeRepository {
 
-    // 좋아요 목록 조회
-    List<Like> findLikeListByBoardId(Long boardId);
+    @PersistenceContext
+    private EntityManager em;
 
-    // 수정 X
+    public JpaLikeRepository(EntityManager em){
+        this.em = em;
+    }
 
-    // 좋아요 취소
+    @Override
+    public Like save(Like like) {
+        em.persist(like);
 
-    // return 값 성공/실패
-    Boolean deleteLike(Long boardId, Long memberId);
+        return like;
+    }
+
+    @Override
+    public List<Like> findLikeListByBoardId(Long boardId) {
+
+        // 구현해야함
+        List<Like> likeList=  Arrays.asList();
+
+        return likeList;
+    }
+
+
+    @Override
+    public Boolean deleteLike(Long boardId, Long memberId) {
+
+        // 구현해야함
+        return false;
+    }
 }

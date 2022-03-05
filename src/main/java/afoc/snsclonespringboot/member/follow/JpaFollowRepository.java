@@ -1,20 +1,44 @@
 package afoc.snsclonespringboot.member.follow;
 
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
-public interface JpaFollowRepository {
-    // 등록
-    Follow save(Follow follow);
+@Repository
+public class JpaFollowRepository implements FollowRepository {
 
-    // Follwer id 이용해 followees 조회
-    List<Long> findFolloweesByFollowerId(Long followerId);
+    @PersistenceContext
+    private EntityManager em;
 
-    // Followee id 이용해 followers 조회
-    List<Long> findFollowersByFolloweeId(Long followeeId);
+    public JpaFollowRepository(EntityManager em) {
+        this.em = em;
+    }
 
-    // 수정 X
+    @Override
+    public Follow save(Follow follow) {
 
-    // 언팔
-    // return 값 성공/실패
-    Boolean deleteFollowee(Long followerId, Long followeeId);
+        em.persist(follow);
+
+        return follow;
+    }
+
+    @Override
+    public List<Long> findFolloweesByFollowerId(Long followerId) {
+        // 구현해야 함
+        return null;
+    }
+
+    @Override
+    public List<Long> findFollowersByFolloweeId(Long followeeId) {
+        // 구현해야 함
+        return null;
+    }
+
+    @Override
+    public Boolean deleteFollowee(Long followerId, Long followeeId) {
+        // 구현해야 함
+        return null;
+    }
 }
