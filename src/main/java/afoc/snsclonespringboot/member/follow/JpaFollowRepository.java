@@ -2,7 +2,7 @@ package afoc.snsclonespringboot.member.follow;
 
 import java.util.List;
 
-public interface FollowRepository {
+public interface JpaFollowRepository {
     // 등록
     Follow save(Follow follow);
 

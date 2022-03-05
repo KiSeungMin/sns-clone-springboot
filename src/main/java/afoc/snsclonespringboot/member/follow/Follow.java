@@ -14,6 +14,7 @@ public class Follow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "COLUMN_ID")
     private Long id;
 
     private Long followerId;

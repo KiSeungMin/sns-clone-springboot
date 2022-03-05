@@ -1,10 +1,8 @@
 package afoc.snsclonespringboot.board.like;
 
-import afoc.snsclonespringboot.board.like.Like;
-
 import java.util.List;
 
-public interface LikeRepository {
+public interface JpaLikeRepository {
     // 등록
     Like save(Like like);
 
@@ -14,6 +12,7 @@ public interface LikeRepository {
     // 수정 X
 
     // 좋아요 취소
+
     // return 값 성공/실패
     Boolean deleteLike(Long boardId, Long memberId);
 }
