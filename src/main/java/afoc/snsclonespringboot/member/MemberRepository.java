@@ -1,5 +1,8 @@
 package afoc.snsclonespringboot.member;
 
+import afoc.snsclonespringboot.board.Board;
+
+import java.util.List;
 import java.util.Optional;
 
 
@@ -9,15 +12,18 @@ public interface MemberRepository {
     Member save(Member member);
 
     // Member id 이용해 유저 조회
-    Optional<Member> findByMemberId(Long id);
+    Optional<Member> findMemberByMemberId(Long id);
 
     // Member username 이용해 유저 조회
-    Optional<Member> findByMemberEmail(String email);
+    Optional<Member> findMemberByMemberEmail(String email);
+
+    // Member id 이용해 게시판 리스트 조회
+    List<Board> findBoardListByMemberId(Long memberId);
 
     // Member id 이용해 수정
-    Optional<Member> updateByMemberId(Long memberId);
+    Optional<Member> updateMemberByMemberId(Long memberId);
 
     // Member id 이용해 삭제
     // return 값 성공/실패
-    Boolean deleteByMemberId(Long memberId);
+    Boolean deleteMemberByMemberId(Long memberId);
 }

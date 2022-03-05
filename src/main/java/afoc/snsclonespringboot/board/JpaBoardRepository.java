@@ -1,5 +1,6 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.member.Member;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -17,7 +18,6 @@ public class JpaBoardRepository implements BoardRepository {
         this.em = em;
     }
 
-
     @Override
     public Board save(Board board) {
         em.persist(board);
@@ -26,7 +26,7 @@ public class JpaBoardRepository implements BoardRepository {
     }
 
     @Override
-    public Optional<Board> findByBoardId(Long boardId) {
+    public Optional<Board> findBoardByBoardId(Long boardId) {
 
         Board findBoard = em.find(Board.class, boardId);
 
@@ -34,18 +34,28 @@ public class JpaBoardRepository implements BoardRepository {
     }
 
     @Override
-    public List<Board> findByMemberId(Long memberId) {
-        // 구현해야 함
-        return null;
+    public Optional<Member> findMemberByBoardId(Long boardId){
+
+        Board findBoard = findBoardByBoardId(boardId).get();
+
+        Member findMember = findBoard.getMember();
+
+        return Optional.of(findMember);
     }
 
+
     @Override
-    public Optional<Board> updateByBoardId(Long boardId) {
+    public Optional<Board> updateBoardByBoardId(Long boardId) {
         return Optional.empty();
     }
 
     @Override
-    public Boolean deleteByBoardId(Long boardId) {
-        return null;
+    public Boolean deleteBoardByBoardId(Long boardId) {
+
+        if(findBoardByBoardId(boardId).get() != null){
+            em.remove(em.find(Board.class, boardId));
+            return true;
+        }
+        return false;
     }
 }

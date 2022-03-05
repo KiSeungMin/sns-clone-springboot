@@ -1,6 +1,8 @@
 package afoc.snsclonespringboot.member;
 
 public interface MemberService {
+
+
     /*
     - 유저 등록/조회/수정/삭제
     - 팔로우 하기

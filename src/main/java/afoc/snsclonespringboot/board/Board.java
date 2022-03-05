@@ -1,5 +1,6 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.member.Member;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,8 +15,14 @@ public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "BOARD_ID")
     private Long id;
-    private Long memberId;
+
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
+
+
     private String dataPath;
 
 }

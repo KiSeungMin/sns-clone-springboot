@@ -15,6 +15,8 @@ public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     private Long boardId;
+
     private Long userId;
 }

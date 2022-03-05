@@ -1,5 +1,6 @@
 package afoc.snsclonespringboot.member;
 
+import afoc.snsclonespringboot.board.Board;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +18,7 @@ import java.util.List;
 public class Member {
 
     @Id
+    @Column(name = "MEMBER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -34,6 +36,13 @@ public class Member {
 
     @Column(name = "profilepicturepath")
     private String profilePicturePath;
+
+    @OneToMany(mappedBy = "member")
+    private List<Board> boardList = new ArrayList<>();
+
+    public Member(){
+
+    }
 
     @Builder
     public Member(

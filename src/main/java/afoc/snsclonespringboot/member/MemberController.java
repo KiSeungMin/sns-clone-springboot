@@ -19,6 +19,7 @@ public class MemberController {
     // TODO
     @PostMapping("/signup")
     public String signup(MemberForm memberForm) {
+
         Member member = new Member(
                 memberForm.getUsername(),
                 memberForm.getPassword(),
