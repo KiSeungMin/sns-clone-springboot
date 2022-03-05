@@ -1,20 +1,18 @@
-package afoc.snsclonespringboot.repository;
+package afoc.snsclonespringboot.member;
 
-import afoc.snsclonespringboot.domain.Member;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Repository
-public class MemberRepositoryImpl implements MemberRepository{
+public class JpaMemberRepository implements MemberRepository{
 
     @PersistenceContext
     private EntityManager em;
 
-    public MemberRepositoryImpl(EntityManager em){
+    public JpaMemberRepository(EntityManager em){
         this.em = em;
     }
 

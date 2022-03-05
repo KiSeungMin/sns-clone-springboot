@@ -1,6 +1,6 @@
-package afoc.snsclonespringboot.repository;
+package afoc.snsclonespringboot.board.like;
 
-import afoc.snsclonespringboot.domain.Like;
+import afoc.snsclonespringboot.board.like.Like;
 
 import java.util.List;
 

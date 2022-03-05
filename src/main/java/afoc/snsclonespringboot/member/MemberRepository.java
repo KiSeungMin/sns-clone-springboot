@@ -1,11 +1,5 @@
-package afoc.snsclonespringboot.repository;
+package afoc.snsclonespringboot.member;
 
-import afoc.snsclonespringboot.domain.Member;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 
@@ -18,7 +12,7 @@ public interface MemberRepository {
     Optional<Member> findByMemberId(Long id);
 
     // Member username 이용해 유저 조회
-    Optional<Member> findByMemberUsername(String username);
+    Optional<Member> findByMemberEmail(String email);
 
     // Member id 이용해 수정
     Optional<Member> updateByMemberId(Long memberId);

@@ -1,9 +1,7 @@
-package afoc.snsclonespringboot.repository;
+package afoc.snsclonespringboot.board.like;
 
-import afoc.snsclonespringboot.domain.Like;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Arrays;

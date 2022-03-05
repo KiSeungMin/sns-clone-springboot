@@ -1,4 +1,4 @@
-package afoc.snsclonespringboot.domain;
+package afoc.snsclonespringboot.member.follow;
 
 import lombok.Getter;
 import lombok.Setter;

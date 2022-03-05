@@ -1,4 +1,4 @@
-package afoc.snsclonespringboot.controller;
+package afoc.snsclonespringboot;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

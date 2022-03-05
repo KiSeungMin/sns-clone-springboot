@@ -1,12 +1,4 @@
-package afoc.snsclonespringboot.controller;
-
-import afoc.snsclonespringboot.domain.AccountRole;
-import afoc.snsclonespringboot.domain.Member;
-import afoc.snsclonespringboot.service.MemberService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+package afoc.snsclonespringboot.member;
 
 /*
 @Controller
