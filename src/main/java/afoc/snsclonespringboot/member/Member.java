@@ -3,9 +3,6 @@ package afoc.snsclonespringboot.member;
 import afoc.snsclonespringboot.board.Board;
 import afoc.snsclonespringboot.member.follow.Follow;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor
 @ToString
 @Table(name = "MEMBER")
 public class Member {
@@ -46,10 +44,6 @@ public class Member {
 
     //@OneToMany()
     //private List<Follow> followeeList = new ArrayList<>();
-
-    public Member(){
-
-    }
 
     @Builder
     public Member(
