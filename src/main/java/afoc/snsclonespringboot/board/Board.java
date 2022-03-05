@@ -27,6 +27,6 @@ public class Board {
 
     private String dataPath;
 
-    @OneToMany(mappedBy = "board")
-    private List<Like> likeList = new ArrayList<>();
+//    @OneToMany(mappedBy = "board")
+//    private List<Like> likeList = new ArrayList<>();
 }
