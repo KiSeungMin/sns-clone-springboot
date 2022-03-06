@@ -38,8 +38,8 @@ public class Member {
     @Column(name = "profilepicturepath")
     private String profilePicturePath;
 
-    @OneToMany(mappedBy = "member")
-    private List<Board> boardList = new ArrayList<>();
+    //@OneToMany(mappedBy = "member")
+    //private List<Board> boardList = new ArrayList<>();
 
     //@OneToMany()
     //private List<Follow> followerList =  new ArrayList<>();
@@ -66,3 +66,4 @@ public class Member {
         this.profilePicturePath = profilePicturePath;
     }
 }
+

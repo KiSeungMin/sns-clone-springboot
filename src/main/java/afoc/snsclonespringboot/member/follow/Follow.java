@@ -22,8 +22,13 @@ public class Follow {
 
     private Long followeeId;
 
-    //@ManyToOne
-    //@JoinColumn(name = "MEMBER_ID")
-    //private Member member;
+    public Follow(){
+
+    }
+
+    public Follow(Long followerId,Long followeeId){
+        this.followerId = followerId;
+        this.followeeId = followeeId;
+    }
 
 }

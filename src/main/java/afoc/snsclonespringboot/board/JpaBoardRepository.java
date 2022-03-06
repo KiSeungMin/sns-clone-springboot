@@ -1,5 +1,7 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.board.like.Like;
+import afoc.snsclonespringboot.member.JpaMemberRepository;
 import afoc.snsclonespringboot.member.Member;
 import org.springframework.stereotype.Repository;
 
@@ -34,15 +36,14 @@ public class JpaBoardRepository implements BoardRepository {
     }
 
     @Override
-    public Optional<Member> findMemberByBoardId(Long boardId){
+    public List<Board> findBoardListByMemberId(Long memberId){
 
-        Board findBoard = findBoardByBoardId(boardId).get();
+        List<Board> findBoard= em.createQuery("select b from Board b where b.memberId = :memberId", Board.class)
+                .setParameter("memberId", memberId)
+                .getResultList();
 
-        Member findMember = findBoard.getMember();
-
-        return Optional.of(findMember);
+        return findBoard;
     }
-
 
     @Override
     public Optional<Board> updateBoardByBoardId(Long boardId) {
@@ -52,10 +53,14 @@ public class JpaBoardRepository implements BoardRepository {
     @Override
     public Boolean deleteBoardByBoardId(Long boardId) {
 
-        if(findBoardByBoardId(boardId).get() != null){
-            em.remove(em.find(Board.class, boardId));
+        Optional<Board> findBoard = findBoardByBoardId(boardId);
+
+        if(findBoard.isPresent()){
+            em.remove(findBoard.get());
             return true;
         }
+
         return false;
     }
+
 }

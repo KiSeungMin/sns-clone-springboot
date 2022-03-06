@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Setter @Getter
 @ToString
-@Table(name = "LIKE")
+@Table(name = "LIKETABLE")
 public class Like {
 
     @Id
@@ -22,5 +22,12 @@ public class Like {
 
     private Long userId;
 
-    // private Board board;
+    public Like(){
+
+    }
+
+    public Like(Long boardId, Long userId){
+        this.boardId = boardId;
+        this.userId = userId;
+    }
 }

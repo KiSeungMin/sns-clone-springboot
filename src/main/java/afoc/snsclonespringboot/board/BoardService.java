@@ -10,5 +10,4 @@ public interface BoardService {
     - TODO
         - 댓글 기능
      */
-
 }

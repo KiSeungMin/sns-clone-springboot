@@ -35,7 +35,7 @@ public class MemoryMemberRepository implements MemberRepository{
     }
 
     @Override
-    public List<Board> findBoardListByMemberId(Long memberId){
+    public Optional<Member> findMemberByBoardId(Long boardId){
         return null;
     }
 

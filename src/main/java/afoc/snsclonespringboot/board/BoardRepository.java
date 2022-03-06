@@ -12,8 +12,7 @@ public interface BoardRepository {
     // Board id 이용해 게시글 조회
     Optional<Board> findBoardByBoardId(Long boardId);
 
-    // Board Id를 이용해 Member 조회
-    Optional<Member> findMemberByBoardId(Long boardId);
+    List<Board> findBoardListByMemberId(Long memberId);
 
     // Board Id 이용해 수정
     Optional<Board> updateBoardByBoardId(Long boardId);

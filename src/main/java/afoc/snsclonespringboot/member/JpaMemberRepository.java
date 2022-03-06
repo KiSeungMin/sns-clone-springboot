@@ -1,6 +1,7 @@
 package afoc.snsclonespringboot.member;
 
 import afoc.snsclonespringboot.board.Board;
+import afoc.snsclonespringboot.board.JpaBoardRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -28,6 +29,7 @@ public class JpaMemberRepository implements MemberRepository{
 
     // member의 boardList에 인수로 받은 board 객체 추가
     // 인수로 받은 board 객체에도 board가 어떤 member 객체의 board인지 세팅
+    /*
     public void setBoardItem(Member member, Board board){
 
         List<Board> boardList = member.getBoardList();
@@ -36,6 +38,7 @@ public class JpaMemberRepository implements MemberRepository{
 
         board.setMember(member);
     }
+     */
 
     // memberId를 이용해 member 서칭
     @Override
@@ -46,21 +49,30 @@ public class JpaMemberRepository implements MemberRepository{
         return Optional.of(findMember);
     }
 
-    //
     @Override
     public Optional<Member> findMemberByMemberEmail(String email){
 
-        Member findMember = em.find(Member.class, email);
+        Member findMember = em.createQuery("select m from Member m where m.email = :email",
+                Member.class)
+                .setParameter("email", email)
+                .getSingleResult();
+
+        //Member findMember = em.createQuery("select m from Member m where m.email = '"
+                //+ email + "'", Member.class).getSingleResult();
 
         return Optional.of(findMember);
     }
 
     @Override
-    public List<Board> findBoardListByMemberId(Long memberId){
+    public Optional<Member> findMemberByBoardId(Long boardId){
 
-        Member findMember = findMemberByMemberId(memberId).get();
+        JpaBoardRepository jbr = new JpaBoardRepository(em);
 
-        return findMember.getBoardList();
+        Board board = jbr.findBoardByBoardId(boardId).get();
+
+        Optional<Member> findMember = findMemberByMemberId(board.getMemberId());
+
+        return findMember;
     }
 
     @Override
@@ -69,17 +81,29 @@ public class JpaMemberRepository implements MemberRepository{
         Member findMember = findMemberByMemberId(memberId).get();
 
         // update
-
         return Optional.of(findMember);
     }
 
     @Override
     public Boolean deleteMemberByMemberId(Long memberId) {
 
-        if(findMemberByMemberId(memberId).get() != null){
-            em.remove(em.find(Member.class, memberId));
+        Optional<Member> findMember = findMemberByMemberId(memberId);
+
+        if(findMember.isPresent()){
+
+            JpaBoardRepository jbr = new JpaBoardRepository(em);
+
+            List<Board> findBoard= jbr.findBoardListByMemberId(findMember.get().getId());
+
+            for(Board board : findBoard){
+                jbr.deleteBoardByBoardId(board.getId());
+            }
+
+            em.remove(findMember.get());
+
             return true;
         }
+
         return false;
     }
 }
