@@ -1,8 +1,8 @@
 package afoc.snsclonespringboot.member;
 
-public interface MemberService {
+import java.util.Optional;
 
-    void join(Member member);
+public interface MemberService {
     /*
     - 유저 등록/조회/수정/삭제
     - 팔로우 하기
@@ -10,4 +10,7 @@ public interface MemberService {
     - 팔로워 목록 조회
     - 팔로이 목록 조회
      */
+    boolean join(Member member);
+    Optional<Member> findMemberById(Long memberId);
+    Optional<Member> findByEmail(String email);
 }
