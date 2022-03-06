@@ -1,3 +1,33 @@
 ﻿# SNS_Project
 
-sns-clone-springboot로 이름 바꿀수 있을까요??
+## Domain  
+Member  
+Board  
+
+## Repository
+Member Repository - Memory Member Repository. JPA Member Repository  
+Board Repository - Memory Board Repository. JPA Board Repository  
+Follow Repository - Memory Follow Repository. JPA Follow Repository  
+Like Repository - Memory Like Repository. JPA Like Repository  
+
+## Service
+Member Service - Member Service Impl  
+Board Service - Board Service Impl  
+Follow Service - Follow Service Impl  
+Like Service - Like Service Impl
+
+## Controller
+Member Controller  
+Board Controller  
+Follow Controller  
+Like Controller  
+
+## TODO  
+[x] hashmap memory db & simple login/signup page (baseline)   
+[x] Member Service/Controller/Repository Baseline   
+[ ] Board Service/Controller/Repository Baseline   
+[ ] Like, Follow Implement   
+[ ] JPA   
+[ ] Spring Security   
+[ ] Bootstrap   
+[ ] OAuth2   

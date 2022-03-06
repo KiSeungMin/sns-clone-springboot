@@ -9,8 +9,11 @@ import java.util.Optional;
 
 public class MemoryMemberRepository implements MemberRepository{
 
-    private static Map<Long, Member> store = new HashMap<>();
+    private static final Map<Long, Member> store = new HashMap<>();
     private static long sequence = 0L;
+
+    /*------------------------------------------------------*/
+    // Member CRUD
 
     @Override
     public Member save(Member member) {
@@ -40,14 +43,31 @@ public class MemoryMemberRepository implements MemberRepository{
     }
 
     @Override
-    public Optional<Member> updateMemberByMemberId(Long memberId) {
-        return Optional.empty();
+    public Boolean updateMember(Member member) {
+        Member returnValue = store.get(member.getId());
+        if (returnValue != null){
+            store.put(member.getId(), member);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public Boolean deleteMemberByMemberId(Long memberId) {
         Member returnValue = store.remove(memberId);
-
         return returnValue != null;
+    }
+
+    /*------------------------------------------------------*/
+    // Follow
+
+    /*------------------------------------------------------*/
+    // Extras
+
+    @Override
+    public void clear(){
+        store.clear();
+        sequence = 0L;
     }
 }

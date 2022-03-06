@@ -19,7 +19,7 @@ public class MemberController {
 
     @PostMapping("/login")
     public String login(LoginForm loginForm){
-        Optional<Member> foundMember = memberService.findByEmail(loginForm.getEmail());
+        Optional<Member> foundMember = memberService.findMemberByEmail(loginForm.getEmail());
         if (foundMember.isPresent() &&
                 loginForm.getPassword().equals(foundMember.get().getPassword())) {
             return "redirect:/main";

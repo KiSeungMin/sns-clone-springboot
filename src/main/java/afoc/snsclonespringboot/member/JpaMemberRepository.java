@@ -63,23 +63,31 @@ public class JpaMemberRepository implements MemberRepository{
         return findMember.getBoardList();
     }
 
+    // TODO
     @Override
-    public Optional<Member> updateMemberByMemberId(Long memberId) {
+    public Boolean updateMember(Member member) {
 
-        Member findMember = findMemberByMemberId(memberId).get();
-
-        // update
-
-        return Optional.of(findMember);
+//        Member findMember = findMemberByMemberId(memberId).get();
+//
+//        // update
+//
+//        return Optional.of(findMember);
+        return false;
     }
 
+    // TODO
     @Override
     public Boolean deleteMemberByMemberId(Long memberId) {
 
-        if(findMemberByMemberId(memberId).get() != null){
-            em.remove(em.find(Member.class, memberId));
-            return true;
-        }
+//        if(findMemberByMemberId(memberId).get() != null){
+//            em.remove(em.find(Member.class, memberId));
+//            return true;
+//        }
         return false;
+    }
+
+    // TODO
+    @Override
+    public void clear(){
     }
 }
