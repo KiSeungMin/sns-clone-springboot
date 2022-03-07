@@ -19,14 +19,14 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "BOARD_ID")
-    private Long id;
+    private Long boardId;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
-    private Member member;
+    private Long memberId;
 
     private String dataPath;
 
-    //@OneToMany(mappedBy = "board")
+    //@OneToMbany(mappedBy = "board")
     //private List<Like> likeList = new ArrayList<>();
 }

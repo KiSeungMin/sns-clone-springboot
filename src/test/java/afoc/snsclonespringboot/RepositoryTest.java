@@ -54,18 +54,18 @@ public class RepositoryTest {
 
          */
 
-        List<Board> boardList1 = jmr.findBoardListByMemberId(3L);
-        List<Board> boardList2 = jmr.findBoardListByMemberId(4L);
-
-        System.out.println("==== member1 boardList ====");
-        for(Board board : boardList1){
-            System.out.println("ID : " + board.getId());
-        }
-
-        System.out.println("==== member2 boardList ====");
-        for(Board board : boardList2){
-            System.out.println("ID : " + board.getId());
-        }
+//        List<Board> boardList1 = jmr.findBoardListByMemberId(3L);
+//        List<Board> boardList2 = jmr.findBoardListByMemberId(4L);
+//
+//        System.out.println("==== member1 boardList ====");
+//        for(Board board : boardList1){
+//            System.out.println("ID : " + board.getId());
+//        }
+//
+//        System.out.println("==== member2 boardList ====");
+//        for(Board board : boardList2){
+//            System.out.println("ID : " + board.getId());
+//        }
 
     }
 }

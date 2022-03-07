@@ -33,20 +33,28 @@ public class JpaBoardRepository implements BoardRepository {
         return Optional.of(findBoard);
     }
 
+    // TODO
     @Override
     public Optional<Member> findMemberByBoardId(Long boardId){
-
-        Board findBoard = findBoardByBoardId(boardId).get();
-
-        Member findMember = findBoard.getMember();
-
-        return Optional.of(findMember);
+//
+//        Board findBoard = findBoardByBoardId(boardId).get();
+//
+//        Member findMember = findBoard.getMember();
+//
+//        return Optional.of(findMember);
+        return Optional.empty();
     }
 
-
+    // TODO
     @Override
-    public Optional<Board> updateBoardByBoardId(Long boardId) {
-        return Optional.empty();
+    public List<Board> findBoardListByMemberId(Long memberId){
+        return null;
+    }
+
+    // TODO
+    @Override
+    public Boolean updateBoard(Board board) {
+        return false;
     }
 
     @Override
@@ -57,5 +65,9 @@ public class JpaBoardRepository implements BoardRepository {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void clear(){
     }
 }

@@ -26,15 +26,16 @@ public class JpaMemberRepository implements MemberRepository{
         return member;
     }
 
+    // TODO - 변경
     // member의 boardList에 인수로 받은 board 객체 추가
     // 인수로 받은 board 객체에도 board가 어떤 member 객체의 board인지 세팅
     public void setBoardItem(Member member, Board board){
 
-        List<Board> boardList = member.getBoardList();
-
-        boardList.add(board);
-
-        board.setMember(member);
+//        List<Board> boardList = member.getBoardList();
+//
+//        boardList.add(board);
+//
+//        board.setMember(member);
     }
 
     // memberId를 이용해 member 서칭
@@ -55,13 +56,13 @@ public class JpaMemberRepository implements MemberRepository{
         return Optional.of(findMember);
     }
 
-    @Override
-    public List<Board> findBoardListByMemberId(Long memberId){
-
-        Member findMember = findMemberByMemberId(memberId).get();
-
-        return findMember.getBoardList();
-    }
+//    @Override
+//    public List<Board> findBoardListByMemberId(Long memberId){
+//
+//        Member findMember = findMemberByMemberId(memberId).get();
+//
+//        return findMember.getBoardList();
+//    }
 
     // TODO
     @Override
