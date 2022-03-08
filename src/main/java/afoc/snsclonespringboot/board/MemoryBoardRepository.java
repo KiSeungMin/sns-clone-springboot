@@ -29,13 +29,6 @@ public class MemoryBoardRepository implements BoardRepository{
         return Optional.ofNullable(store.get(boardId));
     }
 
-    // TODO
-    // Is needed?
-    @Override
-    public Optional<Member> findMemberByBoardId(Long boardId) {
-        return Optional.empty();
-    }
-
     @Override
     public List<Board> findBoardListByMemberId(Long memberId) {
         return store.values().stream()

@@ -29,7 +29,6 @@ class MemberServiceTest {
     void joinSingleTest() {
         Member member1 = Member.builder()
                 .username("test1")
-                .nickname("nick1")
                 .password("1234")
                 .email("test1@test.com")
                 .build();
@@ -44,14 +43,12 @@ class MemberServiceTest {
     void joinDoubleTest() {
         Member member1 = Member.builder()
                 .username("test1")
-                .nickname("nick1")
                 .password("1234")
                 .email("test1@test.com")
                 .build();
 
         Member member2 = Member.builder()
                 .username("test2")
-                .nickname("nick2")
                 .password("2345")
                 .email("test2@test.com")
                 .build();
@@ -68,14 +65,12 @@ class MemberServiceTest {
     void joinDuplicateTest1() {
         Member member1 = Member.builder()
                 .username("test1")
-                .nickname("nick1")
                 .password("1234")
                 .email("test1@test.com")
                 .build();
 
         Member member2 = Member.builder()
                 .username("test1")
-                .nickname("nick1")
                 .password("1234")
                 .email("test2@test.com")
                 .build();
@@ -92,14 +87,12 @@ class MemberServiceTest {
     void joinDuplicateTest2() {
         Member member1 = Member.builder()
                 .username("test1")
-                .nickname("nick1")
                 .password("1234")
                 .email("test1@test.com")
                 .build();
 
         Member member2 = Member.builder()
                 .username("test2")
-                .nickname("nick2")
                 .password("2345")
                 .email("test1@test.com")
                 .build();
@@ -120,7 +113,6 @@ class MemberServiceTest {
     void findMemberByEmailSingleTest(){
         Member member1 = Member.builder()
                 .username("test1")
-                .nickname("nick1")
                 .password("1234")
                 .email("test1@test.com")
                 .build();
@@ -142,14 +134,12 @@ class MemberServiceTest {
     void findMemberByEmailDoubleTest(){
         Member member1 = Member.builder()
                 .username("test1")
-                .nickname("nick1")
                 .password("1234")
                 .email("test1@test.com")
                 .build();
 
         Member member2 = Member.builder()
                 .username("test2")
-                .nickname("nick2")
                 .password("2345")
                 .email("test2@test.com")
                 .build();
@@ -179,7 +169,6 @@ class MemberServiceTest {
     void findMemberByIdSingleTest(){
         Member member1 = Member.builder()
                 .username("test1")
-                .nickname("nick1")
                 .password("1234")
                 .email("test1@test.com")
                 .build();
@@ -201,14 +190,12 @@ class MemberServiceTest {
     void findMemberByIdDoubleTest() {
         Member member1 = Member.builder()
                 .username("test1")
-                .nickname("nick1")
                 .password("1234")
                 .email("test1@test.com")
                 .build();
 
         Member member2 = Member.builder()
                 .username("test2")
-                .nickname("nick2")
                 .password("2345")
                 .email("test2@test.com")
                 .build();
@@ -238,7 +225,6 @@ class MemberServiceTest {
     public void updateMemberSimple(){
         Member member1 = Member.builder()
                 .username("test1")
-                .nickname("nick1")
                 .password("1234")
                 .email("test1@test.com")
                 .build();
@@ -255,7 +241,6 @@ class MemberServiceTest {
         Member foundMember1 = foundMember1ById.get();
         Member updateMember = Member.builder()
                     .username("test2")
-                    .nickname("nick2")
                     .password("2345")
                     .email(foundMember1.getEmail())
                     .build();
@@ -277,7 +262,6 @@ class MemberServiceTest {
     public void updateMemberEmailCheck(){
         Member member1 = Member.builder()
                 .username("test1")
-                .nickname("nick1")
                 .password("1234")
                 .email("test1@test.com")
                 .build();
@@ -294,7 +278,6 @@ class MemberServiceTest {
         Member foundMember1 = foundMember1ById.get();
         Member updateMember = Member.builder()
                 .username(foundMember1.getUsername())
-                .nickname(foundMember1.getNickname())
                 .password(foundMember1.getPassword())
                 .email("test2@test.com")
                 .build();
@@ -319,7 +302,6 @@ class MemberServiceTest {
     public void deleteMemberById(){
         Member member1 = Member.builder()
                 .username("test1")
-                .nickname("nick1")
                 .password("1234")
                 .email("test1@test.com")
                 .build();

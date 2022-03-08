@@ -21,41 +21,31 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name="username")
-    private String username;
+    @Column(nullable = false, name="email")
+    private String email;
 
     @Column(nullable = false ,name="password")
     private String password;
 
-    @Column(nullable = false, name="nickname")
-    private String nickname;
+    @Column(nullable = false, name="username")
+    private String username;
 
-    @Column(nullable = false, name="email")
-    private String email;
-
+    // TODO
     @Column(name = "profilepicturepath")
     private String profilePicturePath;
+//    private FileClass Image
+//    private FileClass 글;
 
-    @OneToMany(mappedBy = "member")
-    private List<Board> boardList = new ArrayList<>();
-
-    //@OneToMany()
-    //private List<Follow> followerList =  new ArrayList<>();
-
-    //@OneToMany()
-    //private List<Follow> followeeList = new ArrayList<>();
 
     @Builder
     public Member(
             String username,
             String password,
-            String nickname,
             String email,
             String profilePicturePath
     ) {
         this.username = username;
         this.password = password;
-        this.nickname = nickname;
         this.email = email;
         this.profilePicturePath = profilePicturePath;
     }

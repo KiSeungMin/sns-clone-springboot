@@ -35,18 +35,6 @@ public class JpaBoardRepository implements BoardRepository {
 
     // TODO
     @Override
-    public Optional<Member> findMemberByBoardId(Long boardId){
-//
-//        Board findBoard = findBoardByBoardId(boardId).get();
-//
-//        Member findMember = findBoard.getMember();
-//
-//        return Optional.of(findMember);
-        return Optional.empty();
-    }
-
-    // TODO
-    @Override
     public List<Board> findBoardListByMemberId(Long memberId){
         return null;
     }
