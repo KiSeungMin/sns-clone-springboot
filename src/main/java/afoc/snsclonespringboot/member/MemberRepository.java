@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface MemberRepository {
 
+    // Member CRUD
+
     // 등록
     Member save(Member member);
 
@@ -21,9 +23,19 @@ public interface MemberRepository {
     List<Board> findBoardListByMemberId(Long memberId);
 
     // Member id 이용해 수정
-    Optional<Member> updateMemberByMemberId(Long memberId);
+    Boolean updateMember(Member member);
 
     // Member id 이용해 삭제
     // return 값 성공/실패
     Boolean deleteMemberByMemberId(Long memberId);
+
+    /*------------------------------------------------------*/
+
+    // TODO
+    // Follow
+
+
+    /*------------------------------------------------------*/
+    // all clear for test
+    void clear();
 }

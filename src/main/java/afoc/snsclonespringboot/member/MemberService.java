@@ -10,7 +10,16 @@ public interface MemberService {
     - 팔로워 목록 조회
     - 팔로이 목록 조회
      */
-    boolean join(Member member);
-    Optional<Member> findMemberById(Long memberId);
-    Optional<Member> findByEmail(String email);
+
+    // Member CRUD
+    Boolean join(Member member);
+    Optional<Member> findMemberById(Long id);
+    Optional<Member> findMemberByEmail(String email);
+    Boolean updateMember(Member member);
+    Boolean deleteMemberById(Long id);
+
+    // TODO
+    // Follow
+//    Boolean follow(Long followerId, Long followeeId);
+//    Boolean unfollow(Long followerId, Long followeeId);
 }
