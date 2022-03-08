@@ -1,14 +1,13 @@
 package afoc.snsclonespringboot.member;
 
-import afoc.snsclonespringboot.board.Board;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Repository
 public class MemoryMemberRepository implements MemberRepository{
-
     private static final Map<Long, Member> store = new HashMap<>();
     private static long sequence = 0L;
 
@@ -17,11 +16,8 @@ public class MemoryMemberRepository implements MemberRepository{
 
     @Override
     public Member save(Member member) {
-
         member.setId(++sequence);
-
         store.put(member.getId(), member);
-
         return member;
     }
 
@@ -38,11 +34,7 @@ public class MemoryMemberRepository implements MemberRepository{
     }
 
     @Override
-    public List<Board> findBoardListByMemberId(Long memberId){
-        return null;
-    }
-
-    @Override
+<<<<<<< HEAD
     public Boolean updateMember(Member member) {
         Member returnValue = store.get(member.getId());
         if (returnValue != null){
@@ -51,6 +43,15 @@ public class MemoryMemberRepository implements MemberRepository{
         } else {
             return false;
         }
+=======
+    public Optional<Member> findMemberByBoardId(Long boardId){
+        return null;
+    }
+
+    @Override
+    public Optional<Member> updateMemberByMemberId(Long memberId) {
+        return Optional.empty();
+>>>>>>> 7ff9faa0104b90e71d2b438e918eb6552e8698f0
     }
 
     @Override

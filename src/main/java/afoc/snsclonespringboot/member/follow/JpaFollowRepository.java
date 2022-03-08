@@ -4,7 +4,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JpaFollowRepository implements FollowRepository {
@@ -24,21 +26,47 @@ public class JpaFollowRepository implements FollowRepository {
         return follow;
     }
 
+    public Follow findFollow(Long followerId, Long followeeId){
+
+        Follow findFollow = em.createQuery("select f from Follow f where f.followerId = :followerId and " +
+                        "f.followeeId = :followeeId", Follow.class)
+                .setParameter("followerId", followerId)
+                .setParameter("followeeId", followeeId)
+                .getSingleResult();
+
+        return findFollow;
+
+    }
+
     @Override
     public List<Long> findFolloweesByFollowerId(Long followerId) {
-        // 구현해야 함
-        return null;
+
+        List<Long> findFollowees = em.createQuery("select F.followeeId from Follow F where F.followerId = '"
+        + followerId + "'").getResultList();
+
+        return findFollowees;
     }
 
     @Override
     public List<Long> findFollowersByFolloweeId(Long followeeId) {
-        // 구현해야 함
-        return null;
+
+        List<Long> findFollowers = em.createQuery("select F.followerId from Follow F where F.followeeId = '"
+        + followeeId + "'").getResultList();
+
+        return findFollowers;
     }
 
     @Override
     public Boolean deleteFollowee(Long followerId, Long followeeId) {
-        // 구현해야 함
-        return null;
+
+        Follow findFollow = findFollow(followerId, followeeId);
+
+        if(findFollow != null){
+
+            em.remove(findFollow);
+            return true;
+        }
+
+        return false;
     }
 }

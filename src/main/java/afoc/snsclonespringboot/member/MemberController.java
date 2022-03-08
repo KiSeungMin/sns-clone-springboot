@@ -40,7 +40,6 @@ public class MemberController {
         Member member = Member.builder()
                 .username(memberForm.getUsername())
                 .password(memberForm.getPassword())
-                .nickname(memberForm.getNickname())
                 .email(memberForm.getEmail())
                 .build();
 

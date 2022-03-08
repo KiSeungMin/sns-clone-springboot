@@ -19,8 +19,6 @@ public interface MemberRepository {
     // Member username 이용해 유저 조회
     Optional<Member> findMemberByMemberEmail(String email);
 
-    // Member id 이용해 게시판 리스트 조회
-    List<Board> findBoardListByMemberId(Long memberId);
 
     // Member id 이용해 수정
     Boolean updateMember(Member member);

@@ -1,5 +1,8 @@
 package afoc.snsclonespringboot.board;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface BoardService {
     /*
     - 게시물 등록
@@ -10,5 +13,12 @@ public interface BoardService {
     - TODO
         - 댓글 기능
      */
+
+    // TODO
+    Boolean upload(Board board);
+    Optional<Board> findBoardByBoardId(Long boardId);
+    List<Board> findBoardListByMemberId(Long memberId);
+    Boolean updateBoard(Board board);
+    Boolean deleteBoardByBoardId(Long boardId);
 
 }
