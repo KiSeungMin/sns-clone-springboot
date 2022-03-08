@@ -21,8 +21,6 @@ public class Board {
     @Column(name = "BOARD_ID")
     private Long boardId;
 
-//    @ManyToOne
-//    @JoinColumn(name = "MEMBER_ID")
     private Long memberId;
 
     // TODO

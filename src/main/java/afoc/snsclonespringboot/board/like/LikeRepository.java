@@ -7,7 +7,7 @@ public interface LikeRepository {
     Like save(Like like);
 
     // 좋아요 목록 조회
-    List<Like> findLikeListByBoardId(Long boardId);
+    List<Long> findLikeListByBoardId(Long boardId);
 
     // 수정 X
 

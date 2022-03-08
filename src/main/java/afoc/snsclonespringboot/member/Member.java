@@ -1,13 +1,8 @@
 package afoc.snsclonespringboot.member;
 
-import afoc.snsclonespringboot.board.Board;
-import afoc.snsclonespringboot.member.follow.Follow;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -36,7 +31,6 @@ public class Member {
 //    private FileClass Image
 //    private FileClass 글;
 
-
     @Builder
     public Member(
             String username,
@@ -50,3 +44,4 @@ public class Member {
         this.profilePicturePath = profilePicturePath;
     }
 }
+
