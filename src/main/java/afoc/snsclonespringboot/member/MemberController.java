@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 @Controller
@@ -24,14 +26,14 @@ public class MemberController {
                 loginForm.getPassword().equals(foundMember.get().getPassword())) {
             return "redirect:/main";
         } else {
-            return "denied";
+            return "redirect:/login-failed";
         }
 
     }
 
     @GetMapping("/signup")
     public String signup() {
-        return "signup";
+        return "signup.html";
     }
 
     @PostMapping("/signup")
@@ -48,9 +50,19 @@ public class MemberController {
             return "redirect:/login";
         }
         else {
-            return "denied";
+            return "redirect:/signup-failed";
         }
 
+    }
+
+    @GetMapping("/login-failed")
+    public String loginFailed() {
+        return "login-failed.html";
+    }
+
+    @GetMapping("/signup-failed")
+    public String singupFailed() {
+        return "signup-failed.html";
     }
 
 }

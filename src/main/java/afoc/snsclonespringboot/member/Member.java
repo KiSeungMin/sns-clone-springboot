@@ -25,23 +25,19 @@ public class Member {
     @Column(nullable = false, name="username")
     private String username;
 
-    // TODO
-    @Column(name = "profilepicturepath")
-    private String profilePicturePath;
-//    private FileClass Image
-//    private FileClass 글;
+    private Long imageDataId;
 
     @Builder
     public Member(
             String username,
             String password,
             String email,
-            String profilePicturePath
+            Long imageDataId
     ) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.profilePicturePath = profilePicturePath;
+        this.imageDataId = imageDataId;
     }
 }
 
