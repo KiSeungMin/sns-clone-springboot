@@ -92,14 +92,6 @@ public class JpaMemberRepository implements MemberRepository{
 
         if(findMember.isPresent()){
 
-            JpaBoardRepository jbr = new JpaBoardRepository(em);
-
-            List<Board> findBoard= jbr.findBoardListByMemberId(findMember.get().getId());
-
-            for(Board board : findBoard){
-                jbr.deleteBoardByBoardId(board.getBoardId());
-            }
-
             em.remove(findMember.get());
 
             return true;

@@ -1,20 +1,25 @@
 package afoc.snsclonespringboot.member;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberServiceImpl implements MemberService {
+
+    @Autowired
     private final MemberRepository memberRepository;
 
     public Boolean join(Member member){
         Optional<Member> foundMember = findMemberByEmail(member.getEmail());
         if (foundMember.isPresent()) {
-            return false;
+            throw new IllegalStateException("이미 가입된 회원입니다.");
         } else {
             memberRepository.save(member);
             return true;
@@ -52,7 +57,5 @@ public class MemberServiceImpl implements MemberService {
     public Boolean deleteMemberById(Long id) {
         return memberRepository.deleteMemberByMemberId(id);
     }
-
-
 
 }

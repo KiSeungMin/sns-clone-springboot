@@ -13,7 +13,7 @@ public class JpaBoardRepository implements BoardRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public JpaBoardRepository(EntityManager em) {
+    public JpaBoardRepository(EntityManager em){
         this.em = em;
     }
 
@@ -56,6 +56,17 @@ public class JpaBoardRepository implements BoardRepository {
             return true;
         }
 
+        return false;
+    }
+
+    public Boolean deleteBoardList(List<Board> board){
+
+        if(!board.isEmpty()){
+            for(Board b : board){
+                deleteBoardByBoardId(b.getBoardId());
+            }
+            return true;
+        }
         return false;
     }
 

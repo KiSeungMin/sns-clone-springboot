@@ -16,7 +16,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name="email")
+    @Column(nullable = false, name="email", unique = true)
     private String email;
 
     @Column(nullable = false ,name="password")
@@ -27,17 +27,22 @@ public class Member {
 
     private Long imageDataId;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Builder
     public Member(
             String username,
             String password,
             String email,
-            Long imageDataId
+            Long imageDataId,
+            Role role
     ) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.imageDataId = imageDataId;
+        this.role = role;
     }
 }
 

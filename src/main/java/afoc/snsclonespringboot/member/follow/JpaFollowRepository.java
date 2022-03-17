@@ -14,7 +14,7 @@ public class JpaFollowRepository implements FollowRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public JpaFollowRepository(EntityManager em) {
+    public JpaFollowRepository(EntityManager em){
         this.em = em;
     }
 

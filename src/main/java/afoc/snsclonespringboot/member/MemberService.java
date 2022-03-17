@@ -11,6 +11,8 @@ public interface MemberService {
     - 팔로이 목록 조회
      */
 
+
+
     // Member CRUD
     Boolean join(Member member);
     Optional<Member> findMemberById(Long id);
