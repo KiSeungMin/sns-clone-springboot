@@ -1,6 +1,5 @@
 package afoc.snsclonespringboot.board;
 
-import afoc.snsclonespringboot.member.Member;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;

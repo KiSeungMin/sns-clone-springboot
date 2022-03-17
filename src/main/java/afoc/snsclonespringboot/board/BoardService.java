@@ -20,5 +20,4 @@ public interface BoardService {
     List<Board> findBoardListByMemberId(Long memberId);
     Boolean updateBoard(Board board);
     Boolean deleteBoardByBoardId(Long boardId);
-
 }

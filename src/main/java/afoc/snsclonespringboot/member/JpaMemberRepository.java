@@ -84,7 +84,6 @@ public class JpaMemberRepository implements MemberRepository{
         return false;
     }
 
-    // TODO
     @Override
     public Boolean deleteMemberByMemberId(Long memberId) {
 
@@ -108,7 +107,6 @@ public class JpaMemberRepository implements MemberRepository{
         return false;
     }
 
-    // TODO
     @Override
     public void clear(){
         em.flush();
