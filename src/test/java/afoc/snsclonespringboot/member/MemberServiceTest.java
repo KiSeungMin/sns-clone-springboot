@@ -6,11 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 class MemberServiceTest {
     @Autowired
     MemberService memberService;
@@ -174,7 +176,8 @@ class MemberServiceTest {
                 .build();
 
         boolean isSuccess1 = memberService.join(member1);
-        Optional<Member> foundMember1ById = memberService.findMemberById(1L);
+
+        Optional<Member> foundMember1ById = memberService.findMemberById(member1.getId());
 
         // successful join
         assertThat(isSuccess1).isTrue();
@@ -202,8 +205,8 @@ class MemberServiceTest {
 
         boolean isSuccess1 = memberService.join(member1);
         boolean isSuccess2 = memberService.join(member2);
-        Optional<Member> foundMember1ById = memberService.findMemberById(1L);
-        Optional<Member> foundMember2ById = memberService.findMemberById(2L);
+        Optional<Member> foundMember1ById = memberService.findMemberById(member1.getId());
+        Optional<Member> foundMember2ById = memberService.findMemberById(member2.getId());
 
         // successful join
         assertThat(isSuccess1).isTrue();
@@ -311,12 +314,12 @@ class MemberServiceTest {
         assertThat(isSuccess1).isTrue(); // successful join
 
         // delete
-        boolean isSuccess2 = memberService.deleteMemberById(1L);
+        boolean isSuccess2 = memberService.deleteMemberById(member1.getId());
         assertThat(isSuccess2).isTrue(); // successful delete
 
         // check
         Optional<Member> memberByEmail = memberService.findMemberByEmail("test1@test.com");
-        Optional<Member> memberById = memberService.findMemberById(1L);
+        Optional<Member> memberById = memberService.findMemberById(member1.getId());
         assertThat(memberByEmail).isEmpty();
         assertThat(memberById).isEmpty();
     }

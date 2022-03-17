@@ -47,21 +47,21 @@ public class JpaMemberRepository implements MemberRepository{
 
         Member findMember = em.find(Member.class, MemberId);
 
-        return Optional.of(findMember);
+        return Optional.ofNullable(findMember);
     }
 
     @Override
     public Optional<Member> findMemberByMemberEmail(String email){
 
-        Member findMember = em.createQuery("select m from Member m where m.email = :email",
+        List<Member> findMember = em.createQuery("select m from Member m where m.email = :email",
                 Member.class)
                 .setParameter("email", email)
-                .getSingleResult();
+                .getResultList();
 
         //Member findMember = em.createQuery("select m from Member m where m.email = '"
                 //+ email + "'", Member.class).getSingleResult();
 
-        return Optional.of(findMember);
+        return findMember.stream().findAny();
     }
 
 //    @Override
@@ -103,5 +103,6 @@ public class JpaMemberRepository implements MemberRepository{
     // TODO
     @Override
     public void clear(){
+        em.flush();
     }
 }
