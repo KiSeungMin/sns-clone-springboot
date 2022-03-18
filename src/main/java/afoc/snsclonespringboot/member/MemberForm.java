@@ -7,8 +7,7 @@ import lombok.Setter;
 @Setter
 public class MemberForm {
     private Long id;
-    private String username;
-    private String password;
-    private String nickname;
     private String email;
+    private String password;
+    private String username;
 }

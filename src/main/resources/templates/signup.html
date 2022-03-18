@@ -1,27 +1,60 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>Signup</title>
 
-<div class="container">
-    <form action="/signup" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="username">이름</label>
-            <input type="text" id="username" name="username" placeholder="이름을 입력하세요">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="css/signup.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+
+<main class="form-signup">
+    <form action="/signup" method="post">
+        <img class="mb-4" src="img/bootstrap-logo.svg" alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+        <div class="form-floating">
+            <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
+            <label for="floatingInput">Email address</label>
         </div>
-        <div class="form-group">
-            <label for="password">비밀번호</label>
-            <input type="text" id="password" name="password" placeholder="비밀번호을 입력하세요">
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+            <label for="floatingPassword">Password</label>
         </div>
-        <div class="form-group">
-            <label for="nickname">닉네임</label>
-            <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요">
+        <div class="form-floating">
+            <input type="username" class="form-control" id="floatingUsername" name="username" placeholder="Username">
+            <label for="floatingUsername">Username</label>
         </div>
-        <div class="form-group">
-            <label for="email">이메일</label>
-            <input type="text" id="email" name="email" placeholder="이메일을 입력하세요">
-        </div>
-        <button type="submit">등록</button>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
     </form>
-</div>
+</main>
 </body>
 </html>

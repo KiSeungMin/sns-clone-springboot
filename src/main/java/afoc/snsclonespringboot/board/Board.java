@@ -1,5 +1,6 @@
 package afoc.snsclonespringboot.board;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,4 +22,15 @@ public class Board {
 
     private Long textDataId;
     private Long imageDataId;
+
+    @Builder
+    public Board(
+            Long memberId,
+            Long textDataId,
+            Long imageDataId
+    ) {
+        this.memberId = memberId;
+        this.textDataId = textDataId;
+        this.imageDataId = imageDataId;
+    }
 }

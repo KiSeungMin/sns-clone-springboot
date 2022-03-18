@@ -11,6 +11,7 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
+    @Override
     public Boolean join(Member member){
         Optional<Member> foundMember = findMemberByEmail(member.getEmail());
         if (foundMember.isPresent()) {
@@ -52,7 +53,4 @@ public class MemberServiceImpl implements MemberService {
     public Boolean deleteMemberById(Long id) {
         return memberRepository.deleteMemberByMemberId(id);
     }
-
-
-
 }
