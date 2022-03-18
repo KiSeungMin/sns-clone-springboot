@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -13,13 +15,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    //@Autowired
+    @Autowired
     private final BoardRepository boardRepository;
 
     @Override
     public Boolean upload(Board board) {
-        boardRepository.save(board);
-        return true;
+
+        try {
+            boardRepository.save(board);
+            return true;
+        } catch (Exception exception) {
+            return false;
+        }
     }
 
     @Override
@@ -34,7 +41,19 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Boolean updateBoard(Board board) {
-        return null;
+        Optional<Board> foundBoard = findBoardByBoardId(board.getBoardId());
+        if (foundBoard.isEmpty()) {
+            return false;
+        } else {
+            Long memberId1 = board.getMemberId();
+            Long memberId2 = foundBoard.get().getMemberId();
+            if (!Objects.equals(memberId1, memberId2)){
+                return false;
+            } else {
+                boardRepository.updateBoard(board);
+                return true;
+            }
+        }
     }
 
     @Override

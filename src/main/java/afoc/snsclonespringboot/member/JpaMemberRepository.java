@@ -7,10 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Transactional
 public class JpaMemberRepository implements MemberRepository{
 
     @PersistenceContext
@@ -27,20 +29,6 @@ public class JpaMemberRepository implements MemberRepository{
 
         return member;
     }
-
-    // TODO - 변경
-    // member의 boardList에 인수로 받은 board 객체 추가
-    // 인수로 받은 board 객체에도 board가 어떤 member 객체의 board인지 세팅
-    /*
-    public void setBoardItem(Member member, Board board){
-
-//        List<Board> boardList = member.getBoardList();
-//
-//        boardList.add(board);
-//
-//        board.setMember(member);
-    }
-     */
 
     // memberId를 이용해 member 서칭
     @Override
@@ -65,15 +53,6 @@ public class JpaMemberRepository implements MemberRepository{
         return findMember.stream().findAny();
     }
 
-//    @Override
-//    public List<Board> findBoardListByMemberId(Long memberId){
-//
-//        Member findMember = findMemberByMemberId(memberId).get();
-//
-//        return findMember.getBoardList();
-//    }
-
-
     // TODO
     @Override
     public Boolean updateMember(Member member) {
@@ -85,7 +64,6 @@ public class JpaMemberRepository implements MemberRepository{
         return false;
     }
 
-    // TODO
     @Override
     public Boolean deleteMemberByMemberId(Long memberId) {
 
@@ -101,7 +79,6 @@ public class JpaMemberRepository implements MemberRepository{
         return false;
     }
 
-    // TODO
     @Override
     public void clear(){
         em.flush();

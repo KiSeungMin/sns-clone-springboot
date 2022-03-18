@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.validation.Valid;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -19,7 +21,7 @@ public class MemberController {
 
     @GetMapping("/login")
     public String login() {
-        return "login.html";
+        return "login";
     }
 
     @PostMapping("/login")
@@ -37,33 +39,42 @@ public class MemberController {
     @GetMapping("/signup")
     public String signup(Model model) {
         model.addAttribute("memberFormDto", new MemberFormDto());
-        return "signup.html";
+        return "signup";
     }
 
 
     @PostMapping("/signup")
-    public String signup(MemberFormDto memberFormDto) {
+    public String signup(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model) {
 
-        Member member = Member.builder()
-                .username(memberFormDto.getUsername())
-                .password(memberFormDto.getPassword())
-                //.password(passwordEncoder.encode(memberFormDto.getPassword()))
-                .email(memberFormDto.getEmail())
-                .build();
-
-        boolean isSuccess = memberService.join(member);
-        if (isSuccess) {
-            return "redirect:/login";
-        }
-        else {
-            return "redirect:/signup-failed";
+        if(bindingResult.hasErrors()){
+            return "signup";
         }
 
+        try{
+
+            Member member = Member.builder()
+                    .username(memberFormDto.getUsername())
+                    //.password(memberFormDto.getPassword())
+                    .password(passwordEncoder.encode(memberFormDto.getPassword()))
+                    .email(memberFormDto.getEmail())
+                    .role(Role.USER)
+                    .build();
+
+            memberService.join(member);
+
+        } catch(IllegalStateException e){
+            model.addAttribute("errorMessage", e.getMessage());
+            return "redirect:/signup";
+        }
+
+        return "redirect:/login";
     }
 
     @GetMapping("/login-failed")
-    public String loginFailed() {
-        return "login-failed.html";
+    public String loginFailed(Model model) {
+
+        model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
+        return "/login";
     }
 
     @GetMapping("/signup-failed")

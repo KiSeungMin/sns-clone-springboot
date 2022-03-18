@@ -49,8 +49,8 @@ public class RepositoryTest {
         jmr.save(member1);
         jmr.save(member2);
 
-        Board board1 = new Board();
-        Board board2 = new Board();
+        Board board1 = Board.builder().build();
+        Board board2 = Board.builder().build();
 
         jbr.save(board1);
         jbr.save(board2);

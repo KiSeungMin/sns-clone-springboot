@@ -2,6 +2,10 @@ package afoc.snsclonespringboot.member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,11 +15,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class MemberServiceImpl implements MemberService {
+public class MemberServiceImpl implements MemberService, UserDetailsService {
 
-    @Autowired
     private final MemberRepository memberRepository;
 
+    @Override
     public Boolean join(Member member){
         Optional<Member> foundMember = findMemberByEmail(member.getEmail());
         if (foundMember.isPresent()) {
@@ -56,6 +60,24 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Boolean deleteMemberById(Long id) {
         return memberRepository.deleteMemberByMemberId(id);
+    }
+
+    // UserDetailsService 인터페이스의 메소드 오버라이딩
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
+
+        Member member = memberRepository.findMemberByMemberEmail(email).get();
+
+        if(member == null){
+            throw new UsernameNotFoundException(email);
+        }
+
+        // UserDetail을 구현하고 있는 User 객체 반환
+        return User.builder()
+                .username(member.getEmail())
+                .password(member.getPassword())
+                .roles(member.getRole().toString())
+                .build();
     }
 
 }

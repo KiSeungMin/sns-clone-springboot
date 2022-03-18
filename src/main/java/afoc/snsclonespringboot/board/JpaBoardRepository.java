@@ -29,7 +29,7 @@ public class JpaBoardRepository implements BoardRepository {
 
         Board findBoard = em.find(Board.class, boardId);
 
-        return Optional.of(findBoard);
+        return Optional.ofNullable(findBoard);
     }
 
     @Override

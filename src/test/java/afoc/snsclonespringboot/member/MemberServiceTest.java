@@ -1,6 +1,5 @@
 package afoc.snsclonespringboot.member;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -238,7 +237,7 @@ class MemberServiceTest {
         assertThat(isSuccess1).isTrue(); // successful join
 
         // find member to be updated
-        Optional<Member> foundMember1ById = memberService.findMemberById(1L);
+        Optional<Member> foundMember1ById = memberService.findMemberById(member1.getId());
         assertThat(foundMember1ById).isPresent(); // Not null
 
         // set new value
@@ -255,7 +254,7 @@ class MemberServiceTest {
         assertThat(isSuccess2).isTrue(); // successful update
 
         // find updated member
-        Optional<Member> foundUpdatedMember1ById = memberService.findMemberById(1L);
+        Optional<Member> foundUpdatedMember1ById = memberService.findMemberById(updateMember.getId());
         assertThat(foundUpdatedMember1ById).isPresent(); // Not null
 
         // check updated value
@@ -275,7 +274,7 @@ class MemberServiceTest {
         assertThat(isSuccess1).isTrue(); // successful join
 
         // find member to be updated
-        Optional<Member> foundMember1ById = memberService.findMemberById(1L);
+        Optional<Member> foundMember1ById = memberService.findMemberById(member1.getId());
         assertThat(foundMember1ById).isPresent(); // Not null
 
         // set new value
@@ -292,7 +291,7 @@ class MemberServiceTest {
         assertThat(isSuccess2).isFalse(); // update failure
 
         // find updated member
-        Optional<Member> foundUpdatedMember1ById = memberService.findMemberById(1L);
+        Optional<Member> foundUpdatedMember1ById = memberService.findMemberById(updateMember.getId());
         assertThat(foundUpdatedMember1ById).isPresent(); // Not null
 
         // check not update value
@@ -319,7 +318,7 @@ class MemberServiceTest {
         assertThat(isSuccess2).isTrue(); // successful delete
 
         // check
-        Optional<Member> memberByEmail = memberService.findMemberByEmail("test1@test.com");
+        Optional<Member> memberByEmail = memberService.findMemberByEmail(member1.getEmail());
         Optional<Member> memberById = memberService.findMemberById(member1.getId());
         assertThat(memberByEmail).isEmpty();
         assertThat(memberById).isEmpty();
