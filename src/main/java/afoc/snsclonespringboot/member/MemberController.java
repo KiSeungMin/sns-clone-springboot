@@ -24,7 +24,8 @@ public class MemberController {
         Optional<Member> foundMember = memberService.findMemberByEmail(loginForm.getEmail());
         if (foundMember.isPresent() &&
                 loginForm.getPassword().equals(foundMember.get().getPassword())) {
-            return "redirect:/main";
+            // TODO - this code is for test
+            return "redirect:/main?id=" + foundMember.get().getId();
         } else {
             return "redirect:/login-failed";
         }
