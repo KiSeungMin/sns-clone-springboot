@@ -3,6 +3,7 @@ package afoc.snsclonespringboot.member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
     public String login() {
@@ -33,17 +35,20 @@ public class MemberController {
     }
 
     @GetMapping("/signup")
-    public String signup() {
+    public String signup(Model model) {
+        model.addAttribute("memberFormDto", new MemberFormDto());
         return "signup.html";
     }
 
+
     @PostMapping("/signup")
-    public String signup(MemberForm memberForm) {
+    public String signup(MemberFormDto memberFormDto) {
 
         Member member = Member.builder()
-                .username(memberForm.getUsername())
-                .password(memberForm.getPassword())
-                .email(memberForm.getEmail())
+                .username(memberFormDto.getUsername())
+                .password(memberFormDto.getPassword())
+                //.password(passwordEncoder.encode(memberFormDto.getPassword()))
+                .email(memberFormDto.getEmail())
                 .build();
 
         boolean isSuccess = memberService.join(member);

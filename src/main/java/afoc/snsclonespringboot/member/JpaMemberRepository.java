@@ -2,6 +2,7 @@ package afoc.snsclonespringboot.member;
 
 import afoc.snsclonespringboot.board.Board;
 import afoc.snsclonespringboot.board.JpaBoardRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
