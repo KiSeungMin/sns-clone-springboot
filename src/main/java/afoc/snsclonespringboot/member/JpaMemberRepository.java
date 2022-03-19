@@ -46,9 +46,6 @@ public class JpaMemberRepository implements MemberRepository{
                 .setParameter("email", email)
                 .getResultList();
 
-        //Member findMember = em.createQuery("select m from Member m where m.email = '"
-                //+ email + "'", Member.class).getSingleResult();
-
         return findMember.stream().findAny();
     }
 

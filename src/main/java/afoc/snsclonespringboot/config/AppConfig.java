@@ -1,6 +1,9 @@
 package afoc.snsclonespringboot.config;
 
 import afoc.snsclonespringboot.board.*;
+import afoc.snsclonespringboot.board.like.JpaLikeRepository;
+import afoc.snsclonespringboot.board.like.LikeRepository;
+import afoc.snsclonespringboot.board.like.MemoryLikeRepository;
 import afoc.snsclonespringboot.member.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,12 +30,18 @@ public class AppConfig {
 
     @Bean
     public BoardService boardService() {
-        return new BoardServiceImpl(boardRepository());
+        return new BoardServiceImpl(boardRepository(), likeRepository());
     }
 
     @Bean
     public BoardRepository boardRepository() {
 //        return new MemoryBoardRepository();
         return new JpaBoardRepository(em);
+    }
+
+    @Bean
+    public LikeRepository likeRepository(){
+//        return new MemoryLikeRepository();
+        return new JpaLikeRepository(em);
     }
 }
