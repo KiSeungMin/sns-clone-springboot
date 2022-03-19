@@ -18,6 +18,7 @@ public class BoardServiceImpl implements BoardService {
             boardRepository.save(board);
             return true;
         } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }

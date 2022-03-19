@@ -1,14 +1,12 @@
 package afoc.snsclonespringboot.board;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Setter @Getter
+@NoArgsConstructor
 @ToString
 @Table(name = "BOARD")
 public class Board {

@@ -65,7 +65,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .h-250 { height: 250px; }
 @media (min-width: 768px) {
-  .h-md-250 { height: 250px; }
+  .h-md-250 {  }
 }
 
 /* Pagination */

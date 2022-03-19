@@ -21,19 +21,57 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "login";
+//        return "redirect:/login";
+        return "redirect:/test";
     }
+
+    @GetMapping("/test")
+    public String test() {
+        Member member1 = Member.builder()
+                .email("test@test.com")
+                .password("1234")
+                .username("test_user")
+                .build();
+        memberService.join(member1);
+
+        for (int i=0;i<10;i++){
+            Member member = Member.builder()
+                    .email("test"+i+"@test.com")
+                    .password("1234")
+                    .username("test_user"+i)
+                    .build();
+            memberService.join(member);
+        }
+
+        for (int i=0;i<10;i++){
+            Board board = Board.builder()
+                    .memberId(1L)
+                    .build();
+            boardService.upload(board);
+        }
+
+        return "test.html";
+    }
+
 
     @GetMapping("/main")
     public String main(@RequestParam Long id, Model model) {
-        try {
-            List<Board> boardList = boardService.findBoardListByMemberId(id);
-            Optional<Member> member = memberService.findMemberById(id);
+//        try {
+//            List<Board> boardList = boardService.findBoardListByMemberId(id);
+//            Optional<Member> member = memberService.findMemberById(id);
+//
+//            model.addAttribute("member", member);
+//            model.addAttribute("boardList", boardList);
+//            return "main.html";
+//        } catch (Exception e){
+//            return "error/500.html";
+//        }
 
-            model.addAttribute("id", id);
-            return "main.html";
-        } catch (Exception e){
-            return "error/500.html";
-        }
+        List<Board> boardList = boardService.findBoardListByMemberId(id);
+        Optional<Member> member = memberService.findMemberById(id);
+
+        model.addAttribute("member", member);
+        model.addAttribute("boardList", boardList);
+        return "main.html";
     }
 }

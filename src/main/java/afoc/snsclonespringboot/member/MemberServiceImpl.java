@@ -13,12 +13,17 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Boolean join(Member member){
-        Optional<Member> foundMember = findMemberByEmail(member.getEmail());
-        if (foundMember.isPresent()) {
+        try{
+            Optional<Member> foundMember = findMemberByEmail(member.getEmail());
+            if (foundMember.isPresent()) {
+                return false;
+            } else {
+                memberRepository.save(member);
+                return true;
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
-        } else {
-            memberRepository.save(member);
-            return true;
         }
     }
 
