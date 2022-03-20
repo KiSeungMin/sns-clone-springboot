@@ -1,12 +1,11 @@
 package afoc.snsclonespringboot.board.like;
 
-import afoc.snsclonespringboot.board.Board;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JpaLikeRepository implements LikeRepository {
@@ -19,44 +18,44 @@ public class JpaLikeRepository implements LikeRepository {
     }
 
     @Override
-    public Like save(Like like) {
+    public Optional<Like> save(Like like) {
         em.persist(like);
 
-        return like;
-    }
-
-    public Like findLikeByLikeId(Long likeId){
-
-        Like findLike = em.find(Like.class, likeId);
-
-        return findLike;
+        return Optional.ofNullable(like);
     }
 
     @Override
-    public List<Long> findLikeListByBoardId(Long boardId) {
+    public List<Long> findLikeMemberListByBoardId(Long boardId) {
 
-        List<Long> likeList = em.createQuery("select L.userId from Like L where L.boardId = :boardId")
+        List<Long> likeList = em.createQuery("select L.memberId from Like L where L.boardId = :boardId")
                 .setParameter("boardId", boardId)
                 .getResultList();
 
         return likeList;
-
     }
 
     @Override
-    public Boolean deleteLike(Long boardId, Long userId){
-
-        Like findLike = em.createQuery("select L from Like L where L.boardId = :boardId and L.userId = :userId"
-        , Like.class)
+    public Optional<Like> findLikeByBoardIdAndMemberId(Long boardId, Long memberId) {
+        List<Like> findLikes = em.createQuery("select L from Like L where L.boardId = :boardId and L.memberId = :memberId"
+                        , Like.class)
                 .setParameter("boardId", boardId)
-                .setParameter("userId", userId)
-                .getSingleResult();
+                .setParameter("memberId", memberId)
+                .getResultList();
+        return  findLikes.stream().findAny();
+    }
 
-        if(findLike != null) {
-            em.remove(findLike);
+    @Override
+    public Boolean deleteLike(Long boardId, Long memberId){
+        Optional<Like> findLike = findLikeByBoardIdAndMemberId(boardId, memberId);
+        if(findLike.isPresent()) {
+            em.remove(findLike.get());
             return true;
         }
-
         return false;
+    }
+
+    @Override
+    public void clear() {
+
     }
 }

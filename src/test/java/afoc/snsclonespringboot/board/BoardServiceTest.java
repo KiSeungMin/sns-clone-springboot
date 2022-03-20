@@ -1,5 +1,7 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.board.like.Like;
+import afoc.snsclonespringboot.board.like.LikeRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,13 @@ class BoardServiceTest {
     BoardService boardService;
     @Autowired
     BoardRepository boardRepository;
+    @Autowired
+    LikeRepository likeRepository;
 
     @AfterEach
     public void afterEach() {
         boardRepository.clear();
+        likeRepository.clear();
     }
 
     /*------------------------------------------------------*/
@@ -298,5 +303,200 @@ class BoardServiceTest {
         Optional<Board> boardByBoardId = boardService.findBoardByBoardId(board1.getBoardId());
         assertThat(memberBoardList).hasSize(0);
         assertThat(boardByBoardId).isEmpty();
+    }
+
+    /*------------------------------------------------------*/
+    // Boolean likeBoard(Long boardId, Long memberId);
+
+    @Test
+    void likeBoardSingleTest() {
+        Board board = Board.builder()
+                .memberId(1L)
+                .textDataId(253L)
+                .imageDataId(651L)
+                .build();
+
+        Boolean isSuccess1 = boardService.upload(board);
+
+        // successful upload
+        assertThat(isSuccess1).isTrue();
+
+        Boolean isSuccess2 = boardService.likeBoard(board.getBoardId(), 2L);
+
+        // successful like
+        assertThat(isSuccess2).isTrue();
+    }
+
+    @Test
+    void likeBoardManyTest() {
+        Board board = Board.builder()
+                .memberId(1L)
+                .textDataId(253L)
+                .imageDataId(651L)
+                .build();
+
+        Boolean isSuccess1 = boardService.upload(board);
+
+        // successful upload
+        assertThat(isSuccess1).isTrue();
+
+        for(int i=0;i<30;i++){
+            Boolean isSuccess = boardService.likeBoard(board.getBoardId(), (long) (i + 2));
+            assertThat(isSuccess).isTrue();  // successful like
+        }
+    }
+
+    @Test
+    void likeBoardMultipleTest() {
+        Board board = Board.builder()
+                .memberId(1L)
+                .textDataId(253L)
+                .imageDataId(651L)
+                .build();
+
+        Boolean isSuccess1 = boardService.upload(board);
+
+        // successful upload
+        assertThat(isSuccess1).isTrue();
+
+        for(int i=0;i<30;i++) {
+            Boolean isSuccess = boardService.likeBoard(board.getBoardId(), 2L);
+            if (i==0){
+                assertThat(isSuccess).isTrue();  // successful like
+            } else {
+                assertThat(isSuccess).isFalse();  // must fail, only like once
+            }
+        }
+    }
+
+    /*------------------------------------------------------*/
+    // Boolean likeCancel(Long boardId, Long memberId);
+
+    @Test
+    void likeCancelSingleTest() {
+        Board board = Board.builder()
+                .memberId(1L)
+                .textDataId(253L)
+                .imageDataId(651L)
+                .build();
+
+        Long likeMemberId = 2L;
+
+        Boolean isSuccess1 = boardService.upload(board);
+
+        // successful upload
+        assertThat(isSuccess1).isTrue();
+
+        Boolean isSuccess2 = boardService.likeBoard(board.getBoardId(), likeMemberId);
+
+        // successful like
+        assertThat(isSuccess2).isTrue();
+
+        Boolean isSuccess3 = boardService.likeCancel(board.getBoardId(), likeMemberId);
+
+        // successful like cancel
+        assertThat(isSuccess3).isTrue();
+
+    }
+
+    @Test
+    void likeCancelManyTest() {
+        Board board = Board.builder()
+                .memberId(1L)
+                .textDataId(253L)
+                .imageDataId(651L)
+                .build();
+
+        Boolean isSuccess1 = boardService.upload(board);
+
+        // successful upload
+        assertThat(isSuccess1).isTrue();
+
+        for(int i=0;i<30;i++){
+            Boolean isSuccess = boardService.likeBoard(board.getBoardId(), (long) (i + 2));
+            assertThat(isSuccess).isTrue();  // successful like
+        }
+        for(int i=0;i<30;i++){
+            Boolean isSuccess = boardService.likeCancel(board.getBoardId(), (long) (i + 2));
+            assertThat(isSuccess).isTrue();  // successful like cancel
+        }
+    }
+
+    @Test
+    void likeCancelMultipleTest() {
+        Board board = Board.builder()
+                .memberId(1L)
+                .textDataId(253L)
+                .imageDataId(651L)
+                .build();
+
+        Long likeMemberId = 2L;
+
+        Boolean isSuccess1 = boardService.upload(board);
+
+        // successful upload
+        assertThat(isSuccess1).isTrue();
+
+        Boolean isSuccess2 = boardService.likeBoard(board.getBoardId(), likeMemberId);
+        assertThat(isSuccess2).isTrue();  // successful like
+
+        for(int i=0;i<30;i++) {
+            Boolean isSuccess3 = boardService.likeCancel(board.getBoardId(), likeMemberId);
+            if (i==0){
+                assertThat(isSuccess3).isTrue();  // successful like cancel
+            } else {
+                assertThat(isSuccess3).isFalse();  // must fail, only like cancel once
+            }
+        }
+    }
+
+    /*------------------------------------------------------*/
+    // List<Long> findLikeMemberList(Long boardId);
+
+    @Test
+    void findLikeMemberListZeroTest() {
+        Board board = Board.builder()
+                .memberId(1L)
+                .textDataId(253L)
+                .imageDataId(651L)
+                .build();
+
+        Boolean isSuccess1 = boardService.upload(board);
+
+        // successful upload
+        assertThat(isSuccess1).isTrue();
+
+        List<Long> likeMemberList = boardService.findLikeMemberList(board.getBoardId());
+        assertThat(likeMemberList).hasSize(0);
+    }
+
+    @Test
+    void findLikeMemberListTest() {
+        Board board = Board.builder()
+                .memberId(1L)
+                .textDataId(253L)
+                .imageDataId(651L)
+                .build();
+
+        Boolean isSuccess1 = boardService.upload(board);
+
+        // successful upload
+        assertThat(isSuccess1).isTrue();
+
+        for(int i=0;i<30;i++){
+            Boolean isSuccess = boardService.likeBoard(board.getBoardId(), (long) (i + 2));
+            assertThat(isSuccess).isTrue();  // successful like
+        }
+
+        List<Long> likeMemberList1 = boardService.findLikeMemberList(board.getBoardId());
+        assertThat(likeMemberList1).hasSize(30);
+
+        for(int i=0;i<30;i++){
+            Boolean isSuccess = boardService.likeCancel(board.getBoardId(), (long) (i + 2));
+            assertThat(isSuccess).isTrue();  // successful like cancel
+        }
+
+        List<Long> likeMemberList2 = boardService.findLikeMemberList(board.getBoardId());
+        assertThat(likeMemberList2).hasSize(0);
     }
 }
