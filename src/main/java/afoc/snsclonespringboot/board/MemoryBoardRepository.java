@@ -53,9 +53,6 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     /*------------------------------------------------------*/
-    // Like
-
-    /*------------------------------------------------------*/
     // Extras
 
     @Override

@@ -63,8 +63,8 @@ public class RepositoryTest {
 
         jlr.save(like1);
         jlr.save(like2);
-
-        List<Long> findLikeList = jlr.findLikeListByBoardId(board1.getBoardId());
+        
+        List<Long> findLikeList = jlr.findLikeMemberListByBoardId(board1.getBoardId());
 
         for(Long l : findLikeList){
             System.out.println("ID : " + l);

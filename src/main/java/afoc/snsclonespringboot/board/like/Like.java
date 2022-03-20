@@ -1,15 +1,13 @@
 package afoc.snsclonespringboot.board.like;
 
-import afoc.snsclonespringboot.board.Board;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Setter @Getter
 @ToString
+@NoArgsConstructor
 @Table(name = "LIKETABLE")
 public class Like {
 
@@ -20,14 +18,14 @@ public class Like {
 
     private Long boardId;
 
-    private Long userId;
+    private Long memberId;
 
-    public Like(){
-
-    }
-
-    public Like(Long boardId, Long userId){
+    @Builder
+    public Like(
+            Long boardId,
+            Long memberId
+    ) {
         this.boardId = boardId;
-        this.userId = userId;
+        this.memberId = memberId;
     }
 }

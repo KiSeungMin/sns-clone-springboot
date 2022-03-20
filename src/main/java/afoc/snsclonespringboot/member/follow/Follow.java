@@ -1,15 +1,13 @@
 package afoc.snsclonespringboot.member.follow;
 
-import afoc.snsclonespringboot.member.Member;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Setter @Getter
 @ToString
+@NoArgsConstructor
 @Table(name = "FOLLOW")
 public class Follow {
 
@@ -22,13 +20,12 @@ public class Follow {
 
     private Long followeeId;
 
-    public Follow(){
-
-    }
-
-    public Follow(Long followerId,Long followeeId){
+    @Builder
+    public Follow(
+            Long followerId,
+            Long followeeId
+    ){
         this.followerId = followerId;
         this.followeeId = followeeId;
     }
-
 }

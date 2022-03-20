@@ -4,10 +4,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Transactional
 public class JpaBoardRepository implements BoardRepository {
 
     @PersistenceContext
@@ -34,7 +36,7 @@ public class JpaBoardRepository implements BoardRepository {
 
     @Override
     public List<Board> findBoardListByMemberId(Long memberId){
-        List<Board> findBoard= em.createQuery("select b from Board b where b.memberId = :memberId", Board.class)
+        List<Board> findBoard = em.createQuery("select b from Board b where b.memberId = :memberId", Board.class)
                 .setParameter("memberId", memberId)
                 .getResultList();
 

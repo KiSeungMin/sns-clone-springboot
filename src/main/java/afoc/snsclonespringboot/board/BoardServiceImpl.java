@@ -1,5 +1,7 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.board.like.Like;
+import afoc.snsclonespringboot.board.like.LikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,10 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired
     private final BoardRepository boardRepository;
+    private final LikeRepository likeRepository;
+
+    /*------------------------------------------------------*/
+    // Basic Board Functions
 
     @Override
     public Boolean upload(Board board) {
@@ -25,6 +31,7 @@ public class BoardServiceImpl implements BoardService {
             boardRepository.save(board);
             return true;
         } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }
@@ -59,5 +66,33 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Boolean deleteBoardByBoardId(Long boardId) {
         return boardRepository.deleteBoardByBoardId(boardId);
+    }
+
+    /*------------------------------------------------------*/
+    // Like Functions
+
+    @Override
+    public Boolean likeBoard(Long boardId, Long memberId) {
+        Optional<Like> findLike = likeRepository.findLikeByBoardIdAndMemberId(boardId, memberId);
+        if (findLike.isEmpty()){
+            Like newLike = Like.builder()
+                    .boardId(boardId)
+                    .memberId(memberId)
+                    .build();
+            Optional<Like> res = likeRepository.save(newLike);
+            return res.isPresent();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean likeCancel(Long boardId, Long memberId) {
+        return likeRepository.deleteLike(boardId, memberId);
+    }
+
+    @Override
+    public List<Long> findLikeMemberList(Long boardId) {
+        return likeRepository.findLikeMemberListByBoardId(boardId);
     }
 }

@@ -1,6 +1,9 @@
 package afoc.snsclonespringboot.member;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,9 +30,20 @@ public class MemberController {
     @PostMapping("/login")
     public String login(LoginForm loginForm){
         Optional<Member> foundMember = memberService.findMemberByEmail(loginForm.getEmail());
+
         if (foundMember.isPresent() &&
                 loginForm.getPassword().equals(foundMember.get().getPassword())) {
-            return "redirect:/main";
+            // TODO - this code is for test
+
+            //return "redirect:/main?id=" + foundMember.get().getId();
+
+            //return "redirect:/main";
+
+            //return "redirect:/main?email=" + foundMember.get().getEmail();
+
+
+            return "redirect:/home";
+
         } else {
             return "redirect:/login-failed";
         }
@@ -82,9 +96,22 @@ public class MemberController {
         return "signup-failed.html";
     }
 
-    @GetMapping(value = "/test1")
-    public String test1(){
-        return "/test1";
+    @GetMapping("/home")
+    public String home(Model model){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String email = "";
+
+        if(authentication != null){
+            email = authentication.getName();
+        }
+
+        Member member = memberService.findMemberByEmail(email).get();
+
+        model.addAttribute("member", member);
+
+        return "/home";
     }
 
 }

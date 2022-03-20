@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
+      layout:decorate="~{layouts/layout1.html}">
+
 
 <div layout:fragment="content">
-    hello!!
-</div>
 
-</html>
+    <p th:text="${member.email}"></p>
+    </br>
+    <p th:text="${member.username}"></p>
+</div>
