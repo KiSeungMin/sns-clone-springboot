@@ -19,22 +19,22 @@ public class JpaFollowRepository implements FollowRepository {
     }
 
     @Override
-    public Follow save(Follow follow) {
+    public Optional<Follow> save(Follow follow) {
 
         em.persist(follow);
 
-        return follow;
+        return Optional.ofNullable(follow);
     }
 
-    public Follow findFollow(Long followerId, Long followeeId){
-
-        Follow findFollow = em.createQuery("select f from Follow f where f.followerId = :followerId and " +
+    @Override
+    public Optional<Follow> findFollow(Long followerId, Long followeeId){
+        List<Follow> findFollow = em.createQuery("select f from Follow f where f.followerId = :followerId and " +
                         "f.followeeId = :followeeId", Follow.class)
                 .setParameter("followerId", followerId)
                 .setParameter("followeeId", followeeId)
-                .getSingleResult();
+                .getResultList();
 
-        return findFollow;
+        return findFollow.stream().findAny();
 
     }
 
@@ -57,16 +57,18 @@ public class JpaFollowRepository implements FollowRepository {
     }
 
     @Override
-    public Boolean deleteFollowee(Long followerId, Long followeeId) {
+    public Boolean deleteFollow(Long followerId, Long followeeId) {
+        Optional<Follow> findFollow = findFollow(followerId, followeeId);
 
-        Follow findFollow = findFollow(followerId, followeeId);
-
-        if(findFollow != null){
-
+        if(findFollow.isPresent()){
             em.remove(findFollow);
             return true;
         }
-
         return false;
+    }
+
+    @Override
+    public void clear() {
+
     }
 }

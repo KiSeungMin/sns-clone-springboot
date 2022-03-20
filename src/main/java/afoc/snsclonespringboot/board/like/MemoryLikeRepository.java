@@ -15,7 +15,7 @@ public class MemoryLikeRepository implements LikeRepository {
     private static long sequence = 0L;
 
     /*------------------------------------------------------*/
-    // Like CRUD
+    // Like CRD
 
     @Override
     public Optional<Like> save(Like like) {
@@ -35,8 +35,8 @@ public class MemoryLikeRepository implements LikeRepository {
     @Override
     public Optional<Like> findLikeByBoardIdAndMemberId(Long boardId, Long memberId) {
         return store.values().stream()
-                    .filter(like -> like.getBoardId().equals(boardId)
-                            && like.getMemberId().equals(memberId))
+                    .filter(like -> like.getBoardId().equals(boardId))
+                    .filter(like -> like.getMemberId().equals(memberId))
                     .findAny();
     }
 

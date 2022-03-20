@@ -63,8 +63,7 @@ public class RepositoryTest {
 
         jlr.save(like1);
         jlr.save(like2);
-
-        // TODO
+        
         List<Long> findLikeList = jlr.findLikeMemberListByBoardId(board1.getBoardId());
 
         for(Long l : findLikeList){

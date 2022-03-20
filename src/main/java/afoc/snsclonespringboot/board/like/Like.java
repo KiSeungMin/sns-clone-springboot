@@ -1,6 +1,5 @@
 package afoc.snsclonespringboot.board.like;
 
-import afoc.snsclonespringboot.board.Board;
 import lombok.*;
 
 import javax.persistence.*;
