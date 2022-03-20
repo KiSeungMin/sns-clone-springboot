@@ -21,7 +21,7 @@ public class MemberController {
 
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "/login";
     }
 
     @PostMapping("/login")
@@ -78,8 +78,13 @@ public class MemberController {
     }
 
     @GetMapping("/signup-failed")
-    public String singupFailed() {
+    public String signupFailed() {
         return "signup-failed.html";
+    }
+
+    @GetMapping(value = "/test1")
+    public String test1(){
+        return "/test1";
     }
 
 }

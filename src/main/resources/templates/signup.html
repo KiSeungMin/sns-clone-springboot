@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1.html}">
+
+<!--
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,33 +14,51 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
 
-    <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-
-      .fieldError{
-          color:#bd2130;
-      }
-    </style>
-
-
-    <!-- Custom styles for this template -->
     <link href="css/signup.css" rel="stylesheet">
+
+
 </head>
+
+-->
+
+<th:block layout:fragment="css">
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .fieldError{
+            color:#bd2130;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            var errorMessage = [[${errorMessage}]];
+            if(errorMessage != null){
+                alert(errorMessage);
+            }
+        });
+    </script>
+</th:block>
+
+
+<div layout:fragment="content">
 
 <body class="text-center">
 
@@ -71,5 +92,9 @@
                th:value="${_csrf.token}">
     </form>
 </main>
+
 </body>
+
+</div>
+
 </html>
