@@ -3,17 +3,17 @@
   background-color: white;
 }
 
-.blog-header {
+.main-header {
   line-height: 1;
   border-bottom: 1px solid #e5e5e5;
 }
 
-.blog-header-logo {
+.main-header-logo {
   font-family: "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;
   font-size: 2.25rem;
 }
 
-.blog-header-logo:hover {
+.main-header-logo:hover {
   text-decoration: none;
 }
 
@@ -69,24 +69,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Pagination */
-.blog-pagination {
+.main-pagination {
   margin-bottom: 4rem;
 }
-.blog-pagination > .btn {
+.main-pagination > .btn {
   border-radius: 2rem;
 }
 
 /*
- * Blog posts
+ * Main posts
  */
-.blog-post {
+.main-post {
   margin-bottom: 4rem;
 }
-.blog-post-title {
+.main-post-title {
   margin-bottom: .25rem;
   font-size: 2.5rem;
 }
-.blog-post-meta {
+.main-post-meta {
   margin-bottom: 1.25rem;
   color: #727272;
 }

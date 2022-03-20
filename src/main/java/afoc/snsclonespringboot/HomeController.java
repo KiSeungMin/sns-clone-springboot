@@ -2,6 +2,8 @@ package afoc.snsclonespringboot;
 
 import afoc.snsclonespringboot.board.Board;
 import afoc.snsclonespringboot.board.BoardService;
+import afoc.snsclonespringboot.data.Data;
+import afoc.snsclonespringboot.data.DataType;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class HomeController {
 
     @GetMapping("/test")
     public String test() {
+        // member
         Member member1 = Member.builder()
                 .email("test@test.com")
                 .password("1234")
@@ -34,6 +37,7 @@ public class HomeController {
                 .build();
         memberService.join(member1);
 
+        // members
         for (int i=0;i<10;i++){
             Member member = Member.builder()
                     .email("test"+i+"@test.com")
@@ -43,9 +47,12 @@ public class HomeController {
             memberService.join(member);
         }
 
+        // boards
         for (int i=0;i<10;i++){
             Board board = Board.builder()
                     .memberId(1L)
+                    .textDataId((long) ((i % 2)+4))
+                    .imageDataId((long) ((i % 3)+1))
                     .build();
             boardService.upload(board);
         }
@@ -70,7 +77,7 @@ public class HomeController {
         List<Board> boardList = boardService.findBoardListByMemberId(id);
         Optional<Member> member = memberService.findMemberById(id);
 
-        model.addAttribute("member", member);
+        model.addAttribute("member", member.get());
         model.addAttribute("boardList", boardList);
         return "main.html";
     }
