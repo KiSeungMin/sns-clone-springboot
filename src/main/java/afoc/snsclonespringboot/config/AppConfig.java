@@ -22,7 +22,7 @@ public class AppConfig {
 
     @Bean
     public MemberService memberService() {
-        return new MemberServiceImpl(memberRepository());
+        return new MemberServiceImpl(memberRepository(), followRepository());
     }
 
     @Bean
@@ -33,8 +33,8 @@ public class AppConfig {
 
     @Bean
     public FollowRepository followRepository() {
-        return new MemoryFollowRepository();
-//        return new JpaFollowRepository(em);
+//        return new MemoryFollowRepository();
+        return new JpaFollowRepository(em);
     }
 
     @Bean

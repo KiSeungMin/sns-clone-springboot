@@ -1,12 +1,12 @@
 package afoc.snsclonespringboot.member;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberService {
     /*
     - 유저 등록/조회/수정/삭제
-    - 팔로우 하기
-    - 팔로우 끊기
+    - 팔로우 하기/끊기
     - 팔로워 목록 조회
     - 팔로이 목록 조회
      */
@@ -20,8 +20,9 @@ public interface MemberService {
     Boolean updateMember(Member member);
     Boolean deleteMemberById(Long id);
 
-    // TODO
     // Follow
-//    Boolean follow(Long followerId, Long followeeId);
-//    Boolean unfollow(Long followerId, Long followeeId);
+    Boolean follow(Long followerId, Long followeeId);
+    Boolean unfollow(Long followerId, Long followeeId);
+    List<Long> findFollowers(Long followeeId);
+    List<Long> findFollowees(Long followerId);
 }

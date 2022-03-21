@@ -61,7 +61,7 @@ public class JpaFollowRepository implements FollowRepository {
         Optional<Follow> findFollow = findFollow(followerId, followeeId);
 
         if(findFollow.isPresent()){
-            em.remove(findFollow);
+            em.remove(findFollow.get());
             return true;
         }
         return false;

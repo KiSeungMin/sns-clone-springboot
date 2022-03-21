@@ -25,9 +25,9 @@ Like Controller
 ## TODO  
 - [x] Hashmap memory db & Simple login/signup page (baseline)   
 - [x] Member Service/Controller/Repository Baseline   
-- [ ] Board Service/Controller/Repository Baseline   
-- [ ] Like, Follow Implement   
-- [ ] JPA   
-- [ ] Spring Security   
-- [ ] Bootstrap   
+- [x] Board Service/Controller/Repository Baseline   
+- [x] Like, Follow Implement   
+- [x] JPA   
+- [ ] Bootstrap
+- [ ] Spring Security    
 - [ ] OAuth2   

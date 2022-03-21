@@ -1,11 +1,15 @@
 package afoc.snsclonespringboot.member;
 
+import afoc.snsclonespringboot.board.Board;
+import afoc.snsclonespringboot.member.follow.FollowRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -18,10 +22,13 @@ class MemberServiceTest {
     MemberService memberService;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    FollowRepository followRepository;
 
     @AfterEach
     public void afterEach(){
         memberRepository.clear();
+        followRepository.clear();
     }
 
     /*------------------------------------------------------*/
@@ -325,5 +332,293 @@ class MemberServiceTest {
     }
 
     /*------------------------------------------------------*/
+    // Boolean follow(Long followerId, Long followeeId);
 
+    @Test
+    public void followSingleTest(){
+        Member member1 = Member.builder()
+                .email("test1@test.com")
+                .password("1234")
+                .username("testMember1")
+                .build();
+
+        Member member2 = Member.builder()
+                .email("test2@test.com")
+                .password("2345")
+                .username("testMember2")
+                .build();
+
+        boolean isSuccess1 = memberService.join(member1);
+        boolean isSuccess2 = memberService.join(member2);
+        assertThat(isSuccess1).isTrue(); // successful join
+        assertThat(isSuccess2).isTrue(); // successful join
+
+        Boolean followSuccess = memberService.follow(member1.getId(), member2.getId());
+        assertThat(followSuccess).isTrue(); // member1 -> member2 follow success
+    }
+
+    @Test
+    public void followManyTest(){
+        List<Member> memberList = new ArrayList<Member>();
+
+        for (int i=1;i<11;i++){
+            Member member = Member.builder()
+                    .email("test" + i + "@test.com")
+                    .password("1234")
+                    .username("testMember" + i)
+                    .build();
+            memberList.add(member);
+            boolean isSuccess = memberService.join(member);
+            assertThat(isSuccess).isTrue();
+        }
+
+        for (int i=1;i<11;i++){
+            for (int j=1;j<11;j++){
+                Member member1 = memberList.get(i-1);
+                Member member2 = memberList.get(j-1);
+                Boolean followSuccess = memberService.follow(member1.getId(), member2.getId());
+                if (i==j){
+                    assertThat(followSuccess).isFalse(); // self-follow is not allowed
+                } else {
+                    assertThat(followSuccess).isTrue(); // member1 -> member2 follow success
+                }
+            }
+        }
+    }
+
+    @Test
+    public void followMultipleTest(){
+        Member member1 = Member.builder()
+                .email("test1@test.com")
+                .password("1234")
+                .username("testMember1")
+                .build();
+
+        Member member2 = Member.builder()
+                .email("test2@test.com")
+                .password("2345")
+                .username("testMember2")
+                .build();
+
+        boolean isSuccess1 = memberService.join(member1);
+        boolean isSuccess2 = memberService.join(member2);
+        assertThat(isSuccess1).isTrue(); // successful join
+        assertThat(isSuccess2).isTrue(); // successful join
+
+        for (int i=0;i<30;i++){
+            Boolean followSuccess = memberService.follow(member1.getId(), member2.getId());
+            if (i==0){
+                assertThat(followSuccess).isTrue(); // member1 -> member2 follow success
+            } else {
+                assertThat(followSuccess).isFalse(); // follow is only one
+            }
+        }
+    }
+
+    /*------------------------------------------------------*/
+    // Boolean unfollow(Long followerId, Long followeeId);
+
+    @Test
+    public void unfollowSingleTest(){
+        Member member1 = Member.builder()
+                .email("test1@test.com")
+                .password("1234")
+                .username("testMember1")
+                .build();
+
+        Member member2 = Member.builder()
+                .email("test2@test.com")
+                .password("2345")
+                .username("testMember2")
+                .build();
+
+        boolean isSuccess1 = memberService.join(member1);
+        boolean isSuccess2 = memberService.join(member2);
+        assertThat(isSuccess1).isTrue(); // successful join
+        assertThat(isSuccess2).isTrue(); // successful join
+
+        Boolean followSuccess = memberService.follow(member1.getId(), member2.getId());
+        assertThat(followSuccess).isTrue(); // member1 -> member2 follow success
+
+        Boolean unfollowSuccess = memberService.unfollow(member1.getId(), member2.getId());
+        assertThat(unfollowSuccess).isTrue(); // member1 -> member2 unfollow success
+    }
+
+    @Test
+    public void unfollowManyTest(){
+        List<Member> memberList = new ArrayList<Member>();
+
+        for (int i=1;i<11;i++){
+            Member member = Member.builder()
+                    .email("test" + i + "@test.com")
+                    .password("1234")
+                    .username("testMember" + i)
+                    .build();
+            memberList.add(member);
+            boolean isSuccess = memberService.join(member);
+            assertThat(isSuccess).isTrue();
+        }
+
+        // follow
+        for (int i=1;i<11;i++){
+            for (int j=1;j<11;j++){
+                Member member1 = memberList.get(i-1);
+                Member member2 = memberList.get(j-1);
+                Boolean followSuccess = memberService.follow(member1.getId(), member2.getId());
+                if (i==j){
+                    assertThat(followSuccess).isFalse(); // self-follow is forbidden
+                } else {
+                    assertThat(followSuccess).isTrue(); // member1 -> member2 follow success
+                }
+            }
+        }
+
+        // unfollow
+        for (int i=1;i<11;i++){
+            for (int j=1;j<11;j++){
+                Member member1 = memberList.get(i-1);
+                Member member2 = memberList.get(j-1);
+                Boolean unfollowSuccess = memberService.unfollow(member1.getId(), member2.getId());
+                if (i==j){
+                    assertThat(unfollowSuccess).isFalse(); // self-unfollow is forbidden
+                } else {
+                    assertThat(unfollowSuccess).isTrue(); // member1 -> member2 unfollow success
+                }
+            }
+        }
+    }
+
+    @Test
+    public void unfollowMultipleTest(){
+        Member member1 = Member.builder()
+                .email("test1@test.com")
+                .password("1234")
+                .username("testMember1")
+                .build();
+
+        Member member2 = Member.builder()
+                .email("test2@test.com")
+                .password("2345")
+                .username("testMember2")
+                .build();
+
+        boolean isSuccess1 = memberService.join(member1);
+        boolean isSuccess2 = memberService.join(member2);
+        assertThat(isSuccess1).isTrue(); // successful join
+        assertThat(isSuccess2).isTrue(); // successful join
+
+        Boolean followSuccess = memberService.follow(member1.getId(), member2.getId());
+        assertThat(followSuccess).isTrue(); // member1 -> member2 follow success
+
+        for (int i=0;i<30;i++){
+            Boolean unFollowSuccess = memberService.unfollow(member1.getId(), member2.getId());
+            if (i==0){
+                assertThat(unFollowSuccess).isTrue(); // member1 -> member2 unfollow success
+            } else {
+                assertThat(unFollowSuccess).isFalse(); // unfollow is only one
+            }
+        }
+    }
+
+    /*------------------------------------------------------*/
+    // List<Long> findFollowers(Long followeeId);
+
+    @Test
+    void findFollowersTest() {
+        List<Member> memberList = new ArrayList<Member>();
+
+        for (int i=1;i<11;i++){
+            Member member = Member.builder()
+                    .email("test" + i + "@test.com")
+                    .password("1234")
+                    .username("testMember" + i)
+                    .build();
+            memberList.add(member);
+            boolean isSuccess = memberService.join(member);
+            assertThat(isSuccess).isTrue();
+        }
+
+        // follow
+        for (int i=1;i<11;i++){
+            for (int j=i+1;j<11;j++){
+                Member member1 = memberList.get(i-1);
+                Member member2 = memberList.get(j-1);
+                Boolean followSuccess = memberService.follow(member1.getId(), member2.getId());
+                assertThat(followSuccess).isTrue(); // member1 -> member2 follow success
+            }
+        }
+
+        // followers
+        for (int i=1;i<11;i++){
+            List<Long> followers = memberService.findFollowers(memberList.get(i-1).getId());
+            assertThat(followers).hasSize(i-1);
+        }
+
+        // unfollow
+        for (int i=1;i<11;i++){
+            for (int j=i+1;j<11;j++){
+                Member member1 = memberList.get(i-1);
+                Member member2 = memberList.get(j-1);
+                Boolean unfollowSuccess = memberService.unfollow(member1.getId(), member2.getId());
+                assertThat(unfollowSuccess).isTrue(); // member1 -> member2 unfollow success
+            }
+        }
+
+        // followers
+        for (int i=1;i<11;i++){
+            List<Long> followers = memberService.findFollowers(memberList.get(i-1).getId());
+            assertThat(followers).hasSize(0);
+        }
+    }
+
+    /*------------------------------------------------------*/
+    // List<Long> findFollowees(Long followeeId);
+
+    @Test
+    void findFolloweesTest() {
+        List<Member> memberList = new ArrayList<Member>();
+
+        for (int i=1;i<11;i++){
+            Member member = Member.builder()
+                    .email("test" + i + "@test.com")
+                    .password("1234")
+                    .username("testMember" + i)
+                    .build();
+            memberList.add(member);
+            boolean isSuccess = memberService.join(member);
+            assertThat(isSuccess).isTrue();
+        }
+
+        // follow
+        for (int i=1;i<11;i++){
+            for (int j=i+1;j<11;j++){
+                Member member1 = memberList.get(i-1);
+                Member member2 = memberList.get(j-1);
+                Boolean followSuccess = memberService.follow(member1.getId(), member2.getId());
+                assertThat(followSuccess).isTrue(); // member1 -> member2 follow success
+            }
+        }
+
+        // followers
+        for (int i=1;i<11;i++){
+            List<Long> followers = memberService.findFollowees(memberList.get(i-1).getId());
+            assertThat(followers).hasSize(10-i);
+        }
+
+        // unfollow
+        for (int i=1;i<11;i++){
+            for (int j=i+1;j<11;j++){
+                Member member1 = memberList.get(i-1);
+                Member member2 = memberList.get(j-1);
+                Boolean unfollowSuccess = memberService.unfollow(member1.getId(), member2.getId());
+                assertThat(unfollowSuccess).isTrue(); // member1 -> member2 unfollow success
+            }
+        }
+
+        // followers
+        for (int i=1;i<11;i++){
+            List<Long> followers = memberService.findFollowees(memberList.get(i-1).getId());
+            assertThat(followers).hasSize(0);
+        }
+    }
 }
