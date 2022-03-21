@@ -27,6 +27,7 @@ public class HomeController {
 
     @GetMapping("/test")
     public String test() {
+        /*
         Member member1 = Member.builder()
                 .email("test@test.com")
                 .password("1234")
@@ -50,7 +51,9 @@ public class HomeController {
             boardService.upload(board);
         }
 
-        return "test.html";
+         */
+
+        return "test";
     }
 
     @GetMapping("/main")

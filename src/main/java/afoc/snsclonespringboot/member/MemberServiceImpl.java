@@ -22,17 +22,36 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Override
     public Boolean join(Member member){
 
-        try{
+        validateDuplicateMember(member);
+        if(memberRepository.save(member) != null){
+            return true;
+        }
+
+        return false;
+        /*
+        try {
             Optional<Member> foundMember = findMemberByEmail(member.getEmail());
             if (foundMember.isPresent()) {
-                return false;
+                throw new IllegalStateException("이미 가입된 회원입니다.");
             } else {
                 memberRepository.save(member);
                 return true;
             }
-        } catch (Exception exception) {
+        }
+
+        catch (Exception exception) {
             exception.printStackTrace();
             return false;
+        }
+
+         */
+    }
+
+    private void validateDuplicateMember(Member member){
+
+        Optional<Member> foundMember = findMemberByEmail(member.getEmail());
+        if(foundMember.isPresent()){
+            throw new IllegalStateException("이미 가입된 회원입니다.");
         }
     }
 

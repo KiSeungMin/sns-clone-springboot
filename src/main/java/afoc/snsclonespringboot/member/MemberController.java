@@ -27,6 +27,7 @@ public class MemberController {
         return "/login";
     }
 
+    /*
     @PostMapping("/login")
     public String login(LoginForm loginForm){
         Optional<Member> foundMember = memberService.findMemberByEmail(loginForm.getEmail());
@@ -49,6 +50,8 @@ public class MemberController {
         }
 
     }
+
+     */
 
     @GetMapping("/signup")
     public String signup(Model model) {
@@ -78,10 +81,10 @@ public class MemberController {
 
         } catch(IllegalStateException e){
             model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/signup";
+            return "signup";
         }
 
-        return "redirect:/login";
+        return "login";
     }
 
     @GetMapping("/login-failed")
@@ -93,17 +96,20 @@ public class MemberController {
 
     @GetMapping("/signup-failed")
     public String signupFailed() {
-        return "signup-failed.html";
+        return "signup-failed";
     }
 
     @GetMapping("/home")
     public String home(Model model){
 
+        // 인증된 객체의 정보를 가져오는듯??
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String email = "";
 
         if(authentication != null){
+
+            // getName 메서드를 통해 member의 email을 가져온다. (SecurityConfig 파일에서 username parameter를 email로 설정해서 그런듯)
             email = authentication.getName();
         }
 
