@@ -3,6 +3,7 @@ package afoc.snsclonespringboot.member;
 import afoc.snsclonespringboot.board.Board;
 import afoc.snsclonespringboot.member.follow.FollowRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -93,26 +94,28 @@ class MemberServiceTest {
     }
 
     @Test
-    void joinDuplicateTest2() {
-        Member member1 = Member.builder()
-                .username("test1")
-                .password("1234")
-                .email("test1@test.com")
-                .build();
+    void joinDuplicateTest2() throws Exception {
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            Member member1 = Member.builder()
+                    .username("test1")
+                    .password("1234")
+                    .email("test1@test.com")
+                    .build();
 
-        Member member2 = Member.builder()
-                .username("test2")
-                .password("2345")
-                .email("test1@test.com")
-                .build();
+            Member member2 = Member.builder()
+                    .username("test2")
+                    .password("2345")
+                    .email("test1@test.com")
+                    .build();
 
-        boolean isSuccess1 = memberService.join(member1);
-        boolean isSuccess2 = memberService.join(member2);
+            boolean isSuccess1 = memberService.join(member1);
+            boolean isSuccess2 = memberService.join(member2);
 
-        // successful join
-        assertThat(isSuccess1).isTrue();
-        // join failure
-        assertThat(isSuccess2).isFalse();
+            // successful join
+            assertThat(isSuccess1).isTrue();
+            // join failure
+            assertThat(isSuccess2).isFalse();
+        });
     }
 
     /*------------------------------------------------------*/

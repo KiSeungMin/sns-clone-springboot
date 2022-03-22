@@ -95,14 +95,17 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     // UserDetailsService 인터페이스의 메소드 오버라이딩
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
 
-        Member member = memberRepository.findMemberByMemberEmail(email).get();
+        Optional<Member> retMember = memberRepository.findMemberByMemberEmail(email);
 
-        if(member == null){
+        if(retMember.isEmpty()){
             throw new UsernameNotFoundException(email);
         }
+
+        Member member = retMember.get();
 
         // UserDetail을 구현하고 있는 User 객체 반환
         return User.builder()

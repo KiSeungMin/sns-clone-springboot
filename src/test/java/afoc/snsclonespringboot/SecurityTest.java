@@ -30,6 +30,9 @@ public class SecurityTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    MemberService memberService;
+
     public Member createMember(){
 
         Member member = Member.builder()
@@ -55,9 +58,6 @@ public class SecurityTest {
     @Test
     @DisplayName("중복 회원 가입 테스트")
     public void saveDuplicateMemberTest(){
-
-        MemberServiceImpl memberService = new MemberServiceImpl(new JpaMemberRepository(em));
-
         Member member1 = createMember();
         Member member2 = createMember();
 

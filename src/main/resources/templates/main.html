@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1.html}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!--      layout:decorate="~{layouts/layout1.html}>"-->
 
 
-<th:block layout:fragment="css">
+<!--<th:block layout:fragment="css">-->
+
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/blog/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900&amp;display=swap" rel="stylesheet">
@@ -30,7 +34,7 @@
         }
     </style>
 
-</th:block>
+<!--</th:block>-->
 
 <!-- Custom styles for this template -->
 <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900&amp;display=swap" rel="stylesheet">
@@ -39,7 +43,7 @@
 </head>
 
 
-<!--
+
 <div class="container fixed-top">
     <header class="main-header py-3">
         <div class="row flex-nowrap justify-content-between align-items-center">
@@ -66,12 +70,12 @@
         </nav>
     </div>
 </div>
--->
 
-<div layout:fragment="content">
 
-    hello
-<!--
+<!--<div layout:fragment="content">-->
+
+<!--    hello-->
+
 <main class="container pt-5 mt-5">
     <div class="row justify-content-center py-5" th:each="board : ${boardList}">
         <div class="col-8">
@@ -85,6 +89,6 @@
         </div>
     </div>
 </main>
--->
+
 </div>
 </html>

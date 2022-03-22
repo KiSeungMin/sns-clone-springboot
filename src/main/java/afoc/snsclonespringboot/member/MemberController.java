@@ -71,7 +71,6 @@ public class MemberController {
 
             Member member = Member.builder()
                     .username(memberFormDto.getUsername())
-                    //.password(memberFormDto.getPassword())
                     .password(passwordEncoder.encode(memberFormDto.getPassword()))
                     .email(memberFormDto.getEmail())
                     .role(Role.USER)
