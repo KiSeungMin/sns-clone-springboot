@@ -60,33 +60,32 @@
 
 <div layout:fragment="content">
 
-<body class="text-center">
+<body class="text-center" >
 
 <main class="form-signup">
     <form action="/signup" role = "form" method="post" th:object="${memberFormDto}">
-        <img class="mb-4" src="img/bootstrap-logo.svg" alt="" width="72" height="57">
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
-        <div class="form-floating">
+        <div class="form-floating mt-3">
             <input type="email" class="form-control" th:field="*{email}"  placeholder="name@example.com">
             <label th:for="email">Email address</label>
             <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError">
                 Incorrect Data </p>
         </div>
-        <div class="form-floating">
+        <div class="form-floating mt-3">
             <input type="password" class="form-control" th:field="*{password}" placeholder="Password">
             <label th:for="password">Password</label>
             <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="fieldError">
                 Incorrect Data </p>
         </div>
-        <div class="form-floating">
+        <div class="form-floating mt-3">
             <input type="text" class="form-control" th:field="*{username}" placeholder="Username">
             <label th:for="username">Username</label>
             <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="fieldError">
                 Incorrect Data </p>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="">Submit</button>
+        <button type="submit" class="btn btn-primary mt-3" style="">Submit</button>
 
         <input type="hidden" th:name="${_csrf.parameterName}"
                th:value="${_csrf.token}">

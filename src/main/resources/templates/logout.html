@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html html xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1.html}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
-logout
-</body>
+
+<div layout:fragment="content">
+
+    <a href="/">로그아웃을 완료하였습니다.</a>
+
+</div>
+
 </html>

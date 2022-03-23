@@ -34,7 +34,8 @@ public class HomeController {
 
     @GetMapping("/test")
     public String test() {
-        // member
+
+        /*
         Member member1 = Member.builder()
                 .email("test@test.com")
                 .password(passwordEncoder.encode("1234"))
@@ -64,6 +65,8 @@ public class HomeController {
             boardService.upload(board);
         }
 
+         */
+
         return "test";
     }
 
@@ -88,8 +91,9 @@ public class HomeController {
             // TODO - 보여줄 보드 리스트 찾는 서비스 필요
             List<Board> boardList = boardService.findBoardListByMemberId(member.get().getId());
 
-            model.addAttribute("member", member.get());
+            //model.addAttribute("member", member.get());
             model.addAttribute("boardList", boardList);
+            model.addAttribute("username", member.get().getUsername());
             return "main.html";
         } catch (Exception e){
             return "error/500.html";

@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,27 +24,29 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
-    public String login() {
+    public String login(Model model) {
+
+        Optional<Member> member = getAuthenticationMember();
+
+        if(member.isPresent()){
+            model.addAttribute("username", member.get().getUsername());
+        } else{
+            model.addAttribute("username", "로그인 해주세요");
+        }
+
         return "/login";
     }
 
-    /*
+
     @PostMapping("/login")
     public String login(LoginForm loginForm){
+
         Optional<Member> foundMember = memberService.findMemberByEmail(loginForm.getEmail());
 
         if (foundMember.isPresent() &&
                 loginForm.getPassword().equals(foundMember.get().getPassword())) {
-            // TODO - this code is for test
 
-            //return "redirect:/main?id=" + foundMember.get().getId();
-
-            //return "redirect:/main";
-
-            //return "redirect:/main?email=" + foundMember.get().getEmail();
-
-
-            return "redirect:/home";
+            return "main";
 
         } else {
             return "redirect:/login-failed";
@@ -51,11 +54,19 @@ public class MemberController {
 
     }
 
-     */
-
     @GetMapping("/signup")
     public String signup(Model model) {
+
         model.addAttribute("memberFormDto", new MemberFormDto());
+
+        Optional<Member> member = getAuthenticationMember();
+
+        if(member.isPresent()){
+            model.addAttribute("username", member.get().getUsername());
+        } else{
+            model.addAttribute("username", "로그인 해주세요");
+        }
+
         return "signup";
     }
 
@@ -83,6 +94,14 @@ public class MemberController {
             return "signup";
         }
 
+        Optional<Member> member = getAuthenticationMember();
+
+        if(member.isPresent()){
+            model.addAttribute("username", member.get().getUsername());
+        } else{
+            model.addAttribute("username", "로그인 해주세요");
+        }
+
         return "login";
     }
 
@@ -101,22 +120,42 @@ public class MemberController {
     @GetMapping("/home")
     public String home(Model model){
 
-        // 인증된 객체의 정보를 가져오는듯??
+        Optional<Member> member = getAuthenticationMember();
+
+        if(member.isPresent()){
+            model.addAttribute("member", member.get());
+        } else{
+            model.addAttribute("member", null);
+        }
+
+        return "/home";
+    }
+
+    @GetMapping("logout")
+    public String logout(){
+        return "/";
+    }
+
+    public Optional<Member> getAuthenticationMember(){
+
+        // 인증된 객체의 정보를 가져온다.
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        String email = "";
+        if(authentication != null) {
 
-        if(authentication != null){
+            String email = "";
 
             // getName 메서드를 통해 member의 email을 가져온다. (SecurityConfig 파일에서 username parameter를 email로 설정해서 그런듯)
             email = authentication.getName();
+
+            // getName 메서드를 통해 member의 email을 가져온다.
+            Optional<Member> member = this.memberService.findMemberByEmail(email);
+
+            return member;
+
+        } else{
+            return null;
         }
-
-        Member member = memberService.findMemberByEmail(email).get();
-
-        model.addAttribute("member", member);
-
-        return "/home";
     }
 
 }
