@@ -24,12 +24,6 @@ public interface BoardRepository {
     Boolean deleteBoardByBoardId(Long boardId);
 
     /*------------------------------------------------------*/
-
-    // TODO
-    // Like
-
-
-    /*------------------------------------------------------*/
     // all clear for test
     void clear();
 }
