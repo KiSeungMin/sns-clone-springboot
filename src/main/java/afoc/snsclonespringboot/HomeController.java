@@ -2,7 +2,7 @@ package afoc.snsclonespringboot;
 
 import afoc.snsclonespringboot.board.Board;
 import afoc.snsclonespringboot.board.BoardService;
-import afoc.snsclonespringboot.data.Data;
+import afoc.snsclonespringboot.data.DataInfo;
 import afoc.snsclonespringboot.data.DataType;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberService;

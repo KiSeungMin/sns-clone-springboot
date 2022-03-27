@@ -3,7 +3,6 @@ package afoc.snsclonespringboot.member;
 import afoc.snsclonespringboot.member.follow.Follow;
 import afoc.snsclonespringboot.member.follow.FollowRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
