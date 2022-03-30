@@ -3,6 +3,7 @@ package afoc.snsclonespringboot.board;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Setter @Getter
@@ -12,7 +13,7 @@ import javax.persistence.*;
 public class Board {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BOARD_ID")
     private Long boardId;
 
@@ -21,14 +22,18 @@ public class Board {
     private Long textDataId;
     private Long imageDataId;
 
+    private LocalDateTime regTime;
+
     @Builder
     public Board(
             Long memberId,
             Long textDataId,
-            Long imageDataId
+            Long imageDataId,
+            LocalDateTime regTime
     ) {
         this.memberId = memberId;
         this.textDataId = textDataId;
         this.imageDataId = imageDataId;
+        this.regTime = regTime;
     }
 }

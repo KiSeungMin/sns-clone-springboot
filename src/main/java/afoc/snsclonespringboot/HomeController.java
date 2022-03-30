@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,15 +28,8 @@ public class HomeController {
     private final PasswordEncoder passwordEncoder; // TODO - 제거 필요
 
     @GetMapping("/")
-    public String home() {
-//        return "redirect:/login";
-        return "redirect:/test";
-    }
-
-    @GetMapping("/test")
     public String test() {
 
-        /*
         Member member1 = Member.builder()
                 .email("test@test.com")
                 .password(passwordEncoder.encode("1234"))
@@ -61,11 +55,10 @@ public class HomeController {
                     .memberId(1L)
                     .textDataId((long) ((i % 2)+4))
                     .imageDataId((long) ((i % 3)+1))
+                    .regTime(LocalDateTime.now())
                     .build();
             boardService.upload(board);
         }
-
-         */
 
         return "test";
     }
@@ -93,7 +86,7 @@ public class HomeController {
 
             //model.addAttribute("member", member.get());
             model.addAttribute("boardList", boardList);
-            model.addAttribute("username", member.get().getUsername());
+            model.addAttribute("member", member.get());
             return "main.html";
         } catch (Exception e){
             return "error/500.html";

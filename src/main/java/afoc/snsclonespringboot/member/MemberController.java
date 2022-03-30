@@ -29,7 +29,7 @@ public class MemberController {
         Optional<Member> member = getAuthenticationMember();
 
         if(member.isPresent()){
-            model.addAttribute("username", member.get().getUsername());
+            model.addAttribute("member", member.get());
         } else{
             model.addAttribute("username", "로그인 해주세요");
         }
@@ -62,14 +62,13 @@ public class MemberController {
         Optional<Member> member = getAuthenticationMember();
 
         if(member.isPresent()){
-            model.addAttribute("username", member.get().getUsername());
+            model.addAttribute("member", member.get());
         } else{
             model.addAttribute("username", "로그인 해주세요");
         }
 
         return "signup";
     }
-
 
     @PostMapping("/signup")
     public String signup(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model) {
@@ -97,7 +96,7 @@ public class MemberController {
         Optional<Member> member = getAuthenticationMember();
 
         if(member.isPresent()){
-            model.addAttribute("username", member.get().getUsername());
+            model.addAttribute("member", member.get());
         } else{
             model.addAttribute("username", "로그인 해주세요");
         }
@@ -115,20 +114,6 @@ public class MemberController {
     @GetMapping("/signup-failed")
     public String signupFailed() {
         return "signup-failed";
-    }
-
-    @GetMapping("/home")
-    public String home(Model model){
-
-        Optional<Member> member = getAuthenticationMember();
-
-        if(member.isPresent()){
-            model.addAttribute("member", member.get());
-        } else{
-            model.addAttribute("member", null);
-        }
-
-        return "/home";
     }
 
     @GetMapping("logout")

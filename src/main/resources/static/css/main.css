@@ -90,3 +90,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 1.25rem;
   color: #727272;
 }
+
+a{
+  text-decoration: none;
+}
