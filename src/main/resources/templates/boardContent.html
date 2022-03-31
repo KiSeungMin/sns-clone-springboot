@@ -77,19 +77,20 @@
 
 <div layout:fragment="content">
 
-    <main class="container-fluid mt-5" style="height:400px">
-        <div class="row row-cols-1 row-cols-md-2 justify-content-center gx-2 me-2" th:object="${form}">
+    <main class="container-fluid mt-5" style="width:90%;">
+        <div class="row row-cols-1 row-cols-md-2 justify-content-center me-2" th:object="${form}">
             <div class="col border rounded flex-column mb-4 h-md-250 position-relative">
                 <div class="row">
                     <div class="col p-3 d-flex flex-column position-static">
 
-                        <div class="d-flex overflow-hidden justify-content-start align-items-center mb-1">
-                            <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 3rem; height: 3rem;">
-                            <h4 class = "ml-3" th:text="${form.username}">username</h4>
+                        <div class="d-flex justify-content-start align-items-center">
+                            <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
+                            <h4 class = "ml-3" th:text="${form.username}" style="font-size: 2vw;">username</h4>
+                            <button class="btn btn-primary" style="position:absolute; right:1rem; width:15%;">follow</button>
                         </div>
 
                         <!-- 캐러셀 구현 (아직 미완)-->
-                        <div class="container">
+                        <div class="container mt-1">
                             <div id="myCarousel" class="carousel slide">
                                 <!-- Indicators -->
                                 <div class="carousel-indicators">
@@ -101,25 +102,25 @@
                                 <!-- Wrapper for slides -->
                                 <div class="carousel-inner justify-content-center">
                                     <div class="carousel-item active">
-                                        <img th:src="@{/img/tmp1.jpg}" class="mx-auto" style="height: 15rem;">
+                                        <img th:src="@{/img/tmp1.jpg}" class="mx-auto w-100">
                                     </div>
 
                                     <div class="carousel-item">
-                                        <img th:src="@{/img/tmp2.jpg}" class="mx-auto" style="height: 15rem;">
+                                        <img th:src="@{/img/tmp2.jpg}" class="mx-auto w-100">
                                     </div>
 
                                     <div class="carousel-item">
-                                        <img th:src="@{/img/tmp3.jpg}" class="mx-auto" style="height : 15rem;">
+                                        <img th:src="@{/img/tmp3.jpg}" class="mx-auto w-100">
                                     </div>
                                 </div>
 
-                                <button class="left carousel-control-prev" type="button" href="#myCarousel">
+                                <button class="left carousel-control-prev bg-transparent border-0" type="button" href="#myCarousel">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
+                                    <span class="visually-hidden"></span>
                                 </button>
-                                <button class="right carousel-control-next" type="button" href="#myCarousel">
+                                <button class="right carousel-control-next bg-transparent border-0" type="button" href="#myCarousel">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
+                                    <span class="visually-hidden"></span>
                                 </button>
                             </div>
                         </div>
@@ -133,12 +134,12 @@
             </div>
 
             <div class="col border rounded flex-column me-2 mb-4 shadow-sm h-md-250 position-relative">
-                <div class="row row-cols-1">
-                    <div class="col">
+                <div class="row row-cols-1 mt-1" style="height: calc(100% - 40px);">
+                    <div class="col" style="height: calc(100% - 110px);">
                         <p>comment</p>
                     </div>
 
-                    <div class="col">
+                    <div class="col" style="height:100px;">
                         <div class="d-flex overflow-hidden justify-content-start align-items-center mb-1">
                             <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 1.5rem; height: 1.5rem;">
                             <h6 class = "ml-3" th:text="${form.username}">username</h6>
@@ -149,7 +150,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row row-cols-2 mt-2">
+                <div class="row row-cols-2 mt-1" style="height: 30px;">
                     <div class="col-1">
                         <form th:action="@{/board/{id}/like (id=${form.boardId})}" method="post" id = "likeForm">
                             <input type="hidden" name = "memberId" th:value = "${member.Id}">
