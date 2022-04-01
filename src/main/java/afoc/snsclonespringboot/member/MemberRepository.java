@@ -28,12 +28,6 @@ public interface MemberRepository {
     Boolean deleteMemberByMemberId(Long memberId);
 
     /*------------------------------------------------------*/
-
-    // TODO
-    // Follow
-
-
-    /*------------------------------------------------------*/
     // all clear for test
     void clear();
 }

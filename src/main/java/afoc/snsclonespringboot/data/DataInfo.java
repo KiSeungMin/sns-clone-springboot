@@ -11,7 +11,7 @@ import javax.persistence.Id;
 @Setter @Getter
 @NoArgsConstructor
 @ToString
-public class Data {
+public class DataInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -20,7 +20,7 @@ public class Data {
     private String saveDataPath;
 
     @Builder
-    public Data(
+    public DataInfo(
             Long id, // remove this line later
             DataType dataType,
             String sourceDataPath,

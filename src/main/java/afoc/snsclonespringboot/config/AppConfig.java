@@ -4,6 +4,7 @@ import afoc.snsclonespringboot.board.*;
 import afoc.snsclonespringboot.board.like.JpaLikeRepository;
 import afoc.snsclonespringboot.board.like.LikeRepository;
 import afoc.snsclonespringboot.board.like.MemoryLikeRepository;
+import afoc.snsclonespringboot.data.*;
 import afoc.snsclonespringboot.member.*;
 import afoc.snsclonespringboot.member.follow.FollowRepository;
 import afoc.snsclonespringboot.member.follow.JpaFollowRepository;
@@ -52,5 +53,16 @@ public class AppConfig {
     public LikeRepository likeRepository(){
 //        return new MemoryLikeRepository();
         return new JpaLikeRepository(em);
+    }
+
+    @Bean
+    public DataService dataService() {
+        return new DataServiceImpl(dataInfoRepository());
+    }
+
+    @Bean
+    public DataInfoRepository dataInfoRepository(){
+//        return new MemoryDataInfoRepository();
+        return new JpaDataInfoRepository(em);
     }
 }

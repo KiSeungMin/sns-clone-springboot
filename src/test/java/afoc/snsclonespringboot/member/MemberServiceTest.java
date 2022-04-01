@@ -174,6 +174,14 @@ class MemberServiceTest {
         assertThat(member2).isEqualTo(foundMember2ByEmail.get());
     }
 
+    @Test
+    void findMemberByEmailNotFoundTest(){
+        Optional<Member> foundMember1ByEmail = memberService.findMemberByEmail("test1@test.com");
+
+        // Not null
+        assertThat(foundMember1ByEmail).isEmpty();
+    }
+
     /*------------------------------------------------------*/
     // Optional<Member> findMemberById(Long id)
 
@@ -229,6 +237,14 @@ class MemberServiceTest {
         // must same value
         assertThat(member1).isEqualTo(foundMember1ById.get());
         assertThat(member2).isEqualTo(foundMember2ById.get());
+    }
+
+    @Test
+    void findMemberByIdNotFoundTest(){
+        Optional<Member> foundMember1ById = memberService.findMemberById(0L);
+
+        // Not null
+        assertThat(foundMember1ById).isEmpty();
     }
 
     /*------------------------------------------------------*/

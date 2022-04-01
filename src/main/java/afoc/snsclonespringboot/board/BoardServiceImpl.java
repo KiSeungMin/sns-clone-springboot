@@ -3,10 +3,8 @@ package afoc.snsclonespringboot.board;
 import afoc.snsclonespringboot.board.like.Like;
 import afoc.snsclonespringboot.board.like.LikeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,8 +14,6 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-
-    @Autowired
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
 

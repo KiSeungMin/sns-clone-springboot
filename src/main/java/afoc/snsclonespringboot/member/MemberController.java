@@ -1,7 +1,6 @@
 package afoc.snsclonespringboot.member;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,12 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.swing.text.html.Option;
 import javax.validation.Valid;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 @Controller
@@ -24,34 +22,18 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
-    public String login(Model model) {
-        return "/login";
-    }
-
-
-    @PostMapping("/login")
-    public String login(LoginForm loginForm){
-
-        Optional<Member> foundMember = memberService.findMemberByEmail(loginForm.getEmail());
-
-        if (foundMember.isPresent() &&
-                loginForm.getPassword().equals(foundMember.get().getPassword())) {
-
-            return "main";
-
-        } else {
-            return "redirect:/login-failed";
-        }
-
+    public String login() {
+        return "login";
     }
 
     @GetMapping("/signup")
     public String signup(Model model) {
+        model.addAttribute("memberForm", new MemberForm());
         return "signup";
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model) {
+    public String signup(@Valid MemberForm memberForm, BindingResult bindingResult, Model model) {
 
         if(bindingResult.hasErrors()){
             return "signup";
@@ -60,9 +42,9 @@ public class MemberController {
         try{
 
             Member member = Member.builder()
-                    .username(memberFormDto.getUsername())
-                    .password(passwordEncoder.encode(memberFormDto.getPassword()))
-                    .email(memberFormDto.getEmail())
+                    .username(memberForm.getUsername())
+                    .password(passwordEncoder.encode(memberForm.getPassword()))
+                    .email(memberForm.getEmail())
                     .role(Role.USER)
                     .build();
 
@@ -72,21 +54,11 @@ public class MemberController {
             model.addAttribute("errorMessage", e.getMessage());
             return "signup";
         }
-
-        Optional<Member> member = getAuthenticationMember();
-
-        if(member.isPresent()){
-            model.addAttribute("member", member.get());
-        } else{
-            model.addAttribute("username", "로그인 해주세요");
-        }
-
-        return "login";
+        return "redirect:/login";
     }
 
     @GetMapping("/login-failed")
     public String loginFailed(Model model) {
-
         model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
         return "/login";
     }
@@ -122,5 +94,4 @@ public class MemberController {
             return null;
         }
     }
-
 }

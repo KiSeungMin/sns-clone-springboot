@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-//@Repository
+@Repository
 public class MemoryBoardRepository implements BoardRepository{
     private static final Map<Long, Board> store = new HashMap<>();
     private static long sequence = 0L;
