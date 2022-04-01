@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Like {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "LIKE_ID")
     private Long id;
 

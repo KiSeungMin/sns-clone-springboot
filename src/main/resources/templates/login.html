@@ -52,21 +52,20 @@
 
 <div layout:fragment="content">
 
-<body class="text-center">
+<body class="text-center mt-3">
 
 <main class="form-signin">
     <form action="/login" method="post">
-        <img class="mb-4" src="img/bootstrap-logo.svg" alt="" width="72" height="57">
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
-        <div class="form-floating">
-            <label for="floatingInput">Email address</label>
+        <div class="form-floating mt-3">
             <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
-
+            <label for="floatingInput">Email address</label>
         </div>
-        <div class="form-floating">
-            <label for="floatingPassword">Password</label>
+
+        <div class="form-floating mt-3">
             <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+            <label for="floatingPassword">Password</label>
         </div>
 
 <!--            <div class="checkbox mb-3">-->
@@ -76,7 +75,7 @@
 <!--            </div>-->
         <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
 
-        <button class="w-100 btn btn-lg btn-primary mb-1" type="submit">Sign in</button>
+        <button class="w-100 btn btn-lg btn-primary mt-3" type="submit">Sign in</button>
 <!--            <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>-->
 
         <input type="hidden" th:name="${_csrf.parameterName}"
@@ -84,7 +83,7 @@
     </form>
 
     <form action="/signup" method="get">
-        <button class="w-100 btn btn-lg btn-secondary" type="submit">Sign up</button>
+        <button class="w-100 btn btn-lg btn-secondary mt-3" type="submit">Sign up</button>
 
         <input type="hidden" th:name="${_csrf.parameterName}"
                th:value="${_csrf.token}">

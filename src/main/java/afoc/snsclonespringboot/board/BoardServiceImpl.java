@@ -86,9 +86,30 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
+    public Boolean likeIsPresent(Long boardId, Long memberId){
+        return likeRepository.findLikeByBoardIdAndMemberId(boardId, memberId).isPresent();
+    }
+
     @Override
     public Boolean likeCancel(Long boardId, Long memberId) {
         return likeRepository.deleteLike(boardId, memberId);
+    }
+
+
+    public Boolean boardLike(Long boardId, Long memberId){
+
+        Optional<Like> findLike = likeRepository.findLikeByBoardIdAndMemberId(boardId, memberId);
+        if (findLike.isEmpty()){
+            Like newLike = Like.builder()
+                    .boardId(boardId)
+                    .memberId(memberId)
+                    .build();
+            Optional<Like> res = likeRepository.save(newLike);
+            return true;
+        } else{
+            likeRepository.deleteLike(boardId, memberId);
+            return false;
+        }
     }
 
     @Override

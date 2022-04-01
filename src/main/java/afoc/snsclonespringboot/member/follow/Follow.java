@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Follow {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "COLUMN_ID")
     private Long id;
 
