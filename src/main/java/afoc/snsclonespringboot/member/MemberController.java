@@ -25,15 +25,6 @@ public class MemberController {
 
     @GetMapping("/login")
     public String login(Model model) {
-
-        Optional<Member> member = getAuthenticationMember();
-
-        if(member.isPresent()){
-            model.addAttribute("member", member.get());
-        } else{
-            model.addAttribute("username", "로그인 해주세요");
-        }
-
         return "/login";
     }
 
@@ -56,17 +47,6 @@ public class MemberController {
 
     @GetMapping("/signup")
     public String signup(Model model) {
-
-        model.addAttribute("memberFormDto", new MemberFormDto());
-
-        Optional<Member> member = getAuthenticationMember();
-
-        if(member.isPresent()){
-            model.addAttribute("member", member.get());
-        } else{
-            model.addAttribute("username", "로그인 해주세요");
-        }
-
         return "signup";
     }
 
