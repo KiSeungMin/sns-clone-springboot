@@ -36,11 +36,9 @@ public class JpaBoardRepository implements BoardRepository {
 
     @Override
     public List<Board> findBoardListByMemberId(Long memberId){
-        List<Board> findBoard = em.createQuery("select b from Board b where b.memberId = :memberId", Board.class)
+        return em.createQuery("select b from Board b where b.memberId = :memberId", Board.class)
                 .setParameter("memberId", memberId)
                 .getResultList();
-
-        return findBoard;
     }
 
     @Override

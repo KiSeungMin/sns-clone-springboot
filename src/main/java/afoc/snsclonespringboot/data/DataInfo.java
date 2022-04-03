@@ -21,12 +21,10 @@ public class DataInfo {
 
     @Builder
     public DataInfo(
-            Long id, // remove this line later
             DataType dataType,
             String sourceDataPath,
             String saveDataPath
     ) {
-        this.id = id;
         this.dataType = dataType;
         this.sourceDataPath = sourceDataPath;
         this.saveDataPath = saveDataPath;

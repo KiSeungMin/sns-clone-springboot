@@ -37,8 +37,6 @@ class BoardServiceTest {
     void uploadSingleTest() {
         Board board1 = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board1);
@@ -51,14 +49,10 @@ class BoardServiceTest {
     void uploadDoubleTest() {
         Board board1 = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Board board2 = Board.builder()
                 .memberId(2L)
-                .textDataId(1831L)
-                .imageDataId(7913L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board1);
@@ -73,14 +67,10 @@ class BoardServiceTest {
     void uploadOneMemberTest() {
         Board board1 = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Board board2 = Board.builder()
                 .memberId(1L)
-                .textDataId(1831L)
-                .imageDataId(7913L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board1);
@@ -98,8 +88,6 @@ class BoardServiceTest {
     void findBoardByBoardIdSingleTest() {
         Board board1 = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
 
@@ -121,14 +109,10 @@ class BoardServiceTest {
     void findBoardByBoardIdDoubleTest() {
         Board board1 = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Board board2 = Board.builder()
                 .memberId(2L)
-                .textDataId(1831L)
-                .imageDataId(7913L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board1);
@@ -157,8 +141,6 @@ class BoardServiceTest {
     void findBoardListByMemberIdSingleTest() {
         Board board1 = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board1);
@@ -182,8 +164,6 @@ class BoardServiceTest {
             for (int j=0;j<i;j++) {
                 Board board = Board.builder()
                         .memberId((long) i)
-                        .textDataId(253L)
-                        .imageDataId(651L)
                         .build();
                 Boolean isSuccess = boardService.upload(board);
 
@@ -206,8 +186,6 @@ class BoardServiceTest {
     void updateBoardSingleTest() {
         Board board1 = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board1);
@@ -223,8 +201,6 @@ class BoardServiceTest {
         Board foundMember1 = foundBoard1ById.get();
         Board updateBoard = Board.builder()
                 .memberId(1L)
-                .textDataId(1831L)
-                .imageDataId(7913L)
                 .build();
         updateBoard.setBoardId(foundMember1.getBoardId());
 
@@ -244,8 +220,6 @@ class BoardServiceTest {
     void updateBoardMemberIdCheck() {
         Board board1 = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board1);
@@ -261,8 +235,6 @@ class BoardServiceTest {
         Board foundMember1 = foundBoard1ById.get();
         Board updateBoard = Board.builder()
                 .memberId(2L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
         updateBoard.setBoardId(foundMember1.getBoardId());
 
@@ -285,8 +257,6 @@ class BoardServiceTest {
     void deleteBoardByBoardId() {
         Board board1 = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board1);
@@ -312,8 +282,6 @@ class BoardServiceTest {
     void likeBoardSingleTest() {
         Board board = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board);
@@ -331,8 +299,6 @@ class BoardServiceTest {
     void likeBoardManyTest() {
         Board board = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board);
@@ -350,8 +316,6 @@ class BoardServiceTest {
     void likeBoardMultipleTest() {
         Board board = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board);
@@ -376,8 +340,6 @@ class BoardServiceTest {
     void likeCancelSingleTest() {
         Board board = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Long likeMemberId = 2L;
@@ -403,8 +365,6 @@ class BoardServiceTest {
     void likeCancelManyTest() {
         Board board = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board);
@@ -426,8 +386,6 @@ class BoardServiceTest {
     void likeCancelMultipleTest() {
         Board board = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Long likeMemberId = 2L;
@@ -457,8 +415,6 @@ class BoardServiceTest {
     void findLikeMemberListZeroTest() {
         Board board = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board);
@@ -474,8 +430,6 @@ class BoardServiceTest {
     void findLikeMemberListTest() {
         Board board = Board.builder()
                 .memberId(1L)
-                .textDataId(253L)
-                .imageDataId(651L)
                 .build();
 
         Boolean isSuccess1 = boardService.upload(board);

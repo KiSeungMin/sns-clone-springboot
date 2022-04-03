@@ -1,4 +1,4 @@
-package afoc.snsclonespringboot.board;
+package afoc.snsclonespringboot.board.like;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,5 +9,4 @@ public class likeForm {
 
     private Long boardId;
     private Long memberId;
-
 }

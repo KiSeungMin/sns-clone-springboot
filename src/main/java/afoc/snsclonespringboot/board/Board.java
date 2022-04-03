@@ -19,21 +19,14 @@ public class Board {
 
     private Long memberId;
 
-    private Long textDataId;
-    private Long imageDataId;
-
     private LocalDateTime regTime;
 
     @Builder
     public Board(
             Long memberId,
-            Long textDataId,
-            Long imageDataId,
             LocalDateTime regTime
     ) {
         this.memberId = memberId;
-        this.textDataId = textDataId;
-        this.imageDataId = imageDataId;
         this.regTime = regTime;
     }
 }

@@ -1,5 +1,6 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.board.like.likeForm;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
