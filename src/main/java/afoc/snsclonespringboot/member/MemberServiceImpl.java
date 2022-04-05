@@ -34,23 +34,6 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         }
 
         return false;
-        /*
-        try {
-            Optional<Member> foundMember = findMemberByEmail(member.getEmail());
-            if (foundMember.isPresent()) {
-                throw new IllegalStateException("이미 가입된 회원입니다.");
-            } else {
-                memberRepository.save(member);
-                return true;
-            }
-        }
-
-        catch (Exception exception) {
-            exception.printStackTrace();
-            return false;
-        }
-
-         */
     }
 
     private void validateDuplicateMember(Member member){

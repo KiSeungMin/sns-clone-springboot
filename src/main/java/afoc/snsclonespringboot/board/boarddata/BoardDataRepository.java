@@ -1,4 +1,6 @@
-package afoc.snsclonespringboot.board;
+package afoc.snsclonespringboot.board.boarddata;
+
+import afoc.snsclonespringboot.board.boarddata.BoardData;
 
 import java.util.List;
 import java.util.Optional;

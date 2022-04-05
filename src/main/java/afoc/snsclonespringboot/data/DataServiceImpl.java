@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,39 +24,50 @@ public class DataServiceImpl implements DataService{
     private String rootDataPath;
 
     @Override
-    public Boolean save(DataType dataType, String sourceDataPath) {
-        Optional<String> ext = Optional.ofNullable(sourceDataPath)
-                .filter(f -> f.contains("."))
-                .map(f -> f.substring(sourceDataPath.lastIndexOf(".") + 1));
-
-        if(ext.isEmpty())
+    public Boolean save(MultipartFile multipartFile, DataType dataType) throws IOException {
+        String originalFilename = multipartFile.getOriginalFilename();
+        if (originalFilename == null)
             return false;
 
-        String saveDataPath = Paths.get(rootDataPath, UUID.randomUUID().toString()) + ext.get();
+        String storeFilename = createStoreFileName(originalFilename);
 
         // check
-        System.out.println("sourceDataPath = " + sourceDataPath);
-        System.out.println("saveDataPath = " + saveDataPath);
+        System.out.println("originalFilename = " + originalFilename);
+        System.out.println("storeFilename = " + storeFilename);
 
-        File file = new File(saveDataPath);
-        if(file.isFile())
+        File saveFile = new File(storeFilename);
+        if(saveFile.isFile())
             return false;
 
-        try {
-            Files.move(Paths.get(sourceDataPath), Paths.get(saveDataPath));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+        if(!saveFile.getParentFile().exists()) {
+            boolean res = saveFile.getParentFile().mkdirs();
+            if (!res)
+                return false;
         }
+
+        System.out.println("saveFile.getAbsolutePath() = " + saveFile.getAbsolutePath());
+        multipartFile.transferTo(new File(saveFile.getAbsolutePath()));
 
         DataInfo dataInfo = DataInfo.builder()
                 .dataType(dataType)
-                .sourceDataPath(sourceDataPath)
-                .saveDataPath(saveDataPath)
+                .saveDataPath(storeFilename)
                 .build();
 
         Optional<DataInfo> ret = dataInfoRepository.save(dataInfo);
         return ret.isPresent();
+    }
+
+    private String createStoreFileName(String originalFilename) {
+        String ext = extractExt(originalFilename);
+        String uuid = UUID.randomUUID().toString();
+        String absolutePath = Paths.get(rootDataPath, uuid + "." + ext).toFile().getAbsolutePath();
+        System.out.println("absolutePath = " + absolutePath);
+        return Paths.get(rootDataPath, uuid + "." + ext).toString();
+    }
+
+    private String extractExt(String originalFilename) {
+        int pos = originalFilename.lastIndexOf(".");
+        return originalFilename.substring(pos + 1);
     }
 
     @Override

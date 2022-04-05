@@ -51,8 +51,6 @@ public class HomeController {
             for (int i = 0; i < 10; i++) {
                 Board board = Board.builder()
                         .memberId(1L)
-                        .textDataId((long) ((i % 2) + 4))
-                        .imageDataId((long) ((i % 3) + 1))
                         .build();
                 boardService.upload(board);
             }

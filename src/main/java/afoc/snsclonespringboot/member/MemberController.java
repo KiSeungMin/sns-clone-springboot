@@ -1,5 +1,7 @@
 package afoc.snsclonespringboot.member;
 
+import afoc.snsclonespringboot.data.DataService;
+import afoc.snsclonespringboot.data.DataType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,15 +12,20 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
+import java.io.IOError;
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final DataService dataService;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
@@ -33,13 +40,19 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid MemberForm memberForm, BindingResult bindingResult, Model model) {
+    public String signup(@Valid @ModelAttribute MemberForm memberForm,
+                         RedirectAttributes redirectAttributes,
+                         BindingResult bindingResult,
+                         Model model)
+    throws IOException
+    {
 
         if(bindingResult.hasErrors()){
             return "signup";
         }
 
         try{
+            dataService.save(memberForm.getProfileImage(), DataType.Image);
 
             Member member = Member.builder()
                     .username(memberForm.getUsername())
@@ -60,17 +73,20 @@ public class MemberController {
     @GetMapping("/login-failed")
     public String loginFailed(Model model) {
         model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
+        System.out.println("MemberController.loginFailed");
         return "/login";
     }
 
     @GetMapping("/signup-failed")
     public String signupFailed() {
+        System.out.println("MemberController.signupFailed");
         return "signup-failed";
     }
 
     @GetMapping("logout")
     public String logout(){
-        return "/";
+        System.out.println("MemberController.logout");
+        return "/login";
     }
 
     public Optional<Member> getAuthenticationMember(){

@@ -13,10 +13,6 @@ public class BoardForm {
 
     private String username;
 
-    //private Long textDataId;
-
-    //private Long imageDataId;
-
     private LocalDateTime regTime;
 
     private Boolean likeIsPresent;
