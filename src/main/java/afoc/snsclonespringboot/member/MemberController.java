@@ -1,8 +1,8 @@
 package afoc.snsclonespringboot.member;
 
+import afoc.snsclonespringboot.board.BoardForm;
 import afoc.snsclonespringboot.board.likeForm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,14 +11,16 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.swing.text.html.Option;
 import javax.validation.Valid;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,54 +29,18 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
-    public String login(Model model) {
-
-        Optional<Member> member = getAuthenticationMember();
-
-        if(member.isPresent()){
-            model.addAttribute("member", member.get());
-        } else{
-            model.addAttribute("username", "로그인 해주세요");
-        }
-
-        return "/login";
-    }
-
-
-    @PostMapping("/login")
-    public String login(LoginForm loginForm){
-
-        Optional<Member> foundMember = memberService.findMemberByEmail(loginForm.getEmail());
-
-        if (foundMember.isPresent() &&
-                loginForm.getPassword().equals(foundMember.get().getPassword())) {
-
-            return "main";
-
-        } else {
-            return "redirect:/login-failed";
-        }
-
+    public String login() {
+        return "login";
     }
 
     @GetMapping("/signup")
     public String signup(Model model) {
-
-        model.addAttribute("memberFormDto", new MemberFormDto());
-
-        Optional<Member> member = getAuthenticationMember();
-
-        if(member.isPresent()){
-            model.addAttribute("member", member.get());
-        } else{
-            model.addAttribute("username", "로그인 해주세요");
-        }
-
+        model.addAttribute("memberForm", new MemberForm());
         return "signup";
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model) {
+    public String signup(@Valid MemberForm memberForm, BindingResult bindingResult, Model model) {
 
         if(bindingResult.hasErrors()){
             return "signup";
@@ -83,33 +49,23 @@ public class MemberController {
         try{
 
             Member member = Member.builder()
-                    .username(memberFormDto.getUsername())
-                    .password(passwordEncoder.encode(memberFormDto.getPassword()))
-                    .email(memberFormDto.getEmail())
+                    .username(memberForm.getUsername())
+                    .password(passwordEncoder.encode(memberForm.getPassword()))
+                    .email(memberForm.getEmail())
                     .role(Role.USER)
                     .build();
 
             memberService.join(member);
 
-        } catch(IllegalStateException e){
+        } catch(Error e){
             model.addAttribute("errorMessage", e.getMessage());
             return "signup";
         }
-
-        Optional<Member> member = getAuthenticationMember();
-
-        if(member.isPresent()){
-            model.addAttribute("member", member.get());
-        } else{
-            model.addAttribute("username", "로그인 해주세요");
-        }
-
-        return "login";
+        return "redirect:/login";
     }
 
     @GetMapping("/login-failed")
     public String loginFailed(Model model) {
-
         model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
         return "/login";
     }
@@ -122,6 +78,74 @@ public class MemberController {
     @GetMapping("logout")
     public String logout(){
         return "/";
+    }
+
+    @PostMapping("/member/{memberId}/follow")
+    public String follow(@PathVariable("memberId") Long memberId){
+
+        Long followerId = getAuthenticationMember().get().getId();
+
+        Long followeeId = memberId;
+
+        memberService.follow(followerId, followeeId);
+
+        return "";
+    }
+
+    @GetMapping("/member/{memberId}/followerList")
+    public String followerList(@PathVariable("memberId") Long memberId, Model model){
+
+        List<Long> followerIdList = memberService.findFollowers(memberId);
+
+        List<FollowForm> followFormList = new ArrayList<>();
+
+        Long userId = getAuthenticationMember().get().getId();
+
+        for(Long L : followerIdList){
+
+            Member member = memberService.findMemberById(L).get();
+            Boolean followIsPresent = memberService.followIsPresent(userId, L);
+
+            FollowForm followForm = new FollowForm();
+
+            followForm.setMember(member);
+            followForm.setFollowIsPresent(followIsPresent);
+
+            followFormList.add(followForm);
+        }
+
+        model.addAttribute("member", getAuthenticationMember().get());
+        model.addAttribute("memberList", followFormList);
+
+        return "memberList";
+    }
+
+    @GetMapping("/member/{memberId}/followeeList")
+    public String followeeList(@PathVariable("memberId") Long memberId, Model model){
+
+        List<Long> followeeIdList = memberService.findFollowees(memberId);
+
+        List<FollowForm> followFormList = new ArrayList<>();
+
+        Long userId = getAuthenticationMember().get().getId();
+
+        for(Long L : followeeIdList){
+
+            Member member = memberService.findMemberById(L).get();
+            Boolean followIsPresent = memberService.followIsPresent(userId, L);
+
+            FollowForm followForm = new FollowForm();
+
+            followForm.setMember(member);
+            followForm.setFollowIsPresent(followIsPresent);
+
+            followFormList.add(followForm);
+        }
+
+        model.addAttribute("member", getAuthenticationMember().get());
+        model.addAttribute("memberList", followFormList);
+
+        return "memberList";
     }
 
     public Optional<Member> getAuthenticationMember(){

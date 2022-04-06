@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1.html}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
-<!--
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,50 +19,22 @@
 
 </head>
 
--->
 
-<th:block layout:fragment="css">
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
+<body class="text-center">
+
+<script>
+    $(document).ready(function(){
+        var errorMessage = [[${errorMessage}]];
+        if(errorMessage != null){
+            alert(errorMessage);
         }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-
-        .fieldError{
-            color:#bd2130;
-        }
-    </style>
-</th:block>
-
-<th:block layout:fragment="script">
-
-    <script th:inline="javascript">
-        $(document).ready(function(){
-            let errorMessage = [[${errorMessage}]];
-            if(errorMessage != null){
-                alert(errorMessage);
-            }
-        });
-    </script>
-</th:block>
-
-
-<div layout:fragment="content">
-
-<body class="text-center" >
+    });
+</script>
 
 <main class="form-signup">
-    <form action="/signup" role = "form" method="post" th:object="${memberFormDto}">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+    <form action="/signup" role = "form" method="post" th:object="${memberForm}">
+        <!--<img class="mb-4" src="img/bootstrap-logo.svg" alt="" width="72" height="57">-->
+        <h1 class="h1 mb-3 fw-normal">Please sign in</h1>
 
         <div class="form-floating mt-3">
             <input type="email" class="form-control" th:field="*{email}"  placeholder="name@example.com">
@@ -93,7 +63,5 @@
 </main>
 
 </body>
-
-</div>
 
 </html>

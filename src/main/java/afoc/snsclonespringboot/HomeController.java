@@ -2,8 +2,6 @@ package afoc.snsclonespringboot;
 
 import afoc.snsclonespringboot.board.Board;
 import afoc.snsclonespringboot.board.BoardService;
-import afoc.snsclonespringboot.data.Data;
-import afoc.snsclonespringboot.data.DataType;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberService;
 import afoc.snsclonespringboot.member.Role;
@@ -14,9 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,35 +27,42 @@ public class HomeController {
 
     @GetMapping("/")
     public String test() {
-
-        Member member1 = Member.builder()
-                .email("test@test.com")
-                .password(passwordEncoder.encode("1234"))
-                .username("test_user")
-                .role(Role.USER)
-                .build();
-        memberService.join(member1);
-
-        // members
-        for (int i=0;i<10;i++){
-            Member member = Member.builder()
-                    .email("test"+i+"@test.com")
+        try {
+            // member
+            Member member1 = Member.builder()
+                    .email("test@test.com")
                     .password(passwordEncoder.encode("1234"))
-                    .username("test_user"+i)
+                    .username("test_user")
                     .role(Role.USER)
                     .build();
-            memberService.join(member);
-        }
+            memberService.join(member1);
 
-        // boards
-        for (int i=0;i<10;i++){
-            Board board = Board.builder()
-                    .memberId(1L)
-                    .textDataId((long) ((i % 2)+4))
-                    .imageDataId((long) ((i % 3)+1))
-                    .regTime(LocalDateTime.now())
-                    .build();
-            boardService.upload(board);
+            // members
+            for (int i = 0; i < 50; i++) {
+                Member member = Member.builder()
+                        .email("test" + i + "@test.com")
+                        .password(passwordEncoder.encode("1234"))
+                        .username("test_user" + i)
+                        .role(Role.USER)
+                        .build();
+                memberService.join(member);
+
+                memberService.follow(1L, member.getId());
+                memberService.follow(member.getId(), 1L);
+            }
+
+            // boards
+            for (int i = 0; i < 10; i++) {
+                Board board = Board.builder()
+                        .memberId(1L)
+                        .textDataId((long) ((i % 2) + 4))
+                        .imageDataId((long) ((i % 3) + 1))
+                        .date(new Date())
+                        .build();
+                boardService.upload(board);
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
 
         return "test";
@@ -66,7 +71,7 @@ public class HomeController {
     @GetMapping("/main")
     public String main(Model model) {
         try {
-            // 인증된 객체의 정보를 가져오는듯??
+            // 인증된 객체의 정보 가져옴
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
             if(authentication == null){
@@ -84,7 +89,6 @@ public class HomeController {
             // TODO - 보여줄 보드 리스트 찾는 서비스 필요
             List<Board> boardList = boardService.findBoardListByMemberId(member.get().getId());
 
-            //model.addAttribute("member", member.get());
             model.addAttribute("boardList", boardList);
             model.addAttribute("member", member.get());
             return "main.html";

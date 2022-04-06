@@ -3,7 +3,6 @@ package afoc.snsclonespringboot.member;
 import afoc.snsclonespringboot.member.follow.Follow;
 import afoc.snsclonespringboot.member.follow.FollowRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -119,13 +118,22 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     // Follow Functions
 
     @Override
+    public Boolean followIsPresent(Long followerId, Long followeeId){
+        return followRepository.findFollow(followerId, followeeId).isPresent();
+    }
+
+    @Override
     public Boolean follow(Long followerId, Long followeeId) {
+        /*
         if (Objects.equals(followerId, followeeId)){
             return false;
         }
 
+         */
+
         Optional<Follow> findFollow = followRepository.findFollow(followerId, followeeId);
         if(findFollow.isPresent()){
+            unfollow(followerId, followeeId);
             return false;
         } else {
             Follow follow = Follow.builder()

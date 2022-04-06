@@ -1,5 +1,6 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.member.FollowForm;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -36,10 +34,12 @@ public class BoardController {
 
         form.setBoardId(board.getBoardId());
         form.setUsername(memberService.findMemberById(board.getMemberId()).get().getUsername());
+        form.setUserId(board.getMemberId());
         //form.setImageDataId(board.getImageDataId());
         //form.setTextDataId(board.getTextDataId());
-        form.setRegTime(board.getRegTime());
-        form.setLikeIsPresent(boardService.likeIsPresent(boardId, member.get().getId()));
+        form.setDate(board.getDate());
+        form.setFollowIsPresent(memberService.followIsPresent(member.get().getId(), board.getMemberId()));
+        form.setLikeIsPresent(boardService.likeIsPresent(board.getMemberId(), member.get().getId()));
 
         model.addAttribute("form", form);
         model.addAttribute("member", member.get());
@@ -62,22 +62,29 @@ public class BoardController {
     @GetMapping(value = "/board/{boardId}/likeList")
     public String getLikeList(@PathVariable("boardId") Long boardId, Model model){
 
-        List<Long> likeMemberList = boardService.findLikeMemberList(boardId);
+        List<Long> likeIdList = boardService.findLikeMemberList(boardId);
 
-        List<Member> likeList;
+        List<FollowForm> followFormList = new ArrayList<>();
 
-        try{
-            likeList = likeMemberList.stream().map(L -> memberService.findMemberById(L).get()).collect(Collectors.toList());
-        } catch(NoSuchElementException noSuchElementException){
-            likeList = null;
+        Long memberId = getAuthenticationMember().get().getId();
+
+        for(Long L : likeIdList){
+
+            Member member = memberService.findMemberById(L).get();
+            Boolean followIsPresent = memberService.followIsPresent(memberId, L);
+
+            FollowForm followForm = new FollowForm();
+
+            followForm.setMember(member);
+            followForm.setFollowIsPresent(followIsPresent);
+
+            followFormList.add(followForm);
         }
 
-        Optional<Member> member = getAuthenticationMember();
+        model.addAttribute("member", getAuthenticationMember().get());
+        model.addAttribute("memberList", followFormList);
 
-        model.addAttribute("likeList", likeList);
-        model.addAttribute("member", member.get());
-
-        return "likeList";
+        return "memberList";
     }
 
     // 인증 멤버를 함수로 받아서 구현

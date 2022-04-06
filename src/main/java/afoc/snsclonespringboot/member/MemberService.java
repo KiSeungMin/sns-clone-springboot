@@ -25,4 +25,5 @@ public interface MemberService {
     Boolean unfollow(Long followerId, Long followeeId);
     List<Long> findFollowers(Long followeeId);
     List<Long> findFollowees(Long followerId);
+    public Boolean followIsPresent(Long followerId, Long followeeId);
 }
