@@ -7,9 +7,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Setter
-@Getter
+@Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 @Table
 public class BoardData {
@@ -19,13 +20,4 @@ public class BoardData {
     private Long boardId;
 
     private Long dataInfoId;
-
-    @Builder
-    public BoardData(
-            Long boardId,
-            Long dataInfoId
-    ) {
-        this.boardId = boardId;
-        this.dataInfoId = dataInfoId;
-    }
 }

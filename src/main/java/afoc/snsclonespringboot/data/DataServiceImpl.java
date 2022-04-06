@@ -8,8 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,46 +21,49 @@ public class DataServiceImpl implements DataService{
     @Value("${constant.rootDataPath}")
     private String rootDataPath;
 
+    // Test
+    @Value("${constant.rootTestDataPath}")
+    private String rootTestDataPath;
+    @Value("${isTest}")
+    private boolean isTest;
+
     @Override
-    public Boolean save(MultipartFile multipartFile, DataType dataType) throws IOException {
+    public Optional<DataInfo> save(MultipartFile multipartFile, DataType dataType){
         String originalFilename = multipartFile.getOriginalFilename();
         if (originalFilename == null)
-            return false;
+            return Optional.empty();
 
         String storeFilename = createStoreFileName(originalFilename);
 
-        // check
-        System.out.println("originalFilename = " + originalFilename);
-        System.out.println("storeFilename = " + storeFilename);
-
-        File saveFile = new File(storeFilename);
+        File saveFile = new File(getAbsolutePath(storeFilename));
         if(saveFile.isFile())
-            return false;
+            return Optional.empty();
 
         if(!saveFile.getParentFile().exists()) {
             boolean res = saveFile.getParentFile().mkdirs();
             if (!res)
-                return false;
+                return Optional.empty();
         }
 
-        System.out.println("saveFile.getAbsolutePath() = " + saveFile.getAbsolutePath());
-        multipartFile.transferTo(new File(saveFile.getAbsolutePath()));
+        try {
+            multipartFile.transferTo(saveFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
 
         DataInfo dataInfo = DataInfo.builder()
                 .dataType(dataType)
                 .saveDataPath(storeFilename)
                 .build();
 
-        Optional<DataInfo> ret = dataInfoRepository.save(dataInfo);
-        return ret.isPresent();
+        return dataInfoRepository.save(dataInfo);
     }
 
     private String createStoreFileName(String originalFilename) {
         String ext = extractExt(originalFilename);
         String uuid = UUID.randomUUID().toString();
-        String absolutePath = Paths.get(rootDataPath, uuid + "." + ext).toFile().getAbsolutePath();
-        System.out.println("absolutePath = " + absolutePath);
-        return Paths.get(rootDataPath, uuid + "." + ext).toString();
+        return Paths.get(uuid + "." + ext).toString();
     }
 
     private String extractExt(String originalFilename) {
@@ -73,5 +74,18 @@ public class DataServiceImpl implements DataService{
     @Override
     public Optional<DataInfo> load(Long id) {
         return dataInfoRepository.load(id);
+    }
+
+    @Override
+    public String getAbsolutePath(String path){
+        return Paths.get(rootDataPath, path).toAbsolutePath().toString();
+    }
+
+    // Test
+    @Override
+    public String getTestAbsolutePath(String path){
+        if(!isTest)
+            return null;
+        return Paths.get(rootTestDataPath, path).toAbsolutePath().toString();
     }
 }

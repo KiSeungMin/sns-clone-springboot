@@ -1,8 +1,6 @@
 package afoc.snsclonespringboot.member;
 
-import afoc.snsclonespringboot.board.Board;
-import afoc.snsclonespringboot.board.JpaBoardRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -13,14 +11,11 @@ import java.util.Optional;
 
 @Repository
 @Transactional
+@RequiredArgsConstructor
 public class JpaMemberRepository implements MemberRepository{
 
     @PersistenceContext
-    private EntityManager em;
-
-    public JpaMemberRepository(EntityManager em){
-        this.em = em;
-    }
+    private final EntityManager em;
 
     @Override
     public Member save(Member member) {

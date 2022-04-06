@@ -6,8 +6,10 @@ import javax.persistence.*;
 
 @Entity
 @Setter @Getter
-@ToString
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 @Table(name = "LIKETABLE")
 public class Like {
 
@@ -19,13 +21,4 @@ public class Like {
     private Long boardId;
 
     private Long memberId;
-
-    @Builder
-    public Like(
-            Long boardId,
-            Long memberId
-    ) {
-        this.boardId = boardId;
-        this.memberId = memberId;
-    }
 }

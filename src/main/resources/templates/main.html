@@ -15,7 +15,7 @@
                 <div class="col p-4 d-flex flex-column position-static">
 
                     <div class="d-flex overflow-hidden justify-content-start align-items-center mb-3">
-                        <img src="img/tmp3.jpg" class="rounded-circle" style="width: 3rem; height: 3rem;">
+                        <img th:src="|/images/${profileImagePath}|" class="rounded-circle mr-3" style="width: 3rem; height: 3rem;">
                         <h4 class = "ml-2" th:text="${member.username}">username</h4>
                     </div>
 

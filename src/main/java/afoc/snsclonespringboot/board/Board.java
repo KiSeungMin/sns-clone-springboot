@@ -6,8 +6,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Setter @Getter
+@Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 @Table(name = "BOARD")
 public class Board {
@@ -20,13 +22,4 @@ public class Board {
     private Long memberId;
 
     private LocalDateTime regTime;
-
-    @Builder
-    public Board(
-            Long memberId,
-            LocalDateTime regTime
-    ) {
-        this.memberId = memberId;
-        this.regTime = regTime;
-    }
 }

@@ -58,8 +58,14 @@ public class RepositoryTest {
         board1.setMemberId(member1.getId());
         board2.setMemberId(member2.getId());
 
-        Like like1 = new Like(board1.getBoardId(), member1.getId());
-        Like like2 = new Like(board1.getBoardId(), member2.getId());
+        Like like1 = Like.builder()
+                .boardId(board1.getBoardId())
+                .memberId(member1.getId())
+                .build();
+        Like like2 = Like.builder()
+                .boardId(board1.getBoardId())
+                .memberId(member2.getId())
+                .build();
 
         jlr.save(like1);
         jlr.save(like2);
@@ -70,8 +76,15 @@ public class RepositoryTest {
             System.out.println("ID : " + l);
         }
 
-        Follow follow1 = new Follow(member1.getId(), member2.getId());
-        Follow follow2 = new Follow(member2.getId(), member1.getId());
+        Follow follow1 = Follow.builder()
+                .followerId(member1.getId())
+                .followeeId(member2.getId())
+                .build();
+
+        Follow follow2 = Follow.builder()
+                .followerId(member2.getId())
+                .followeeId(member1.getId())
+                .build();
 
         jfr.save(follow1);
         jfr.save(follow2);
