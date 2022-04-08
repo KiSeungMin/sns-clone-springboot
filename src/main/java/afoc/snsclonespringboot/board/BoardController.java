@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
@@ -24,6 +25,18 @@ public class BoardController {
 
     private final BoardServiceImpl boardService;
     private final MemberServiceImpl memberService;
+
+    @GetMapping(value="/board/upload")
+    public String uploadBoard(Model model){
+        model.addAttribute("uploadForm", new UploadForm());
+        return "upload";
+    }
+
+    @PostMapping(value="/board/upload")
+    public String uploadBoard(@ModelAttribute UploadForm uploadForm, Model model){
+        // TODO
+        return "redirect:/main";
+    }
 
     @GetMapping(value="/board/{boardId}/get")
     public String visitBoardForm(@PathVariable("boardId") Long boardId, Model model){

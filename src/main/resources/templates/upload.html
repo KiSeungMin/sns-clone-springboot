@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>upload</title>
+</head>
+<body>
+<form action="/board/upload" role = "form" method="post" enctype="multipart/form-data" th:object="${uploadForm}">
+    <div class="form-floating mt-3">
+        <input type="file" multiple="multiple" class="form-control" th:field="*{imageFiles}" accept="image/png, image/jpeg">
+        <label th:for="imageFiles">imageFiles</label>
+        <p th:if="${#fields.hasErrors('imageFiles')}" th:errors="*{imageFiles}" class="fieldError">
+            Incorrect Data </p>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3" style="">Submit</button>
+
+    <input type="hidden" th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}">
+</form>
+
+</body>
+</html>
