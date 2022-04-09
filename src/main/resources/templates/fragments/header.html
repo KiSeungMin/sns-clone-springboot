@@ -28,10 +28,10 @@
 
         <div class="nav-scroller py-1 mb-1">
             <nav class="nav d-flex justify-content-around">
-                <a class="p-2 link-secondary" style="text-decoration: none;" href="#">aaaa</a>
-                <a class="p-2 link-secondary" style="text-decoration: none;" th:href="@{/member/{id}/followeeList (id=${member.Id})}">팔로잉</a>
-                <a class="p-2 link-secondary" style="text-decoration:none;" th:href="@{/member/{id}/followerList (id=${member.Id})}">팔로워</a>
-                <div>
+                <a class="p-2 link-secondary" style="text-decoration: none; color:black;" href="#">aaaa</a>
+                <a class="p-2 link-secondary" style="text-decoration: none; color:black;" th:href="@{/member/{id}/followeeList (id=${member.Id})}">팔로잉</a>
+                <a class="p-2 link-secondary" style="text-decoration: none; color:black;" th:href="@{/member/{id}/followerList (id=${member.Id})}">팔로워</a>
+                <div style="text-decoration:none; color:black;">
                     <a class="p-2 link-secondary" sec:authorize="isAnonymous()" href="/login">로그인</a>
                     <a class="p-2 link-secondary" sec:authorize="isAuthenticated()" href="/logout">로그아웃</a>
                 </div>

@@ -2,6 +2,7 @@ package afoc.snsclonespringboot;
 
 import afoc.snsclonespringboot.board.Board;
 import afoc.snsclonespringboot.board.BoardService;
+import afoc.snsclonespringboot.member.FollowForm;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberService;
 import afoc.snsclonespringboot.member.Role;
@@ -91,6 +92,7 @@ public class HomeController {
 
             model.addAttribute("boardList", boardList);
             model.addAttribute("member", member.get());
+
             return "main.html";
         } catch (Exception e){
             return "error/500.html";

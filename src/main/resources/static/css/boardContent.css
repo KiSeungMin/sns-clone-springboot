@@ -7,3 +7,27 @@
     color: red;
     cursor: pointer;
 }
+
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+    width: 100%;
+    margin: auto;
+}
+
+@media all and (min-width:320px){
+    #commentBox{
+        height: 150px;
+    }
+}
+
+@media all and (min-width: 768px){
+    #commentBox{
+        height: 300px;
+    }
+}
+
+@media all and (min-width: 1024px){
+    #commentBox{
+        height: 400px;
+    }
+}

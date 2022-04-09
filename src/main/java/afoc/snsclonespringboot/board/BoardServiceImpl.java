@@ -1,11 +1,15 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.board.Comment.Comment;
+import afoc.snsclonespringboot.board.Comment.CommentRepository;
 import afoc.snsclonespringboot.board.like.Like;
 import afoc.snsclonespringboot.board.like.LikeRepository;
+import afoc.snsclonespringboot.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,6 +20,7 @@ import java.util.Optional;
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
+    private final CommentRepository commentRepository;
 
     /*------------------------------------------------------*/
     // Basic Board Functions
@@ -111,5 +116,23 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<Long> findLikeMemberList(Long boardId) {
         return likeRepository.findLikeMemberListByBoardId(boardId);
+    }
+
+    public Boolean addComment(Long boardId, Member member, String content){
+
+        Comment comment = Comment.builder()
+                .boardId(boardId)
+                .member(member)
+                .content(content)
+                .date(new Date())
+                .build();
+
+        Optional<Comment> res = commentRepository.save(comment);
+
+        return res.isPresent();
+    }
+
+    public List<Comment> getCommentList(Long boardId){
+        return commentRepository.findCommentListByBoardId(boardId);
     }
 }

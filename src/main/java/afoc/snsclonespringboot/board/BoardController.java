@@ -1,5 +1,8 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.board.Comment.Comment;
+import afoc.snsclonespringboot.board.Comment.CommentForm;
+import afoc.snsclonespringboot.board.like.LikeForm;
 import afoc.snsclonespringboot.member.FollowForm;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberServiceImpl;
@@ -8,13 +11,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,28 +30,35 @@ public class BoardController {
 
         Board board = boardService.findBoardByBoardId(boardId).get();
 
-        BoardForm form = new BoardForm();
+        BoardForm boardForm = new BoardForm();
 
-        form.setBoardId(board.getBoardId());
-        form.setUsername(memberService.findMemberById(board.getMemberId()).get().getUsername());
-        form.setUserId(board.getMemberId());
+        List<Comment> commentList = boardService.getCommentList(boardId);
+
+        boardForm.setBoardId(board.getBoardId());
+        boardForm.setUsername(memberService.findMemberById(board.getMemberId()).get().getUsername());
+        boardForm.setUserId(board.getMemberId());
         //form.setImageDataId(board.getImageDataId());
         //form.setTextDataId(board.getTextDataId());
-        form.setDate(board.getDate());
-        form.setFollowIsPresent(memberService.followIsPresent(member.get().getId(), board.getMemberId()));
-        form.setLikeIsPresent(boardService.likeIsPresent(board.getMemberId(), member.get().getId()));
+        boardForm.setDate(board.getDate());
+        boardForm.setFollowIsPresent(memberService.followIsPresent(member.get().getId(), board.getMemberId()));
+        boardForm.setLikeIsPresent(boardService.likeIsPresent(board.getMemberId(), member.get().getId()));
 
-        model.addAttribute("form", form);
+        model.addAttribute("boardForm", boardForm);
         model.addAttribute("member", member.get());
+        model.addAttribute("commentList", commentList);
+        model.addAttribute("likeForm", new LikeForm());
+        model.addAttribute("commentForm", new CommentForm());
 
         return "boardContent";
     }
 
     // 좋아요 기능 구현(좋아요 버튼 누르면 실행)
-    @PostMapping("/board/{boardId}/like")
-    public RedirectView like(@PathVariable("boardId") Long boardId, likeForm likeForm){
+    @PostMapping("/board/like")
+    public RedirectView like(LikeForm likeForm, Model model){
 
         Long memberId = likeForm.getMemberId();
+
+        Long boardId = likeForm.getBoardId();
 
         boardService.boardLike(boardId, memberId);
 
@@ -85,6 +92,16 @@ public class BoardController {
         model.addAttribute("memberList", followFormList);
 
         return "memberList";
+    }
+
+    @PostMapping(value="/board/comment")
+    public RedirectView addComment(@ModelAttribute("commentForm") CommentForm commentForm, Model model){
+
+        Member member = getAuthenticationMember().get();
+
+        boardService.addComment(commentForm.getBoardId(), member, commentForm.getContent());
+
+        return new RedirectView ("/board/" + commentForm.getBoardId() + "/get");
     }
 
     // 인증 멤버를 함수로 받아서 구현
