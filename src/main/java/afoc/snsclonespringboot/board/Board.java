@@ -20,7 +20,10 @@ public class Board {
 
     private Long memberId;
 
-    private Long textDataId;
+    private String username;
+
+    private String textData;
+
     private Long imageDataId;
 
     private Date date;
@@ -28,12 +31,14 @@ public class Board {
     @Builder
     public Board(
             Long memberId,
-            Long textDataId,
+            String username,
+            String textData,
             Long imageDataId,
             Date date
     ) {
         this.memberId = memberId;
-        this.textDataId = textDataId;
+        this.username = username;
+        this.textData = textData;
         this.imageDataId = imageDataId;
         this.date = date;
     }

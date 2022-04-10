@@ -1,5 +1,7 @@
 package afoc.snsclonespringboot.member;
 
+import afoc.snsclonespringboot.board.Board;
+import afoc.snsclonespringboot.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final BoardService boardService;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
@@ -75,7 +79,7 @@ public class MemberController {
     }
 
     @PostMapping("/member/{memberId}/follow")
-    public String follow(@PathVariable("memberId") Long memberId){
+    public RedirectView follow(@PathVariable("memberId") Long memberId){
 
         Long followerId = getAuthenticationMember().get().getId();
 
@@ -83,7 +87,7 @@ public class MemberController {
 
         memberService.follow(followerId, followeeId);
 
-        return "/member/" + memberId + "/followeeList";
+        return new RedirectView( "/member/" + memberId + "/memberPage");
     }
 
     @GetMapping("/member/{memberId}/followerList")
@@ -140,6 +144,23 @@ public class MemberController {
         model.addAttribute("memberList", followFormList);
 
         return "memberList";
+    }
+
+    @GetMapping(value="/member/{memberId}/memberPage")
+    public String memberPage(@PathVariable("memberId") Long memberId, Model model){
+
+        Member member = memberService.findMemberById(memberId).get();
+
+        List<Board> boardList = boardService.findBoardListByMemberId(memberId);
+
+        Boolean followIsPresent = memberService.followIsPresent(getAuthenticationMember().get().getId(), memberId);
+
+        model.addAttribute("memberPageForm", member);
+        model.addAttribute("boardList", boardList);
+        model.addAttribute("member", getAuthenticationMember().get());
+        model.addAttribute("followIsPresent", followIsPresent);
+
+        return "memberPage";
     }
 
     public Optional<Member> getAuthenticationMember(){

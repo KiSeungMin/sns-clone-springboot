@@ -23,6 +23,30 @@ public class BoardController {
     private final BoardServiceImpl boardService;
     private final MemberServiceImpl memberService;
 
+    @GetMapping(value="/board/new")
+    public String createBoard(Model model){
+
+        model.addAttribute("member", getAuthenticationMember().get());
+        model.addAttribute("boardForm", new BoardForm());
+
+        return "createBoard";
+    }
+
+    @PostMapping(value="/board/new")
+    public RedirectView createBoard(BoardForm boardForm, Model model){
+
+        Board board = Board.builder()
+                .memberId(boardForm.getMemberId())
+                .username(memberService.findMemberById(boardForm.getMemberId()).get().getUsername())
+                .textData(boardForm.getTextData())
+                .date(new Date())
+                .build();
+
+        boardService.upload(board);
+
+        return new RedirectView("/main");
+    }
+
     @GetMapping(value="/board/{boardId}/get")
     public String visitBoardForm(@PathVariable("boardId") Long boardId, Model model){
 
@@ -30,20 +54,15 @@ public class BoardController {
 
         Board board = boardService.findBoardByBoardId(boardId).get();
 
-        BoardForm boardForm = new BoardForm();
+        BoardContentForm boardContentForm = new BoardContentForm();
 
         List<Comment> commentList = boardService.getCommentList(boardId);
 
-        boardForm.setBoardId(board.getBoardId());
-        boardForm.setUsername(memberService.findMemberById(board.getMemberId()).get().getUsername());
-        boardForm.setUserId(board.getMemberId());
-        //form.setImageDataId(board.getImageDataId());
-        //form.setTextDataId(board.getTextDataId());
-        boardForm.setDate(board.getDate());
-        boardForm.setFollowIsPresent(memberService.followIsPresent(member.get().getId(), board.getMemberId()));
-        boardForm.setLikeIsPresent(boardService.likeIsPresent(board.getMemberId(), member.get().getId()));
+        boardContentForm.setBoard(board);
+        boardContentForm.setFollowIsPresent(memberService.followIsPresent(member.get().getId(), board.getMemberId()));
+        boardContentForm.setLikeIsPresent(boardService.likeIsPresent(board.getMemberId(), member.get().getId()));
 
-        model.addAttribute("boardForm", boardForm);
+        model.addAttribute("boardContentForm", boardContentForm);
         model.addAttribute("member", member.get());
         model.addAttribute("commentList", commentList);
         model.addAttribute("likeForm", new LikeForm());

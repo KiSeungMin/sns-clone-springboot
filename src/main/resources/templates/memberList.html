@@ -29,8 +29,10 @@
 <div layout:fragment="content">
     <div id="container" class="container container-fluid border rounded">
         <div class="row row-cols-1 p-2" th:each="memberForm , status: ${memberList}">
-            <div class="col d-flex align-items-center justify-content-start border-bottom rounded p-1 m-1">
-                <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
+            <div class="col d-flex align-items-center justify-content-start border-bottom rounded p-2 m-1 h-100">
+                <a th:href="@{/member/{id}/memberPage (id=${memberForm.member.id})}">
+                    <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
+                </a>
 
                 <h5 class = "ml-1" th:text="${memberForm.member.username}" style="font-size: 1.4vw;">username</h5>
 

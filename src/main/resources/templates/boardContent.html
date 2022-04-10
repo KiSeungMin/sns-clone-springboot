@@ -12,20 +12,21 @@
 <div layout:fragment="content">
 
     <main class="container-fluid mt-5" style="width:90%;">
-        <div class="row row-cols-1 row-cols-md-2 justify-content-center" th:object="${boardForm}">
+        <div class="row row-cols-1 row-cols-md-2 justify-content-center" th:object="${boardContentForm}">
             <div class="col border rounded flex-column mb-4 h-md-250 position-relative">
                 <div class="row">
                     <div class="col p-3 d-flex flex-column position-static">
-
                         <div class="d-flex justify-content-start align-items-center">
-                            <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
-                            <h4 class = "ml-3" th:text="${boardForm.username}">username</h4>
+                            <a th:href="@{/member/{id}/memberPage (id=${boardContentForm.board.memberId})}">
+                                <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
+                            </a>
+                            <h4 class = "ml-3" th:text="${boardContentForm.board.username}">username</h4>
 
-                            <form th:action="@{/member/{id}/follow (id=${boardForm.userId})}" method="post" target= "hiddenFrame" style="position: absolute; right:1.5rem;">
-                                <span th:if="${boardForm.followIsPresent == true}">
+                            <form th:action="@{/member/{id}/follow (id=${boardContentForm.board.memberId})}" method="post" target= "hiddenFrame" style="position: absolute; right:1.5rem;">
+                                <span th:if="${boardContentForm.followIsPresent == true}">
                                     <button class="btn btn-secondary followBtn" type="submit">unfollow</button>
                                 </span>
-                                <span th:unless="${!boardForm.followIsPresent == false}">
+                                <span th:unless="${!boardContentForm.followIsPresent == false}">
                                     <button class="btn btn-primary followBtn" type="submit" >follow</button>
                                 </span>
                             </form>
@@ -69,8 +70,8 @@
                         </div>
 
                         <div class="mt-2">
-                            <div class="mb-1 text-muted" th:text = "${boardForm.date}">DATE</div>
-                            <p class="card-text mb-auto" style="text-decoration:none; color:black;">BODY TEXT</p>
+                            <div class="mb-1 text-muted" th:text = "${boardContentForm.board.date}">DATE</div>
+                            <p class="card-text mb-auto" style="text-decoration:none; color:black;" th:text="${boardContentForm.board.textData}">BODY TEXT</p>
                         </div>
                     </div>
                 </div>
@@ -80,17 +81,19 @@
                 <div class="row row-cols-1 mt-1" style="height: calc(100% - 40px);">
                     <div class="col" style="height: calc(100% - 110px);  ">
 
-                        <h5 class="m-1 p-2 border-bottom">comment</h5>
+                        <h5 class="mb-2 p-2 border-bottom">comment</h5>
 
                         <div id="commentBox" class="overflow-auto" style="overflow-y: scroll;">
-                            <div class="p-1 " th:each="comment, status:${commentList}" >
-                                <div class="col d-flex align-items-center justify-content-start border-bottom rounded p-1 m-1 mw-100" >
+                            <div th:each="comment, status:${commentList}" >
+                                <div class="border-bottom rounded mb-2 mw-100 h-100 d-flex align-items-center justify-content-start">
 
-                                    <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
+                                    <a class="align-items-center" th:href="@{/member/{id}/memberPage (id=${comment.member.Id})}">
+                                        <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 1.8vw; height: 1.8vw;">
+                                    </a>
 
-                                    <h5 class="ml-2 align-items-center" th:text="${comment.member.username}">username</h5>
+                                    <h6 class="ml-2" th:text="${comment.member.username}">username</h6>
 
-                                    <div class="ml-4 align-items-center" th:text="${comment.content}">text</div>
+                                    <div class="ml-2 p-1" th:text="${comment.content}">text</div>
                                 </div>
                             </div>
                         </div>
@@ -99,11 +102,11 @@
                     <div class="col mt-2" style="height:100px;">
                         <div class="d-flex overflow-hidden justify-content-start align-items-center mb-1">
                             <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 1.5rem; height: 1.5rem;">
-                            <h6 class = "ml-2" th:text="${boardForm.username}">username</h6>
+                            <h6 class = "ml-2" th:text="${member.username}">username</h6>
                         </div>
                         <form class="input-group" th:action="@{/board/comment}" th:object="${commentForm}" role="form" method="post" id = "commentForm">
 
-                            <input type="hidden" name ="boardId" th:value="${boardForm.boardId}">
+                            <input type="hidden" name ="boardId" th:value="${boardContentForm.board.boardId}">
 
                             <textarea type="text" th:field="*{content}" class="form-control" aria-label="With textarea"></textarea>
 
@@ -119,12 +122,12 @@
 
                             <input type="hidden" name = "memberId" th:value = "${member.Id}">
 
-                            <input type="hidden" name="boardId" th:value="${boardForm.boardId}">
+                            <input type="hidden" name="boardId" th:value="${boardContentForm.board.boardId}">
 
-                            <span class="_heart liked"  th:if="${boardForm.likeIsPresent == true}">
+                            <span class="_heart liked"  th:if="${boardContentForm.likeIsPresent == true}">
                                         <i class="fa fa-heart" aria-hidden="true" ></i>
                                     </span>
-                            <span class="_heart" th:unless="${!boardForm.likeIsPresent == false}">
+                            <span class="_heart" th:unless="${!boardContentForm.likeIsPresent == false}">
                                         <i class="fa fa-heart-o" aria-hidden="true" ></i>
                                     </span>
 
@@ -133,7 +136,7 @@
 
                         </form>
                     </div>
-                    <a href="#" th:href="@{/board/{id}/likeList (id=${boardForm.boardId})}">
+                    <a href="#" th:href="@{/board/{id}/likeList (id=${boardContentForm.board.boardId})}">
                         좋아요 누른 사람 보기
                     </a>
                 </div>
