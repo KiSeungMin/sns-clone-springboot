@@ -1,0 +1,19 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1.html}">
+
+<div layout:fragment="content">
+
+    <div class="container-fluid">
+
+        <form th:action="@{/board/new}" th:object="${boardForm}" method="post">
+
+            <input type="hidden" name="memberId" th:value="${member.Id}">
+
+            <textarea type="text" th:field="*{textData}" class="form-control" aria-label="With textarea"></textarea>
+
+            <button class="btn btn-primary" type="submit">생성</button>
+
+        </form>
+    </div>
+</div>

@@ -2,6 +2,7 @@ package afoc.snsclonespringboot;
 
 import afoc.snsclonespringboot.board.Board;
 import afoc.snsclonespringboot.board.BoardService;
+import afoc.snsclonespringboot.member.FollowForm;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberService;
 import afoc.snsclonespringboot.member.Role;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +39,7 @@ public class HomeController {
             memberService.join(member1);
 
             // members
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 50; i++) {
                 Member member = Member.builder()
                         .email("test" + i + "@test.com")
                         .password(passwordEncoder.encode("1234"))
@@ -45,14 +47,20 @@ public class HomeController {
                         .role(Role.USER)
                         .build();
                 memberService.join(member);
+
+                memberService.follow(1L, member.getId());
+                memberService.follow(member.getId(), 1L);
             }
 
             // boards
             for (int i = 0; i < 10; i++) {
                 Board board = Board.builder()
                         .memberId(1L)
-                        .textDataId((long) ((i % 2) + 4))
+                        .username(memberService.findMemberById(1L).get().getUsername())
+                        //.textDataId((long) ((i % 2) + 4))
+                        .textData("hello " + i)
                         .imageDataId((long) ((i % 3) + 1))
+                        .date(new Date())
                         .build();
                 boardService.upload(board);
             }
@@ -86,6 +94,7 @@ public class HomeController {
 
             model.addAttribute("boardList", boardList);
             model.addAttribute("member", member.get());
+
             return "main.html";
         } catch (Exception e){
             return "error/500.html";

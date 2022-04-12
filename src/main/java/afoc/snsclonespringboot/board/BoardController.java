@@ -1,5 +1,9 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.board.Comment.Comment;
+import afoc.snsclonespringboot.board.Comment.CommentForm;
+import afoc.snsclonespringboot.board.like.LikeForm;
+import afoc.snsclonespringboot.member.FollowForm;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -7,16 +11,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,6 +23,30 @@ public class BoardController {
     private final BoardServiceImpl boardService;
     private final MemberServiceImpl memberService;
 
+    @GetMapping(value="/board/new")
+    public String createBoard(Model model){
+
+        model.addAttribute("member", getAuthenticationMember().get());
+        model.addAttribute("boardForm", new BoardForm());
+
+        return "createBoard";
+    }
+
+    @PostMapping(value="/board/new")
+    public RedirectView createBoard(BoardForm boardForm, Model model){
+
+        Board board = Board.builder()
+                .memberId(boardForm.getMemberId())
+                .username(memberService.findMemberById(boardForm.getMemberId()).get().getUsername())
+                .textData(boardForm.getTextData())
+                .date(new Date())
+                .build();
+
+        boardService.upload(board);
+
+        return new RedirectView("/main");
+    }
+
     @GetMapping(value="/board/{boardId}/get")
     public String visitBoardForm(@PathVariable("boardId") Long boardId, Model model){
 
@@ -32,26 +54,30 @@ public class BoardController {
 
         Board board = boardService.findBoardByBoardId(boardId).get();
 
-        BoardForm form = new BoardForm();
+        BoardContentForm boardContentForm = new BoardContentForm();
 
-        form.setBoardId(board.getBoardId());
-        form.setUsername(memberService.findMemberById(board.getMemberId()).get().getUsername());
-        //form.setImageDataId(board.getImageDataId());
-        //form.setTextDataId(board.getTextDataId());
-        form.setRegTime(board.getRegTime());
-        form.setLikeIsPresent(boardService.likeIsPresent(boardId, member.get().getId()));
+        List<Comment> commentList = boardService.getCommentList(boardId);
 
-        model.addAttribute("form", form);
+        boardContentForm.setBoard(board);
+        boardContentForm.setFollowIsPresent(memberService.followIsPresent(member.get().getId(), board.getMemberId()));
+        boardContentForm.setLikeIsPresent(boardService.likeIsPresent(board.getMemberId(), member.get().getId()));
+
+        model.addAttribute("boardContentForm", boardContentForm);
         model.addAttribute("member", member.get());
+        model.addAttribute("commentList", commentList);
+        model.addAttribute("likeForm", new LikeForm());
+        model.addAttribute("commentForm", new CommentForm());
 
         return "boardContent";
     }
 
     // 좋아요 기능 구현(좋아요 버튼 누르면 실행)
-    @PostMapping("/board/{boardId}/like")
-    public RedirectView like(@PathVariable("boardId") Long boardId, likeForm likeForm){
+    @PostMapping("/board/like")
+    public RedirectView like(LikeForm likeForm, Model model){
 
         Long memberId = likeForm.getMemberId();
+
+        Long boardId = likeForm.getBoardId();
 
         boardService.boardLike(boardId, memberId);
 
@@ -62,22 +88,39 @@ public class BoardController {
     @GetMapping(value = "/board/{boardId}/likeList")
     public String getLikeList(@PathVariable("boardId") Long boardId, Model model){
 
-        List<Long> likeMemberList = boardService.findLikeMemberList(boardId);
+        List<Long> likeIdList = boardService.findLikeMemberList(boardId);
 
-        List<Member> likeList;
+        List<FollowForm> followFormList = new ArrayList<>();
 
-        try{
-            likeList = likeMemberList.stream().map(L -> memberService.findMemberById(L).get()).collect(Collectors.toList());
-        } catch(NoSuchElementException noSuchElementException){
-            likeList = null;
+        Long memberId = getAuthenticationMember().get().getId();
+
+        for(Long L : likeIdList){
+
+            Member member = memberService.findMemberById(L).get();
+            Boolean followIsPresent = memberService.followIsPresent(memberId, L);
+
+            FollowForm followForm = new FollowForm();
+
+            followForm.setMember(member);
+            followForm.setFollowIsPresent(followIsPresent);
+
+            followFormList.add(followForm);
         }
 
-        Optional<Member> member = getAuthenticationMember();
+        model.addAttribute("member", getAuthenticationMember().get());
+        model.addAttribute("memberList", followFormList);
 
-        model.addAttribute("likeList", likeList);
-        model.addAttribute("member", member.get());
+        return "memberList";
+    }
 
-        return "likeList";
+    @PostMapping(value="/board/comment")
+    public RedirectView addComment(@ModelAttribute("commentForm") CommentForm commentForm, Model model){
+
+        Member member = getAuthenticationMember().get();
+
+        boardService.addComment(commentForm.getBoardId(), member, commentForm.getContent());
+
+        return new RedirectView ("/board/" + commentForm.getBoardId() + "/get");
     }
 
     // 인증 멤버를 함수로 받아서 구현

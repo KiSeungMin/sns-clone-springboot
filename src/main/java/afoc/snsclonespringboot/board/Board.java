@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Setter @Getter
@@ -19,21 +20,26 @@ public class Board {
 
     private Long memberId;
 
-    private Long textDataId;
+    private String username;
+
+    private String textData;
+
     private Long imageDataId;
 
-    private LocalDateTime regTime;
+    private Date date;
 
     @Builder
     public Board(
             Long memberId,
-            Long textDataId,
+            String username,
+            String textData,
             Long imageDataId,
-            LocalDateTime regTime
+            Date date
     ) {
         this.memberId = memberId;
-        this.textDataId = textDataId;
+        this.username = username;
+        this.textData = textData;
         this.imageDataId = imageDataId;
-        this.regTime = regTime;
+        this.date = date;
     }
 }

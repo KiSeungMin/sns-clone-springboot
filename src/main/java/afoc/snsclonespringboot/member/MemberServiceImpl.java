@@ -56,9 +56,16 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private void validateDuplicateMember(Member member){
 
         Optional<Member> foundMember = findMemberByEmail(member.getEmail());
-        if(foundMember.isPresent()){
-            throw new IllegalStateException("이미 가입된 회원입니다.");
+        try{
+            if(foundMember.isPresent()){
+                throw new IllegalStateException("이미 가입된 회원입니다.");
+            } else{
+
+            }
+        } catch(Exception exception){
+            exception.printStackTrace();
         }
+
     }
 
     @Override
@@ -118,13 +125,22 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     // Follow Functions
 
     @Override
+    public Boolean followIsPresent(Long followerId, Long followeeId){
+        return followRepository.findFollow(followerId, followeeId).isPresent();
+    }
+
+    @Override
     public Boolean follow(Long followerId, Long followeeId) {
+        /*
         if (Objects.equals(followerId, followeeId)){
             return false;
         }
 
+         */
+
         Optional<Follow> findFollow = followRepository.findFollow(followerId, followeeId);
         if(findFollow.isPresent()){
+            unfollow(followerId, followeeId);
             return false;
         } else {
             Follow follow = Follow.builder()

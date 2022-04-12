@@ -1,6 +1,8 @@
 package afoc.snsclonespringboot.config;
 
 import afoc.snsclonespringboot.board.*;
+import afoc.snsclonespringboot.board.Comment.CommentRepository;
+import afoc.snsclonespringboot.board.Comment.JpaCommentRepository;
 import afoc.snsclonespringboot.board.like.JpaLikeRepository;
 import afoc.snsclonespringboot.board.like.LikeRepository;
 import afoc.snsclonespringboot.board.like.MemoryLikeRepository;
@@ -39,8 +41,13 @@ public class AppConfig {
     }
 
     @Bean
+    public CommentRepository commentRepository(){
+        return new JpaCommentRepository(em);
+    }
+
+    @Bean
     public BoardService boardService() {
-        return new BoardServiceImpl(boardRepository(), likeRepository());
+        return new BoardServiceImpl(boardRepository(), likeRepository(), commentRepository());
     }
 
     @Bean
