@@ -90,25 +90,5 @@ public class MemberController {
         return "/login";
     }
 
-    public Optional<Member> getAuthenticationMember(){
 
-        // 인증된 객체의 정보를 가져온다.
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if(authentication != null) {
-
-            String email = "";
-
-            // getName 메서드를 통해 member의 email을 가져온다. (SecurityConfig 파일에서 username parameter를 email로 설정해서 그런듯)
-            email = authentication.getName();
-
-            // getName 메서드를 통해 member의 email을 가져온다.
-            Optional<Member> member = this.memberService.findMemberByEmail(email);
-
-            return member;
-
-        } else{
-            return null;
-        }
-    }
 }

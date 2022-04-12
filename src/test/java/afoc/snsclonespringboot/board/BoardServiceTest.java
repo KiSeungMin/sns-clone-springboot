@@ -1,6 +1,5 @@
 package afoc.snsclonespringboot.board;
 
-import afoc.snsclonespringboot.board.like.Like;
 import afoc.snsclonespringboot.board.like.LikeRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -39,10 +38,10 @@ class BoardServiceTest {
                 .memberId(1L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board1);
+        Optional<Board> optionalBoard1 = boardService.upload(board1);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
     }
 
     @Test
@@ -55,12 +54,12 @@ class BoardServiceTest {
                 .memberId(2L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board1);
-        Boolean isSuccess2 = boardService.upload(board2);
+        Optional<Board> optionalBoard1 = boardService.upload(board1);
+        Optional<Board> optionalBoard2 = boardService.upload(board2);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
-        assertThat(isSuccess2).isTrue();
+        assertThat(optionalBoard1).isPresent();
+        assertThat(optionalBoard2).isPresent();
     }
 
     @Test
@@ -73,12 +72,12 @@ class BoardServiceTest {
                 .memberId(1L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board1);
-        Boolean isSuccess2 = boardService.upload(board2);
+        Optional<Board> optionalBoard1 = boardService.upload(board1);
+        Optional<Board> optionalBoard2 = boardService.upload(board2);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
-        assertThat(isSuccess2).isTrue();
+        assertThat(optionalBoard1).isPresent();
+        assertThat(optionalBoard2).isPresent();
     }
 
     /*------------------------------------------------------*/
@@ -91,10 +90,10 @@ class BoardServiceTest {
                 .build();
 
 
-        Boolean isSuccess1 = boardService.upload(board1);
+        Optional<Board> optionalBoard1 = boardService.upload(board1);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         Optional<Board> foundBoard = boardService.findBoardByBoardId(board1.getBoardId());
 
@@ -115,12 +114,12 @@ class BoardServiceTest {
                 .memberId(2L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board1);
-        Boolean isSuccess2 = boardService.upload(board2);
+        Optional<Board> optionalBoard1 = boardService.upload(board1);
+        Optional<Board> optionalBoard2 = boardService.upload(board2);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
-        assertThat(isSuccess2).isTrue();
+        assertThat(optionalBoard1).isPresent();
+        assertThat(optionalBoard2).isPresent();
 
         Optional<Board> foundBoard1 = boardService.findBoardByBoardId(board1.getBoardId());
         Optional<Board> foundBoard2 = boardService.findBoardByBoardId(board2.getBoardId());
@@ -143,10 +142,10 @@ class BoardServiceTest {
                 .memberId(1L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board1);
+        Optional<Board> optionalBoard1 = boardService.upload(board1);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         List<Board> foundBoardList1 = boardService.findBoardListByMemberId(board1.getMemberId());
 
@@ -165,10 +164,10 @@ class BoardServiceTest {
                 Board board = Board.builder()
                         .memberId((long) i)
                         .build();
-                Boolean isSuccess = boardService.upload(board);
+                Optional<Board> optionalBoard = boardService.upload(board);
 
                 // successful upload
-                assertThat(isSuccess).isTrue();
+                assertThat(optionalBoard).isPresent();
             }
         }
 
@@ -188,10 +187,10 @@ class BoardServiceTest {
                 .memberId(1L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board1);
+        Optional<Board> optionalBoard1 = boardService.upload(board1);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         // find member to be updated
         Optional<Board> foundBoard1ById = boardService.findBoardByBoardId(board1.getBoardId());
@@ -222,10 +221,10 @@ class BoardServiceTest {
                 .memberId(1L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board1);
+        Optional<Board> optionalBoard1 = boardService.upload(board1);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         // find member to be updated
         Optional<Board> foundBoard1ById = boardService.findBoardByBoardId(board1.getBoardId());
@@ -259,10 +258,10 @@ class BoardServiceTest {
                 .memberId(1L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board1);
+        Optional<Board> optionalBoard1 = boardService.upload(board1);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         // delete
         Boolean isSuccess2 = boardService.deleteBoardByBoardId(board1.getBoardId());
@@ -284,10 +283,10 @@ class BoardServiceTest {
                 .memberId(1L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board);
+        Optional<Board> optionalBoard1 = boardService.upload(board);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         Boolean isSuccess2 = boardService.likeBoard(board.getBoardId(), 2L);
 
@@ -301,10 +300,10 @@ class BoardServiceTest {
                 .memberId(1L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board);
+        Optional<Board> optionalBoard1 = boardService.upload(board);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         for(int i=0;i<30;i++){
             Boolean isSuccess = boardService.likeBoard(board.getBoardId(), (long) (i + 2));
@@ -318,10 +317,10 @@ class BoardServiceTest {
                 .memberId(1L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board);
+        Optional<Board> optionalBoard1 = boardService.upload(board);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         for(int i=0;i<30;i++) {
             Boolean isSuccess = boardService.likeBoard(board.getBoardId(), 2L);
@@ -344,10 +343,10 @@ class BoardServiceTest {
 
         Long likeMemberId = 2L;
 
-        Boolean isSuccess1 = boardService.upload(board);
+        Optional<Board> optionalBoard1 = boardService.upload(board);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         Boolean isSuccess2 = boardService.likeBoard(board.getBoardId(), likeMemberId);
 
@@ -367,10 +366,10 @@ class BoardServiceTest {
                 .memberId(1L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board);
+        Optional<Board> optionalBoard1 = boardService.upload(board);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         for(int i=0;i<30;i++){
             Boolean isSuccess = boardService.likeBoard(board.getBoardId(), (long) (i + 2));
@@ -390,10 +389,10 @@ class BoardServiceTest {
 
         Long likeMemberId = 2L;
 
-        Boolean isSuccess1 = boardService.upload(board);
+        Optional<Board> optionalBoard1 = boardService.upload(board);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         Boolean isSuccess2 = boardService.likeBoard(board.getBoardId(), likeMemberId);
         assertThat(isSuccess2).isTrue();  // successful like
@@ -417,10 +416,10 @@ class BoardServiceTest {
                 .memberId(1L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board);
+        Optional<Board> optionalBoard1 = boardService.upload(board);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         List<Long> likeMemberList = boardService.findLikeMemberList(board.getBoardId());
         assertThat(likeMemberList).hasSize(0);
@@ -432,10 +431,10 @@ class BoardServiceTest {
                 .memberId(1L)
                 .build();
 
-        Boolean isSuccess1 = boardService.upload(board);
+        Optional<Board> optionalBoard1 = boardService.upload(board);
 
         // successful upload
-        assertThat(isSuccess1).isTrue();
+        assertThat(optionalBoard1).isPresent();
 
         for(int i=0;i<30;i++){
             Boolean isSuccess = boardService.likeBoard(board.getBoardId(), (long) (i + 2));

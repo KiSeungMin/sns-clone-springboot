@@ -25,4 +25,7 @@ public interface MemberService {
     Boolean unfollow(Long followerId, Long followeeId);
     List<Long> findFollowers(Long followeeId);
     List<Long> findFollowees(Long followerId);
+
+    // Authentication
+    Optional<Member> getAuthenticationMember();
 }

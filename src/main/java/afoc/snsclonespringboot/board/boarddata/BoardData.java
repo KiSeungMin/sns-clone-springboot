@@ -2,9 +2,7 @@ package afoc.snsclonespringboot.board.boarddata;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Getter @Setter
@@ -15,6 +13,7 @@ import javax.persistence.Table;
 @Table
 public class BoardData {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long boardId;

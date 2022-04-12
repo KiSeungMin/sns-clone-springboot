@@ -1,5 +1,7 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.board.boarddata.BoardData;
+import afoc.snsclonespringboot.board.boarddata.BoardDataRepository;
 import afoc.snsclonespringboot.board.like.Like;
 import afoc.snsclonespringboot.board.like.LikeRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,19 +18,20 @@ import java.util.Optional;
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
+    private final BoardDataRepository boardDataRepository;
 
     /*------------------------------------------------------*/
     // Basic Board Functions
 
     @Override
-    public Boolean upload(Board board) {
+    public Optional<Board> upload(Board board) {
 
         try {
             boardRepository.save(board);
-            return true;
+            return Optional.of(board);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return false;
+            return Optional.empty();
         }
     }
 
@@ -82,6 +85,7 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
+    @Override
     public Boolean likeIsPresent(Long boardId, Long memberId){
         return likeRepository.findLikeByBoardIdAndMemberId(boardId, memberId).isPresent();
     }
@@ -91,7 +95,7 @@ public class BoardServiceImpl implements BoardService {
         return likeRepository.deleteLike(boardId, memberId);
     }
 
-
+    @Override
     public Boolean boardLike(Long boardId, Long memberId){
 
         Optional<Like> findLike = likeRepository.findLikeByBoardIdAndMemberId(boardId, memberId);
@@ -111,5 +115,19 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<Long> findLikeMemberList(Long boardId) {
         return likeRepository.findLikeMemberListByBoardId(boardId);
+    }
+
+    /*------------------------------------------------------*/
+    // BoardData Functions
+    @Override
+    public Optional<BoardData> uploadBoardData(BoardData boardData) {
+
+        try {
+            boardDataRepository.save(boardData);
+            return Optional.of(boardData);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return Optional.empty();
+        }
     }
 }

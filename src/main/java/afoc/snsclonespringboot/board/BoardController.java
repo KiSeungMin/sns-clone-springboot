@@ -1,8 +1,12 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.board.boarddata.BoardData;
 import afoc.snsclonespringboot.board.like.likeForm;
+import afoc.snsclonespringboot.data.DataInfo;
+import afoc.snsclonespringboot.data.DataService;
+import afoc.snsclonespringboot.data.DataType;
 import afoc.snsclonespringboot.member.Member;
-import afoc.snsclonespringboot.member.MemberServiceImpl;
+import afoc.snsclonespringboot.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
@@ -23,8 +28,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardController {
 
-    private final BoardServiceImpl boardService;
-    private final MemberServiceImpl memberService;
+    private final BoardService boardService;
+    private final MemberService memberService;
+    private final DataService dataService;
 
     @GetMapping(value="/board/upload")
     public String uploadBoard(Model model){
@@ -34,7 +40,38 @@ public class BoardController {
 
     @PostMapping(value="/board/upload")
     public String uploadBoard(@ModelAttribute UploadForm uploadForm, Model model){
-        // TODO
+        Optional<Member> authenticationMember = memberService.getAuthenticationMember();
+        if (authenticationMember.isEmpty())
+            throw new IllegalStateException();
+
+        Long memberId = authenticationMember.get().getId();
+
+        Board board = Board.builder()
+                .memberId(memberId)
+                .text(uploadForm.getText())
+                .build();
+
+        Optional<Board> optionalBoard = boardService.upload(board);
+        if(optionalBoard.isEmpty())
+            throw new IllegalStateException();
+
+        Long boardId = optionalBoard.get().getBoardId();
+
+        for (MultipartFile multipartFile : uploadForm.getImageFiles()) {
+            if (!multipartFile.isEmpty()){
+                Optional<DataInfo> dataInfo = dataService.save(multipartFile, DataType.Image);
+                if(dataInfo.isEmpty())
+                    throw new IllegalStateException();
+                Long dataInfoId = dataInfo.get().getId();
+
+                BoardData boardData = BoardData.builder()
+                        .boardId(boardId)
+                        .dataInfoId(dataInfoId)
+                        .build();
+
+                boardService.uploadBoardData(boardData);
+            }
+        }
         return "redirect:/main";
     }
 

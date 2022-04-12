@@ -22,7 +22,6 @@ public class JpaBoardRepository implements BoardRepository {
     @Override
     public Board save(Board board) {
         em.persist(board);
-
         return board;
     }
 

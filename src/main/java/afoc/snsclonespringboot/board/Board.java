@@ -21,5 +21,7 @@ public class Board {
 
     private Long memberId;
 
+    private String text;
+
     private LocalDateTime regTime;
 }

@@ -85,7 +85,7 @@ public class DataServiceImpl implements DataService{
     @Override
     public String getTestAbsolutePath(String path){
         if(!isTest)
-            return null;
+            throw new IllegalStateException();
         return Paths.get(rootTestDataPath, path).toAbsolutePath().toString();
     }
 }

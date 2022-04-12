@@ -1,17 +1,17 @@
 package afoc.snsclonespringboot.board.boarddata;
 
-import afoc.snsclonespringboot.board.boarddata.BoardData;
-import afoc.snsclonespringboot.board.boarddata.BoardDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional
 public class JpaBoardDataRepository implements BoardDataRepository {
 
     @PersistenceContext
