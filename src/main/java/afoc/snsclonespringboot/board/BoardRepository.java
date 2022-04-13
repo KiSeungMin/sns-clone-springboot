@@ -1,7 +1,5 @@
 package afoc.snsclonespringboot.board;
 
-import afoc.snsclonespringboot.member.Member;
-
 import java.util.List;
 import java.util.Optional;
 

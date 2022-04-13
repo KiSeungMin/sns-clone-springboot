@@ -6,14 +6,19 @@
 
     <div class="container-fluid">
 
-        <form th:action="@{/board/new}" th:object="${boardForm}" method="post">
-
-            <input type="hidden" name="memberId" th:value="${member.Id}">
+        <form th:action="@{/board/new}" enctype="multipart/form-data" th:object="${boardForm}" method="post">
 
             <textarea type="text" th:field="*{textData}" class="form-control" aria-label="With textarea"></textarea>
 
+            <input type="file" multiple="multiple" class="form-control" th:field="*{imageFiles}" accept="image/png, image/jpeg">
+            <label th:for="imageFiles">imageFiles</label>
+            <p th:if="${#fields.hasErrors('imageFiles')}" th:errors="*{imageFiles}" class="fieldError">
+                Incorrect Data </p>
+
             <button class="btn btn-primary" type="submit">생성</button>
 
+            <input type="hidden" th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}">
         </form>
     </div>
 </div>

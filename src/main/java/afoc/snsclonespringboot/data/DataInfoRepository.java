@@ -9,6 +9,7 @@ public interface DataInfoRepository {
 
     Optional<DataInfo> save(DataInfo data);
     Optional<DataInfo> load(Long id);
+    Boolean delete(Long id);
 
     // extra
     void clear();

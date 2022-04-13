@@ -3,17 +3,16 @@ package afoc.snsclonespringboot.config;
 import afoc.snsclonespringboot.board.*;
 import afoc.snsclonespringboot.board.Comment.CommentRepository;
 import afoc.snsclonespringboot.board.Comment.JpaCommentRepository;
+import afoc.snsclonespringboot.board.boarddata.BoardDataRepository;
+import afoc.snsclonespringboot.board.boarddata.JpaBoardDataRepository;
 import afoc.snsclonespringboot.board.like.JpaLikeRepository;
 import afoc.snsclonespringboot.board.like.LikeRepository;
-import afoc.snsclonespringboot.board.like.MemoryLikeRepository;
 import afoc.snsclonespringboot.data.*;
 import afoc.snsclonespringboot.member.*;
 import afoc.snsclonespringboot.member.follow.FollowRepository;
 import afoc.snsclonespringboot.member.follow.JpaFollowRepository;
-import afoc.snsclonespringboot.member.follow.MemoryFollowRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.annotation.Persistent;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -47,7 +46,7 @@ public class AppConfig {
 
     @Bean
     public BoardService boardService() {
-        return new BoardServiceImpl(boardRepository(), likeRepository(), commentRepository());
+        return new BoardServiceImpl(boardRepository(), likeRepository(), commentRepository(), boardDataRepository());
     }
 
     @Bean
@@ -60,6 +59,11 @@ public class AppConfig {
     public LikeRepository likeRepository(){
 //        return new MemoryLikeRepository();
         return new JpaLikeRepository(em);
+    }
+
+    @Bean
+    public BoardDataRepository boardDataRepository() {
+        return new JpaBoardDataRepository(em);
     }
 
     @Bean

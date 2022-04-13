@@ -24,6 +24,12 @@ public class MemoryDataInfoRepository implements DataInfoRepository {
     }
 
     @Override
+    public Boolean delete(Long id) {
+        store.remove(id);
+        return true;
+    }
+
+    @Override
     public void clear(){
         store.clear();
         sequence = 0L;

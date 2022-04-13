@@ -4,53 +4,115 @@ import afoc.snsclonespringboot.board.Comment.Comment;
 import afoc.snsclonespringboot.board.Comment.CommentForm;
 import afoc.snsclonespringboot.board.like.LikeForm;
 import afoc.snsclonespringboot.member.FollowForm;
+import afoc.snsclonespringboot.board.boarddata.BoardData;
+import afoc.snsclonespringboot.data.DataInfo;
+import afoc.snsclonespringboot.data.DataService;
+import afoc.snsclonespringboot.data.DataType;
 import afoc.snsclonespringboot.member.Member;
-import afoc.snsclonespringboot.member.MemberServiceImpl;
+import afoc.snsclonespringboot.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class BoardController {
 
-    private final BoardServiceImpl boardService;
-    private final MemberServiceImpl memberService;
+    private final BoardService boardService;
+    private final MemberService memberService;
+    private final DataService dataService;
 
     @GetMapping(value="/board/new")
-    public String createBoard(Model model){
-
-        model.addAttribute("member", getAuthenticationMember().get());
+    public String uploadBoard(Model model){
+        model.addAttribute("member", memberService.getAuthenticationMember().get());
         model.addAttribute("boardForm", new BoardForm());
-
         return "createBoard";
     }
 
     @PostMapping(value="/board/new")
-    public RedirectView createBoard(BoardForm boardForm, Model model){
+    public String uploadBoard(@ModelAttribute BoardForm boardForm, Model model){
+        Optional<Member> authenticationMember = memberService.getAuthenticationMember();
+        if (authenticationMember.isEmpty())
+            throw new IllegalStateException();
+
+        Long memberId = authenticationMember.get().getId();
 
         Board board = Board.builder()
-                .memberId(boardForm.getMemberId())
-                .username(memberService.findMemberById(boardForm.getMemberId()).get().getUsername())
+                .memberId(memberId)
                 .textData(boardForm.getTextData())
                 .date(new Date())
                 .build();
 
-        boardService.upload(board);
+        Optional<Board> optionalBoard = boardService.upload(board);
+        if(optionalBoard.isEmpty())
+            throw new IllegalStateException();
 
-        return new RedirectView("/main");
+        Long boardId = optionalBoard.get().getBoardId();
+
+        for (MultipartFile multipartFile : boardForm.getImageFiles()) {
+            if (!multipartFile.isEmpty()){
+                Optional<DataInfo> dataInfo = dataService.save(multipartFile, DataType.Image);
+                if(dataInfo.isEmpty())
+                    throw new IllegalStateException();
+                Long dataInfoId = dataInfo.get().getId();
+
+                BoardData boardData = BoardData.builder()
+                        .boardId(boardId)
+                        .dataInfoId(dataInfoId)
+                        .build();
+
+                boardService.uploadBoardData(boardData);
+            }
+        }
+        return "redirect:/main";
     }
+
+//    @GetMapping(value="/board/new")
+//    public String createBoard(Model model){
+//
+//        model.addAttribute("member", memberService.getAuthenticationMember().get());
+//        model.addAttribute("boardForm", new BoardForm());
+//
+//        return "createBoard";
+//    }
+////
+//    @PostMapping(value="/board/new")
+//    public RedirectView createBoard(BoardForm boardForm, Model model){
+//
+//        Optional<Member> authenticationMember = memberService.getAuthenticationMember();
+//        if (authenticationMember.isEmpty())
+//            throw new IllegalStateException();
+//        Member member = authenticationMember.get();
+//
+//        Board board = Board.builder()
+//                .memberId(member.getId())
+//                .username(member.getUsername())
+//                .textData(boardForm.getTextData())
+//                .date(new Date())
+//                .build();
+//
+//        boardService.upload(board);
+//
+//        return new RedirectView("/main");
+//    }
 
     @GetMapping(value="/board/{boardId}/get")
     public String visitBoardForm(@PathVariable("boardId") Long boardId, Model model){
 
-        Optional<Member> member = getAuthenticationMember();
+        Optional<Member> member = memberService.getAuthenticationMember();
 
         Board board = boardService.findBoardByBoardId(boardId).get();
 
@@ -92,7 +154,7 @@ public class BoardController {
 
         List<FollowForm> followFormList = new ArrayList<>();
 
-        Long memberId = getAuthenticationMember().get().getId();
+        Long memberId = memberService.getAuthenticationMember().get().getId();
 
         for(Long L : likeIdList){
 
@@ -107,7 +169,7 @@ public class BoardController {
             followFormList.add(followForm);
         }
 
-        model.addAttribute("member", getAuthenticationMember().get());
+        model.addAttribute("member", memberService.getAuthenticationMember().get());
         model.addAttribute("memberList", followFormList);
 
         return "memberList";
@@ -116,25 +178,10 @@ public class BoardController {
     @PostMapping(value="/board/comment")
     public RedirectView addComment(@ModelAttribute("commentForm") CommentForm commentForm, Model model){
 
-        Member member = getAuthenticationMember().get();
+        Member member = memberService.getAuthenticationMember().get();
 
         boardService.addComment(commentForm.getBoardId(), member, commentForm.getContent());
 
         return new RedirectView ("/board/" + commentForm.getBoardId() + "/get");
     }
-
-    // 인증 멤버를 함수로 받아서 구현
-    public Optional<Member> getAuthenticationMember(){
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        Optional<Member> member = memberService.findMemberByEmail(email);
-
-        if(!member.isPresent()){
-            throw new Error();
-        }
-
-        return member;
-    }
-
 }

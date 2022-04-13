@@ -3,6 +3,8 @@ package afoc.snsclonespringboot.member;
 import afoc.snsclonespringboot.member.follow.Follow;
 import afoc.snsclonespringboot.member.follow.FollowRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,23 +36,6 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         }
 
         return false;
-        /*
-        try {
-            Optional<Member> foundMember = findMemberByEmail(member.getEmail());
-            if (foundMember.isPresent()) {
-                throw new IllegalStateException("이미 가입된 회원입니다.");
-            } else {
-                memberRepository.save(member);
-                return true;
-            }
-        }
-
-        catch (Exception exception) {
-            exception.printStackTrace();
-            return false;
-        }
-
-         */
     }
 
     private void validateDuplicateMember(Member member){
@@ -165,5 +150,27 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Override
     public List<Long> findFollowees(Long followerId) {
         return followRepository.findFolloweesByFollowerId(followerId);
+    }
+
+    /*------------------------------------------------------*/
+    // Authentication
+
+    @Override
+    public Optional<Member> getAuthenticationMember(){
+
+        // 인증된 객체의 정보를 가져온다.
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication != null) {
+
+            String email = "";
+
+            // getName 메서드를 통해 member의 email을 가져온다. (SecurityConfig 파일에서 username parameter를 email로 설정해서 그런듯)
+            email = authentication.getName();
+            return findMemberByEmail(email);
+
+        } else{
+            return Optional.empty();
+        }
     }
 }

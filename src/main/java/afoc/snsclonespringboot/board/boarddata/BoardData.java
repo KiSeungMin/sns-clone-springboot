@@ -1,24 +1,22 @@
-package afoc.snsclonespringboot.board.like;
+package afoc.snsclonespringboot.board.boarddata;
 
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Setter @Getter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString
-@Table(name = "LIKETABLE")
-public class Like {
-
+@Table
+public class BoardData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "LIKE_ID")
     private Long id;
 
     private Long boardId;
 
-    private Long memberId;
+    private Long dataInfoId;
 }

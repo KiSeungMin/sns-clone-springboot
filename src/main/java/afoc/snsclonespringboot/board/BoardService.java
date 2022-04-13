@@ -1,6 +1,7 @@
 package afoc.snsclonespringboot.board;
 
-import afoc.snsclonespringboot.board.like.Like;
+import afoc.snsclonespringboot.board.Comment.Comment;
+import afoc.snsclonespringboot.board.boarddata.BoardData;
 import afoc.snsclonespringboot.member.Member;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface BoardService {
      */
 
     // basic functions
-    Boolean upload(Board board);
+    Optional<Board> upload(Board board);
     Optional<Board> findBoardByBoardId(Long boardId);
     List<Board> findBoardListByMemberId(Long memberId);
     Boolean updateBoard(Board board);
@@ -23,6 +24,14 @@ public interface BoardService {
 
     // like functions
     Boolean likeBoard(Long boardId, Long memberId);
+    Boolean boardLike(Long boardId, Long memberId);
+    Boolean likeIsPresent(Long boardId, Long memberId);
     Boolean likeCancel(Long boardId, Long memberId);
     List<Long> findLikeMemberList(Long boardId);
+
+    Boolean addComment(Long boardId, Member member, String content);
+    List<Comment> getCommentList(Long boardId);
+
+    // BoardData functions
+    Optional<BoardData> uploadBoardData(BoardData boardData);
 }

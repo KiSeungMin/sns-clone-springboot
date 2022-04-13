@@ -7,8 +7,10 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Setter @Getter
+@Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 @Table(name = "BOARD")
 public class Board {
@@ -24,8 +26,6 @@ public class Board {
 
     private String textData;
 
-    private Long imageDataId;
-
     private Date date;
 
     @Builder
@@ -33,13 +33,11 @@ public class Board {
             Long memberId,
             String username,
             String textData,
-            Long imageDataId,
             Date date
     ) {
         this.memberId = memberId;
         this.username = username;
         this.textData = textData;
-        this.imageDataId = imageDataId;
         this.date = date;
     }
 }

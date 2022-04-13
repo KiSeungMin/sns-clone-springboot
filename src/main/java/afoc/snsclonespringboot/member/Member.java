@@ -9,6 +9,8 @@ import javax.persistence.*;
 @Entity
 @Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 @Table(name = "MEMBER")
 public class Member {
@@ -27,24 +29,9 @@ public class Member {
     @Column(nullable = false, name="username")
     private String username;
 
-    private Long imageDataId;
+    private Long imageDataInfoId;
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @Builder
-    public Member(
-            String username,
-            String password,
-            String email,
-            Long imageDataId,
-            Role role
-    ) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.imageDataId = imageDataId;
-        this.role = role;
-    }
 }
 

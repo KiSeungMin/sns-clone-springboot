@@ -2,14 +2,16 @@ package afoc.snsclonespringboot.member;
 
 import afoc.snsclonespringboot.board.Board;
 import afoc.snsclonespringboot.board.BoardService;
+import afoc.snsclonespringboot.data.DataInfo;
+import afoc.snsclonespringboot.data.DataService;
+import afoc.snsclonespringboot.data.DataType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
@@ -17,6 +19,10 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
@@ -24,6 +30,7 @@ import java.util.Optional;
 public class MemberController {
     private final MemberService memberService;
     private final BoardService boardService;
+    private final DataService dataService;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
@@ -38,18 +45,27 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid MemberForm memberForm, BindingResult bindingResult, Model model) {
+    public String signup(@Valid @ModelAttribute MemberForm memberForm,
+                         RedirectAttributes redirectAttributes,
+                         BindingResult bindingResult,
+                         Model model)
+    throws IOException
+    {
 
         if(bindingResult.hasErrors()){
             return "signup";
         }
 
         try{
+            Optional<DataInfo> dataInfo = dataService.save(memberForm.getProfileImage(), DataType.Image);
+            if(dataInfo.isEmpty())
+                throw new IllegalStateException();
 
             Member member = Member.builder()
                     .username(memberForm.getUsername())
                     .password(passwordEncoder.encode(memberForm.getPassword()))
                     .email(memberForm.getEmail())
+                    .imageDataInfoId(dataInfo.get().getId())
                     .role(Role.USER)
                     .build();
 
@@ -65,23 +81,26 @@ public class MemberController {
     @GetMapping("/login-failed")
     public String loginFailed(Model model) {
         model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
+        System.out.println("MemberController.loginFailed");
         return "/login";
     }
 
     @GetMapping("/signup-failed")
     public String signupFailed() {
+        System.out.println("MemberController.signupFailed");
         return "signup-failed";
     }
 
     @GetMapping("logout")
     public String logout(){
-        return "/";
+        System.out.println("MemberController.logout");
+        return "/login";
     }
 
     @PostMapping("/member/{memberId}/follow")
     public RedirectView follow(@PathVariable("memberId") Long memberId){
 
-        Long followerId = getAuthenticationMember().get().getId();
+        Long followerId = memberService.getAuthenticationMember().get().getId();
 
         Long followeeId = memberId;
 
@@ -97,7 +116,7 @@ public class MemberController {
 
         List<FollowForm> followFormList = new ArrayList<>();
 
-        Long userId = getAuthenticationMember().get().getId();
+        Long userId = memberService.getAuthenticationMember().get().getId();
 
         for(Long L : followerIdList){
 
@@ -112,7 +131,7 @@ public class MemberController {
             followFormList.add(followForm);
         }
 
-        model.addAttribute("member", getAuthenticationMember().get());
+        model.addAttribute("member", memberService.getAuthenticationMember().get());
         model.addAttribute("memberList", followFormList);
 
         return "memberList";
@@ -125,7 +144,7 @@ public class MemberController {
 
         List<FollowForm> followFormList = new ArrayList<>();
 
-        Long userId = getAuthenticationMember().get().getId();
+        Long userId = memberService.getAuthenticationMember().get().getId();
 
         for(Long L : followeeIdList){
 
@@ -140,7 +159,7 @@ public class MemberController {
             followFormList.add(followForm);
         }
 
-        model.addAttribute("member", getAuthenticationMember().get());
+        model.addAttribute("member", memberService.getAuthenticationMember().get());
         model.addAttribute("memberList", followFormList);
 
         return "memberList";
@@ -153,35 +172,14 @@ public class MemberController {
 
         List<Board> boardList = boardService.findBoardListByMemberId(memberId);
 
-        Boolean followIsPresent = memberService.followIsPresent(getAuthenticationMember().get().getId(), memberId);
+        Boolean followIsPresent = memberService.followIsPresent(memberService.getAuthenticationMember().get().getId(), memberId);
 
         model.addAttribute("memberPageForm", member);
         model.addAttribute("boardList", boardList);
-        model.addAttribute("member", getAuthenticationMember().get());
+        model.addAttribute("member", memberService.getAuthenticationMember().get());
         model.addAttribute("followIsPresent", followIsPresent);
 
         return "memberPage";
     }
 
-    public Optional<Member> getAuthenticationMember(){
-
-        // 인증된 객체의 정보를 가져온다.
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if(authentication != null) {
-
-            String email = "";
-
-            // getName 메서드를 통해 member의 email을 가져온다. (SecurityConfig 파일에서 username parameter를 email로 설정해서 그런듯)
-            email = authentication.getName();
-
-            // getName 메서드를 통해 member의 email을 가져온다.
-            Optional<Member> member = this.memberService.findMemberByEmail(email);
-
-            return member;
-
-        } else{
-            return null;
-        }
-    }
 }
