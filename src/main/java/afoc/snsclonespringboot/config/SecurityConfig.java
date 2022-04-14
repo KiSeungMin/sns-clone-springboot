@@ -29,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")        // 로그인 페이지 URL 설정
                 .defaultSuccessUrl("/main")     // 로그인 성공 시 이동할 URL
                 .usernameParameter("email")     // 로그인 시 사용할 파라미터 이름
+                .failureUrl("/login-failed")
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))        // 로그아웃 URL 설정

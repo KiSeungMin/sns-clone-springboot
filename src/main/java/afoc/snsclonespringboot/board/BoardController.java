@@ -44,6 +44,7 @@ public class BoardController {
 
     @PostMapping(value="/board/new")
     public String uploadBoard(@ModelAttribute BoardForm boardForm, Model model){
+
         Optional<Member> authenticationMember = memberService.getAuthenticationMember();
         if (authenticationMember.isEmpty())
             throw new IllegalStateException();
@@ -112,25 +113,34 @@ public class BoardController {
     @GetMapping(value="/board/{boardId}/get")
     public String visitBoardForm(@PathVariable("boardId") Long boardId, Model model){
 
-        Optional<Member> member = memberService.getAuthenticationMember();
+        try{
+            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
 
-        Board board = boardService.findBoardByBoardId(boardId).get();
+            if(authenticationMember.isEmpty()){
+                throw new Exception();
+            }
 
-        BoardContentForm boardContentForm = new BoardContentForm();
+            Board board = boardService.findBoardByBoardId(boardId).get();
 
-        List<Comment> commentList = boardService.getCommentList(boardId);
+            BoardContentForm boardContentForm = new BoardContentForm();
 
-        boardContentForm.setBoard(board);
-        boardContentForm.setFollowIsPresent(memberService.followIsPresent(member.get().getId(), board.getMemberId()));
-        boardContentForm.setLikeIsPresent(boardService.likeIsPresent(board.getMemberId(), member.get().getId()));
+            List<Comment> commentList = boardService.getCommentList(boardId);
 
-        model.addAttribute("boardContentForm", boardContentForm);
-        model.addAttribute("member", member.get());
-        model.addAttribute("commentList", commentList);
-        model.addAttribute("likeForm", new LikeForm());
-        model.addAttribute("commentForm", new CommentForm());
+            boardContentForm.setBoard(board);
+            boardContentForm.setFollowIsPresent(memberService.followIsPresent(authenticationMember.get().getId(), board.getMemberId()));
+            boardContentForm.setLikeIsPresent(boardService.likeIsPresent(board.getMemberId(), authenticationMember.get().getId()));
 
-        return "boardContent";
+            model.addAttribute("boardContentForm", boardContentForm);
+            model.addAttribute("member", authenticationMember.get());
+            model.addAttribute("commentList", commentList);
+            model.addAttribute("likeForm", new LikeForm());
+            model.addAttribute("commentForm", new CommentForm());
+
+            return "boardContent";
+        } catch(Exception e){
+            return "error/500.html";
+        }
+
     }
 
     // 좋아요 기능 구현(좋아요 버튼 누르면 실행)
@@ -150,38 +160,58 @@ public class BoardController {
     @GetMapping(value = "/board/{boardId}/likeList")
     public String getLikeList(@PathVariable("boardId") Long boardId, Model model){
 
-        List<Long> likeIdList = boardService.findLikeMemberList(boardId);
+        try{
 
-        List<FollowForm> followFormList = new ArrayList<>();
+            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
 
-        Long memberId = memberService.getAuthenticationMember().get().getId();
+            if(authenticationMember.isEmpty()){
+                throw new Exception();
+            }
 
-        for(Long L : likeIdList){
+            Long memberId = authenticationMember.get().getId();
 
-            Member member = memberService.findMemberById(L).get();
-            Boolean followIsPresent = memberService.followIsPresent(memberId, L);
+            List<Long> likeIdList = boardService.findLikeMemberList(boardId);
 
-            FollowForm followForm = new FollowForm();
+            List<FollowForm> followFormList = new ArrayList<>();
 
-            followForm.setMember(member);
-            followForm.setFollowIsPresent(followIsPresent);
+            for(Long L : likeIdList){
 
-            followFormList.add(followForm);
+                Member member = memberService.findMemberById(L).get();
+                Boolean followIsPresent = memberService.followIsPresent(memberId, L);
+
+                FollowForm followForm = new FollowForm();
+
+                followForm.setMember(member);
+                followForm.setFollowIsPresent(followIsPresent);
+
+                followFormList.add(followForm);
+            }
+
+            model.addAttribute("member", memberService.getAuthenticationMember().get());
+            model.addAttribute("memberList", followFormList);
+
+            return "memberList";
+        } catch(Exception e){
+            return "error/500";
         }
-
-        model.addAttribute("member", memberService.getAuthenticationMember().get());
-        model.addAttribute("memberList", followFormList);
-
-        return "memberList";
     }
 
     @PostMapping(value="/board/comment")
     public RedirectView addComment(@ModelAttribute("commentForm") CommentForm commentForm, Model model){
 
-        Member member = memberService.getAuthenticationMember().get();
+        try{
 
-        boardService.addComment(commentForm.getBoardId(), member, commentForm.getContent());
+            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
 
-        return new RedirectView ("/board/" + commentForm.getBoardId() + "/get");
+            if(authenticationMember.isEmpty()){
+                throw new Exception();
+            }
+
+            boardService.addComment(commentForm.getBoardId(), authenticationMember.get(), commentForm.getContent());
+
+            return new RedirectView ("/board/" + commentForm.getBoardId() + "/get");
+        } catch(Exception e){
+            return new RedirectView("error/500");
+        }
     }
 }

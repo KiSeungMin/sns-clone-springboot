@@ -81,7 +81,7 @@ public class MemberController {
     @GetMapping("/login-failed")
     public String loginFailed(Model model) {
         model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
-        System.out.println("MemberController.loginFailed");
+        //System.out.println("MemberController.loginFailed");
         return "/login";
     }
 
@@ -100,69 +100,98 @@ public class MemberController {
     @PostMapping("/member/{memberId}/follow")
     public RedirectView follow(@PathVariable("memberId") Long memberId){
 
-        Long followerId = memberService.getAuthenticationMember().get().getId();
+        try{
+            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
 
-        Long followeeId = memberId;
+            if(authenticationMember.isEmpty()){
+                throw new Exception();
+            }
+            Long followerId = authenticationMember.get().getId();
 
-        memberService.follow(followerId, followeeId);
+            Long followeeId = memberId;
 
-        return new RedirectView( "/member/" + memberId + "/memberPage");
+            memberService.follow(followerId, followeeId);
+
+            return new RedirectView( "/member/" + memberId + "/memberPage");
+        } catch(Exception e){
+            return new RedirectView("error/500");
+        }
     }
 
     @GetMapping("/member/{memberId}/followerList")
     public String followerList(@PathVariable("memberId") Long memberId, Model model){
 
-        List<Long> followerIdList = memberService.findFollowers(memberId);
+        try{
+            List<Long> followerIdList = memberService.findFollowers(memberId);
 
-        List<FollowForm> followFormList = new ArrayList<>();
+            List<FollowForm> followFormList = new ArrayList<>();
 
-        Long userId = memberService.getAuthenticationMember().get().getId();
+            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
 
-        for(Long L : followerIdList){
+            if(authenticationMember.isEmpty()){
+                throw new Exception();
+            }
 
-            Member member = memberService.findMemberById(L).get();
-            Boolean followIsPresent = memberService.followIsPresent(userId, L);
+            Long userId = authenticationMember.get().getId();
 
-            FollowForm followForm = new FollowForm();
+            for(Long L : followerIdList){
 
-            followForm.setMember(member);
-            followForm.setFollowIsPresent(followIsPresent);
+                Member member = memberService.findMemberById(L).get();
+                Boolean followIsPresent = memberService.followIsPresent(userId, L);
 
-            followFormList.add(followForm);
+                FollowForm followForm = new FollowForm();
+
+                followForm.setMember(member);
+                followForm.setFollowIsPresent(followIsPresent);
+
+                followFormList.add(followForm);
+            }
+
+            model.addAttribute("member", memberService.getAuthenticationMember().get());
+            model.addAttribute("memberList", followFormList);
+
+            return "memberList";
+        } catch(Exception e){
+            return "error/500";
         }
-
-        model.addAttribute("member", memberService.getAuthenticationMember().get());
-        model.addAttribute("memberList", followFormList);
-
-        return "memberList";
     }
 
     @GetMapping("/member/{memberId}/followeeList")
     public String followeeList(@PathVariable("memberId") Long memberId, Model model){
 
-        List<Long> followeeIdList = memberService.findFollowees(memberId);
+        try{
+            List<Long> followeeIdList = memberService.findFollowees(memberId);
 
-        List<FollowForm> followFormList = new ArrayList<>();
+            List<FollowForm> followFormList = new ArrayList<>();
 
-        Long userId = memberService.getAuthenticationMember().get().getId();
+            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
 
-        for(Long L : followeeIdList){
+            if(authenticationMember.isEmpty()){
+                throw new Exception();
+            }
 
-            Member member = memberService.findMemberById(L).get();
-            Boolean followIsPresent = memberService.followIsPresent(userId, L);
+            Long userId = authenticationMember.get().getId();
 
-            FollowForm followForm = new FollowForm();
+            for(Long L : followeeIdList){
 
-            followForm.setMember(member);
-            followForm.setFollowIsPresent(followIsPresent);
+                Member member = memberService.findMemberById(L).get();
+                Boolean followIsPresent = memberService.followIsPresent(userId, L);
 
-            followFormList.add(followForm);
+                FollowForm followForm = new FollowForm();
+
+                followForm.setMember(member);
+                followForm.setFollowIsPresent(followIsPresent);
+
+                followFormList.add(followForm);
+            }
+
+            model.addAttribute("member", memberService.getAuthenticationMember().get());
+            model.addAttribute("memberList", followFormList);
+
+            return "memberList";
+        } catch(Exception e){
+            return "error/500";
         }
-
-        model.addAttribute("member", memberService.getAuthenticationMember().get());
-        model.addAttribute("memberList", followFormList);
-
-        return "memberList";
     }
 
     @GetMapping(value="/member/{memberId}/memberPage")

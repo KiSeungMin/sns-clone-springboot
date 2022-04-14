@@ -75,7 +75,6 @@ public class HomeController {
                         .username(memberService.findMemberById(1L).get().getUsername())
                         //.textDataId((long) ((i % 2) + 4))
                         .textData("hello " + i)
-                        .imageDataId((long) ((i % 3) + 1))
                         .date(new Date())
 
                         .memberId(memberList.get(0).getId())
@@ -123,9 +122,9 @@ public class HomeController {
 
             return "main.html";
         } catch (Exception e){
-            System.out.println("HomeController.main e");
-            e.printStackTrace();
-            return "error/500.html";
+            //  System.out.println("HomeController.main e");
+            //  e.printStackTrace();
+            return "error/500";
         }
     }
 }
