@@ -34,4 +34,5 @@ public interface BoardService {
 
     // BoardData functions
     Optional<BoardData> uploadBoardData(BoardData boardData);
+    List<Long> findBoardDataInfoIdByBoardId(Long boardId);
 }

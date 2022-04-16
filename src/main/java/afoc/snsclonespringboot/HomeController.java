@@ -2,6 +2,8 @@ package afoc.snsclonespringboot;
 
 import afoc.snsclonespringboot.board.Board;
 import afoc.snsclonespringboot.board.BoardService;
+import afoc.snsclonespringboot.board.BoardShowForm;
+import afoc.snsclonespringboot.board.boarddata.BoardData;
 import afoc.snsclonespringboot.data.DataInfo;
 import afoc.snsclonespringboot.data.DataInfoRepository;
 import afoc.snsclonespringboot.data.DataService;
@@ -71,11 +73,8 @@ public class HomeController {
             // boards
             for (int i = 0; i < 10; i++) {
                 Board board = Board.builder()
-
-                        .username(memberService.findMemberById(1L).get().getUsername())
                         //.textDataId((long) ((i % 2) + 4))
                         .textData("hello " + i)
-                        .imageDataId((long) ((i % 3) + 1))
                         .date(new Date())
 
                         .memberId(memberList.get(0).getId())
@@ -115,9 +114,37 @@ public class HomeController {
             String profileImagePath = dataInfo.get().getSaveDataPath();
 
             // TODO - 보여줄 보드 리스트 찾는 서비스 필요
+            // TODO - board의 member가 본인이 아닌 작성자가 나오도록 바꾸기
+            // TODO - 다른 모든 것들도 본인의 member가 model에 들어가도록 바꾸기
+            List<BoardShowForm> boardShowFormList = new ArrayList<>();
             List<Board> boardList = boardService.findBoardListByMemberId(member.get().getId());
+            for(Board board : boardList){
+                try{
+                    // get contents (Board, imgPath)
+                    List<Long> boardDataInfoIdList = boardService.findBoardDataInfoIdByBoardId(board.getBoardId());
+                    List<String> boardDataPathList = new ArrayList<>();
+                    for(Long boardDataInfoId : boardDataInfoIdList){
+                        Optional<DataInfo> boardDataInfo = dataService.load(boardDataInfoId);
+                        if(boardDataInfo.isPresent()){
+                            String boardDataPath = boardDataInfo.get().getSaveDataPath();
+                            boardDataPathList.add(boardDataPath);
+                        }
+                    }
+                    // set boardShowForm
+                    BoardShowForm boardShowForm = BoardShowForm.builder()
+                            .boardId(board.getBoardId())
+                            .memberId(board.getMemberId())
+                            .username(memberService.findMemberById(board.getMemberId()).get().getUsername())
+                            .date(board.getDate())
+                            .textData(board.getTextData())
+                            .imgPath(boardDataPathList)
+                            .build();
+                    boardShowFormList.add(boardShowForm);
+                } catch (Exception ignored){
+                }
+            }
 
-            model.addAttribute("boardList", boardList);
+            model.addAttribute("boardList", boardShowFormList);
             model.addAttribute("member", member.get());
             model.addAttribute("profileImagePath", profileImagePath);
 

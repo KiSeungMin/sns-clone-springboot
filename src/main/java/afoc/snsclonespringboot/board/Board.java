@@ -3,7 +3,6 @@ package afoc.snsclonespringboot.board;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -22,8 +21,7 @@ public class Board {
 
     private Long memberId;
 
-    private String username;
-
+    @Column(length = 2000)
     private String textData;
 
     private Date date;
@@ -31,12 +29,10 @@ public class Board {
     @Builder
     public Board(
             Long memberId,
-            String username,
             String textData,
             Date date
     ) {
         this.memberId = memberId;
-        this.username = username;
         this.textData = textData;
         this.date = date;
     }

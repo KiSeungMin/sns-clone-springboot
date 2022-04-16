@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1.html}">
@@ -8,7 +10,7 @@
 
         <form th:action="@{/board/new}" enctype="multipart/form-data" th:object="${boardForm}" method="post">
 
-            <textarea type="text" th:field="*{textData}" class="form-control" aria-label="With textarea"></textarea>
+            <textarea rows="10" maxlength="900" type="text" th:field="*{textData}" class="form-control" aria-label="With textarea"></textarea>
 
             <input type="file" multiple="multiple" class="form-control" th:field="*{imageFiles}" accept="image/png, image/jpeg">
             <label th:for="imageFiles">imageFiles</label>
