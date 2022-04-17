@@ -17,12 +17,12 @@
                 <div class="row">
                     <div class="col p-3 d-flex flex-column position-static">
                         <div class="d-flex justify-content-start align-items-center">
-                            <a th:href="@{/member/{id}/memberPage (id=${boardContentForm.board.memberId})}">
-                                <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
+                            <a th:href="@{/member/{id}/memberPage (id=${boardContentForm.board.member.id})}">
+                                <img th:src="|/images/${boardContentForm.board.member.dataInfo.saveDataPath}|" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
                             </a>
-                            <h4 class = "ml-3" th:text="${boardContentForm.board.username}">username</h4>
+                            <h4 class = "ml-3" th:text="${boardContentForm.board.member.username}">username</h4>
 
-                            <form th:action="@{/member/{id}/follow (id=${boardContentForm.board.memberId})}" method="post" target= "hiddenFrame" style="position: absolute; right:1.5rem;">
+                            <form th:action="@{/member/{id}/follow (id=${boardContentForm.board.member.id})}" method="post" target= "hiddenFrame" style="position: absolute; right:1.5rem;">
                                 <span th:if="${boardContentForm.followIsPresent == true}">
                                     <button class="btn btn-secondary followBtn" type="submit">unfollow</button>
                                 </span>
@@ -34,40 +34,38 @@
                             <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
                         </div>
 
-                        <div class="container mt-2">
-                            <div id="myCarousel" class="carousel slide">
-                                <!-- Indicators -->
-                                <div class="carousel-indicators">
-                                    <button type="button" class="item1 active" aria-current="true" aria-label="Slide 1"></button>
-                                    <button type="button" class="item2" aria-label="Slide 2"></button>
-                                    <button type="button" class="item3" aria-label="Slide 3"></button>
+                        <div th:if="${#lists.size(boardContentForm.board.boardDataList) > 0}">
+                            <div class="container mt-2">
+                                <div id="myCarousel" class="carousel slide">
+                                    <!-- Indicators -->
+                                    <!--
+                                    <div class="carousel-indicators">
+                                        <button type="button" class="item1 active" aria-current="true" aria-label="Slide 1"></button>
+                                        <button type="button" class="item2" aria-label="Slide 2"></button>
+                                        <button type="button" class="item3" aria-label="Slide 3"></button>
+                                    </div>
+                                    -->
+
+                                    <div class="carousel-inner justify-content-center">
+
+                                        <div th:attr="class=${status.index == 0 ? 'carousel-item active' : 'carousel-item'}" th:each="boardImage, status:${boardContentForm.board.boardDataList}">
+                                            <img th:src="|/images/${boardImage.dataInfo.saveDataPath}|" class="mx-auto img-fluid" style="height:400px;">
+                                        </div>
+
+                                    </div>
+
+                                    <button class="left carousel-control-prev bg-transparent border-0" type="button" href="#myCarousel">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden"></span>
+                                    </button>
+                                    <button class="right carousel-control-next bg-transparent border-0" type="button" href="#myCarousel">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden"></span>
+                                    </button>
                                 </div>
-
-                                <!-- Wrapper for slides -->
-                                <div class="carousel-inner justify-content-center">
-                                    <div class="carousel-item active">
-                                        <img th:src="@{/img/tmp1.jpg}" class="mx-auto img-fluid">
-                                    </div>
-
-                                    <div class="carousel-item">
-                                        <img th:src="@{/img/tmp2.jpg}" class="mx-auto img-fluid">
-                                    </div>
-
-                                    <div class="carousel-item">
-                                        <img th:src="@{/img/tmp3.jpg}" class="mx-auto img-fluid">
-                                    </div>
-                                </div>
-
-                                <button class="left carousel-control-prev bg-transparent border-0" type="button" href="#myCarousel">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden"></span>
-                                </button>
-                                <button class="right carousel-control-next bg-transparent border-0" type="button" href="#myCarousel">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden"></span>
-                                </button>
                             </div>
                         </div>
+
 
                         <div class="mt-2">
                             <div class="mb-1 text-muted" th:text = "${boardContentForm.board.date}">DATE</div>
@@ -87,8 +85,8 @@
                             <div th:each="comment, status:${commentList}" >
                                 <div class="border-bottom rounded mb-2 mw-100 h-100 d-flex align-items-center justify-content-start">
 
-                                    <a class="align-items-center" th:href="@{/member/{id}/memberPage (id=${comment.member.Id})}">
-                                        <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 1.8vw; height: 1.8vw;">
+                                    <a class="align-items-center" th:href="@{/member/{id}/memberPage (id=${comment.member.id})}">
+                                        <img th:src="|/images/${comment.member.dataInfo.saveDataPath}|" class = "rounded-circle" style="width: 1.8vw; height: 1.8vw;">
                                     </a>
 
                                     <h6 class="ml-2" th:text="${comment.member.username}">username</h6>
@@ -101,8 +99,8 @@
 
                     <div class="col mt-2" style="height:100px;">
                         <div class="d-flex overflow-hidden justify-content-start align-items-center mb-1">
-                            <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 1.5rem; height: 1.5rem;">
-                            <h6 class = "ml-2" th:text="${member.username}">username</h6>
+                            <img th:src="|/images/${authMember.dataInfo.saveDataPath}|" class = "rounded-circle" style="width: 1.5rem; height: 1.5rem;">
+                            <h6 class = "ml-2" th:text="${authMember.username}">username</h6>
                         </div>
                         <form class="input-group" th:action="@{/board/comment}" th:object="${commentForm}" role="form" method="post" id = "commentForm">
 
@@ -120,7 +118,7 @@
                         <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
                         <form th:action="@{/board/like}" method="post" id = "likeForm" target="hiddenFrame" th:object="${likeForm}">
 
-                            <input type="hidden" name = "memberId" th:value = "${member.Id}">
+                            <input type="hidden" name = "memberId" th:value = "${authMember.id}">
 
                             <input type="hidden" name="boardId" th:value="${boardContentForm.board.boardId}">
 

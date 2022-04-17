@@ -1,5 +1,7 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.member.Member;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +13,7 @@ public interface BoardRepository {
     Optional<Board> findBoardByBoardId(Long boardId);
 
     // Member Id를 이용해 Board List 조회
-    List<Board> findBoardListByMemberId(Long memberId);
+    List<Board> findBoardListByMember(Member member);
 
     // Board Id 이용해 수정
     // return 값 성공/실패

@@ -16,9 +16,10 @@ $(document).ready(function(){
 // 캐러셀 기능 구현 관련 함수
 $(document).ready(function(){
     // Activate Carousel
-    $("#myCarousel").carousel({interval: false, wrap: true, touch : true});
+    $(".myCarousel").carousel({interval: false, wrap: true, touch : true});
 
     // Enable Carousel Indicators
+    /*
     $(".item1").click(function(){
         $("#myCarousel").carousel(0);
     });
@@ -36,7 +37,18 @@ $(document).ready(function(){
     $(".right").click(function(){
         $("#myCarousel").carousel("next");
     });
+
+     */
+
 });
+
+function leftClick(a){
+    $("#myCarousel" + a).carousel("prev");
+}
+
+function rightClick(a){
+    $("#myCarousel" + a).carousel("next");
+}
 
 $(document).ready(function(){
 

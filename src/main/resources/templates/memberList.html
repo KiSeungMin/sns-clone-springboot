@@ -28,17 +28,17 @@
 
 <div layout:fragment="content">
     <div id="container" class="container container-fluid border rounded">
-        <div class="row row-cols-1 p-2" th:each="memberForm , status: ${memberList}">
+        <div class="row row-cols-1 p-2" th:each="memberForm, status: ${memberList}">
             <div class="col d-flex align-items-center justify-content-start border-bottom rounded p-2 m-1 h-100">
                 <a th:href="@{/member/{id}/memberPage (id=${memberForm.member.id})}">
-                    <img th:src="@{/img/tmp3.jpg}" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
+                    <img th:src="|/images/memberForm.member.dataInfo.saveDataPath|" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
                 </a>
 
                 <h5 class = "ml-1" th:text="${memberForm.member.username}" style="font-size: 1.4vw;">username</h5>
 
                 <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
 
-                <form th:action="@{/member/{id}/follow (id=${memberForm.member.Id})}" method="post" target= "hiddenFrame" style="position: absolute; right:1.5rem;">
+                <form th:action="@{/member/{id}/follow (id=${memberForm.member.id})}" method="post" target= "hiddenFrame" style="position: absolute; right:1.5rem;">
                     <span th:if="${memberForm.followIsPresent}">
                         <button class="btn btn-secondary followBtn" type="submit" >unfollow</button>
                     </span>

@@ -18,7 +18,7 @@ public interface BoardService {
     // basic functions
     Optional<Board> upload(Board board);
     Optional<Board> findBoardByBoardId(Long boardId);
-    List<Board> findBoardListByMemberId(Long memberId);
+    List<Board> findBoardListByMember(Member member);
     Boolean updateBoard(Board board);
     Boolean deleteBoardByBoardId(Long boardId);
 

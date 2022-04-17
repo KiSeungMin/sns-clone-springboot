@@ -1,15 +1,16 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.board.boarddata.BoardData;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
 
 @Getter
 @Setter
 public class BoardContentForm {
 
     private Board board;
+
+    private BoardData boardData;
 
     private Boolean followIsPresent;
 

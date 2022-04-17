@@ -12,7 +12,9 @@ import javax.persistence.*;
 @ToString
 @Table
 public class DataInfo {
+
     @Id
+    @Column(name="DATAINFO_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 

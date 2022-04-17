@@ -1,5 +1,6 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.member.Member;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -34,9 +35,9 @@ public class JpaBoardRepository implements BoardRepository {
     }
 
     @Override
-    public List<Board> findBoardListByMemberId(Long memberId){
-        return em.createQuery("select b from Board b where b.memberId = :memberId", Board.class)
-                .setParameter("memberId", memberId)
+    public List<Board> findBoardListByMember(Member member){
+        return em.createQuery("select b from Board b where b.member = :member", Board.class)
+                .setParameter("member", member)
                 .getResultList();
     }
 

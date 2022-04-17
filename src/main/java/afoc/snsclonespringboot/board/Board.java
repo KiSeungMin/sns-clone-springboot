@@ -1,10 +1,13 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.board.boarddata.BoardData;
+import afoc.snsclonespringboot.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -20,23 +23,24 @@ public class Board {
     @Column(name = "BOARD_ID")
     private Long boardId;
 
-    private Long memberId;
-
-    private String username;
+    @OneToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
     private String textData;
 
     private Date date;
 
+    @OneToMany(mappedBy = "board")
+    private List<BoardData> boardDataList;
+
     @Builder
     public Board(
-            Long memberId,
-            String username,
+            Member member,
             String textData,
             Date date
     ) {
-        this.memberId = memberId;
-        this.username = username;
+        this.member = member;
         this.textData = textData;
         this.date = date;
     }

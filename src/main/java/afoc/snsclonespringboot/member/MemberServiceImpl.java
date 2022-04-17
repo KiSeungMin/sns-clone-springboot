@@ -28,29 +28,15 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     // Basic Member Functions
 
     @Override
-    public Boolean join(Member member){
+    public Boolean join(Member member) throws IllegalStateException{
 
-        validateDuplicateMember(member);
-        if(memberRepository.save(member) != null){
-            return true;
+        if(memberRepository.findMemberByMemberEmail(member.getEmail()).isPresent()){
+            throw new IllegalStateException("이미 가입된 회원입니다.");
         }
 
-        return false;
-    }
+        memberRepository.save(member);
 
-    private void validateDuplicateMember(Member member){
-
-        Optional<Member> foundMember = findMemberByEmail(member.getEmail());
-        try{
-            if(foundMember.isPresent()){
-                throw new IllegalStateException("이미 가입된 회원입니다.");
-            } else{
-
-            }
-        } catch(Exception exception){
-            exception.printStackTrace();
-        }
-
+        return true;
     }
 
     @Override
@@ -116,12 +102,10 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     public Boolean follow(Long followerId, Long followeeId) {
-        /*
+
         if (Objects.equals(followerId, followeeId)){
             return false;
         }
-
-         */
 
         Optional<Follow> findFollow = followRepository.findFollow(followerId, followeeId);
         if(findFollow.isPresent()){
@@ -170,7 +154,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             return findMemberByEmail(email);
 
         } else{
-            return Optional.empty();
+           return Optional.empty();
         }
     }
 }

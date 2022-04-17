@@ -1,5 +1,7 @@
 package afoc.snsclonespringboot.board.boarddata;
 
+import afoc.snsclonespringboot.board.Board;
+import afoc.snsclonespringboot.data.DataInfo;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +18,11 @@ public class BoardData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long boardId;
+    @ManyToOne
+    @JoinColumn(name = "BOARD_ID")
+    private Board board;
 
-    private Long dataInfoId;
+    @OneToOne
+    @JoinColumn(name="DATAINFO_ID")
+    private DataInfo dataInfo;
 }

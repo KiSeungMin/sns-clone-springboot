@@ -1,8 +1,11 @@
 package afoc.snsclonespringboot.member;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 public interface MemberService {
     /*
     - 유저 등록/조회/수정/삭제
@@ -10,8 +13,6 @@ public interface MemberService {
     - 팔로워 목록 조회
     - 팔로이 목록 조회
      */
-
-
 
     // Member CRUD
     Boolean join(Member member);

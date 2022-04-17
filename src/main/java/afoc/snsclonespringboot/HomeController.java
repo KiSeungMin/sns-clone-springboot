@@ -59,6 +59,7 @@ public class HomeController {
                         .username("test_user")
                         .imageDataInfoId(dataInfo.getId())
                         .role(Role.USER)
+                        .dataInfo(dataInfo)
                         .build();
                 memberService.join(member);
 
@@ -67,17 +68,16 @@ public class HomeController {
                 memberList.add(member);
             }
 
-
             // boards
             for (int i = 0; i < 10; i++) {
                 Board board = Board.builder()
 
-                        .username(memberService.findMemberById(1L).get().getUsername())
+                        //.username(memberService.findMemberById(1L).get().getUsername())
                         //.textDataId((long) ((i % 2) + 4))
                         .textData("hello " + i)
                         .date(new Date())
-
-                        .memberId(memberList.get(0).getId())
+                        //.memberId(memberList.get(0).getId())
+                        .member(memberList.get(0))
 
                         .build();
                 boardService.upload(board);
@@ -93,6 +93,7 @@ public class HomeController {
     public String main(Model model) {
         try {
             // 인증된 객체의 정보 가져옴
+
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
             if(authentication == null){
@@ -107,18 +108,20 @@ public class HomeController {
                 throw new Exception();
             }
 
+            /*
             Optional<DataInfo> dataInfo = dataService.load(member.get().getImageDataInfoId());
             if(dataInfo.isEmpty()){
                 throw new Exception();
             }
             String profileImagePath = dataInfo.get().getSaveDataPath();
 
+             */
+
             // TODO - 보여줄 보드 리스트 찾는 서비스 필요
-            List<Board> boardList = boardService.findBoardListByMemberId(member.get().getId());
+            List<Board> boardList = boardService.findBoardListByMember(member.get());
 
             model.addAttribute("boardList", boardList);
-            model.addAttribute("member", member.get());
-            model.addAttribute("profileImagePath", profileImagePath);
+            model.addAttribute("authMember", member.get());
 
             return "main.html";
         } catch (Exception e){

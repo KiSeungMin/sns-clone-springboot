@@ -20,43 +20,41 @@
 
                     <div class="d-flex overflow-hidden justify-content-start align-items-center mb-3">
 
-                        <a th:href="@{/member/{id}/memberPage (id=${board.memberId})}">
-                            <img th:src="|/images/${profileImagePath}|" class="rounded-circle mr-3" style="width: 3rem; height: 3rem;">
+                        <a th:href="@{/member/{id}/memberPage (id=${board.member.id})}">
+                            <img th:src="|/images/${board.member.dataInfo.saveDataPath}|" class="rounded-circle mr-3" style="width: 3rem; height: 3rem;">
                         </a>
-                        <h4 class = "ml-2" th:text="${board.username}">username</h4>
+                        <h4 class = "ml-2" th:text="${board.member.username}">username</h4>
 
                     </div>
 
-                    <div>
+                    <div th:if="${#lists.size(board.boardDataList) > 0}">
                         <div class="container">
-                            <div id="myCarousel" class="carousel slide">
+                            <div th:id="'myCarousel' + ${status.index}" class="carousel slide">
+
                                 <!-- Indicators -->
-                                <div class="carousel-indicators">
+                                <!--
+                                <div class="carousel-indicators" th:each="boardImage, status:${board.boardDataList}">
                                     <button type="button" class="item1 active" aria-current="true" aria-label="Slide 1"></button>
                                     <button type="button" class="item2" aria-label="Slide 2"></button>
                                     <button type="button" class="item3" aria-label="Slide 3"></button>
                                 </div>
+                                -->
 
-                                <!-- Wrapper for slides -->
                                 <div class="carousel-inner justify-content-center">
-                                    <div class="carousel-item active">
-                                        <img th:src="@{/img/tmp1.jpg}" class="mx-auto img-fluid">
+
+                                    <div th:attr="class=${status.index == 0 ? 'carousel-item active' : 'carousel-item'}" th:each="boardImage, status:${board.boardDataList}">
+                                        <img th:src="|/images/${boardImage.dataInfo.saveDataPath}|" class="mx-auto img-fluid" style="height:400px;">
                                     </div>
 
-                                    <div class="carousel-item">
-                                        <img th:src="@{/img/tmp2.jpg}" class="mx-auto img-fluid">
-                                    </div>
-
-                                    <div class="carousel-item">
-                                        <img th:src="@{/img/tmp3.jpg}" class="mx-auto img-fluid">
-                                    </div>
                                 </div>
 
-                                <button class="left carousel-control-prev bg-transparent border-0" type="button" href="#myCarousel">
+                                <button class="left carousel-control-prev bg-transparent border-0" type="button" href="#myCarousel"
+                                        th:onclick="|javascript:leftClick('${status.index}')|">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden"></span>
                                 </button>
-                                <button class="right carousel-control-next bg-transparent border-0" type="button" href="#myCarousel">
+                                <button class="right carousel-control-next bg-transparent border-0" type="button" href="#myCarousel"
+                                        th:onclick="|javascript:rightClick('${status.index}')|">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden"></span>
                                 </button>

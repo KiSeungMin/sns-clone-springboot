@@ -7,6 +7,7 @@ import afoc.snsclonespringboot.data.DataService;
 import afoc.snsclonespringboot.data.DataType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -41,25 +41,23 @@ public class MemberController {
     @GetMapping("/signup")
     public String signup(Model model) {
         model.addAttribute("memberForm", new MemberForm());
-        return "signup";
+        return "/signup";
     }
 
     @PostMapping("/signup")
     public String signup(@Valid @ModelAttribute MemberForm memberForm,
-                         RedirectAttributes redirectAttributes,
                          BindingResult bindingResult,
-                         Model model)
-    throws IOException
-    {
+                         Model model) {
 
         if(bindingResult.hasErrors()){
-            return "signup";
+            return "/signup";
         }
 
         try{
             Optional<DataInfo> dataInfo = dataService.save(memberForm.getProfileImage(), DataType.Image);
-            if(dataInfo.isEmpty())
-                throw new IllegalStateException();
+            if(dataInfo.isEmpty()) {
+                throw new IllegalStateException("사진 정보가 없습니다!");
+            }
 
             Member member = Member.builder()
                     .username(memberForm.getUsername())
@@ -71,9 +69,10 @@ public class MemberController {
 
             memberService.join(member);
 
-        } catch(Error e){
+        } catch(IllegalStateException e){
             model.addAttribute("errorMessage", e.getMessage());
-            return "signup";
+
+            return "/signup";
         }
         return "redirect:/login";
     }
@@ -85,11 +84,14 @@ public class MemberController {
         return "/login";
     }
 
+    /*
     @GetMapping("/signup-failed")
     public String signupFailed() {
         System.out.println("MemberController.signupFailed");
         return "signup-failed";
     }
+
+     */
 
     @GetMapping("logout")
     public String logout(){
@@ -106,6 +108,7 @@ public class MemberController {
             if(authenticationMember.isEmpty()){
                 throw new Exception();
             }
+
             Long followerId = authenticationMember.get().getId();
 
             Long followeeId = memberId;
@@ -113,6 +116,7 @@ public class MemberController {
             memberService.follow(followerId, followeeId);
 
             return new RedirectView( "/member/" + memberId + "/memberPage");
+
         } catch(Exception e){
             return new RedirectView("error/500");
         }
@@ -126,18 +130,12 @@ public class MemberController {
 
             List<FollowForm> followFormList = new ArrayList<>();
 
-            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
-
-            if(authenticationMember.isEmpty()){
-                throw new Exception();
-            }
-
-            Long userId = authenticationMember.get().getId();
+            Optional<Member> authenticationMember =  memberService.getAuthenticationMember();
 
             for(Long L : followerIdList){
 
                 Member member = memberService.findMemberById(L).get();
-                Boolean followIsPresent = memberService.followIsPresent(userId, L);
+                Boolean followIsPresent = memberService.followIsPresent(authenticationMember.get().getId(), L);
 
                 FollowForm followForm = new FollowForm();
 
@@ -147,8 +145,8 @@ public class MemberController {
                 followFormList.add(followForm);
             }
 
-            model.addAttribute("member", memberService.getAuthenticationMember().get());
             model.addAttribute("memberList", followFormList);
+            model.addAttribute("authMember", authenticationMember.get());
 
             return "memberList";
         } catch(Exception e){
@@ -166,16 +164,10 @@ public class MemberController {
 
             Optional<Member> authenticationMember = memberService.getAuthenticationMember();
 
-            if(authenticationMember.isEmpty()){
-                throw new Exception();
-            }
-
-            Long userId = authenticationMember.get().getId();
-
             for(Long L : followeeIdList){
 
                 Member member = memberService.findMemberById(L).get();
-                Boolean followIsPresent = memberService.followIsPresent(userId, L);
+                Boolean followIsPresent = memberService.followIsPresent(authenticationMember.get().getId(), L);
 
                 FollowForm followForm = new FollowForm();
 
@@ -185,7 +177,7 @@ public class MemberController {
                 followFormList.add(followForm);
             }
 
-            model.addAttribute("member", memberService.getAuthenticationMember().get());
+            model.addAttribute("authMember", authenticationMember.get());
             model.addAttribute("memberList", followFormList);
 
             return "memberList";
@@ -197,18 +189,24 @@ public class MemberController {
     @GetMapping(value="/member/{memberId}/memberPage")
     public String memberPage(@PathVariable("memberId") Long memberId, Model model){
 
-        Member member = memberService.findMemberById(memberId).get();
+        try{
+            Member member = memberService.findMemberById(memberId).get();
 
-        List<Board> boardList = boardService.findBoardListByMemberId(memberId);
+            List<Board> boardList = boardService.findBoardListByMember(member);
 
-        Boolean followIsPresent = memberService.followIsPresent(memberService.getAuthenticationMember().get().getId(), memberId);
+            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
 
-        model.addAttribute("memberPageForm", member);
-        model.addAttribute("boardList", boardList);
-        model.addAttribute("member", memberService.getAuthenticationMember().get());
-        model.addAttribute("followIsPresent", followIsPresent);
+            Boolean followIsPresent = memberService.followIsPresent(authenticationMember.get().getId(), memberId);
 
-        return "memberPage";
+            model.addAttribute("memberPageForm", member);
+            model.addAttribute("boardList", boardList);
+            model.addAttribute("authMember", authenticationMember.get());
+            model.addAttribute("followIsPresent", followIsPresent);
+
+            return "memberPage";
+        } catch(Exception e){
+            return "error/500";
+        }
+
     }
-
 }

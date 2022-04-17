@@ -1,5 +1,6 @@
 package afoc.snsclonespringboot.member;
 
+import afoc.snsclonespringboot.data.DataInfo;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +31,10 @@ public class Member {
     private String username;
 
     private Long imageDataInfoId;
+
+    @OneToOne
+    @JoinColumn(name = "DATAINFO_ID")
+    private DataInfo dataInfo;
 
     @Enumerated(EnumType.STRING)
     private Role role;

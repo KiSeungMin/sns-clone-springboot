@@ -1,5 +1,6 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.member.Member;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -29,10 +30,14 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     @Override
-    public List<Board> findBoardListByMemberId(Long memberId) {
+    public List<Board> findBoardListByMember(Member member) {
+        /*
         return store.values().stream()
                     .filter(board -> board.getMemberId().equals(memberId))
                     .collect(Collectors.toList());
+
+         */
+        return null;
     }
 
     @Override

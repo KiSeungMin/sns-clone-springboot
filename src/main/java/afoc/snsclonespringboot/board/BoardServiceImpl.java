@@ -46,10 +46,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<Board> findBoardListByMemberId(Long memberId) {
-        return boardRepository.findBoardListByMemberId(memberId);
+    public List<Board> findBoardListByMember(Member member) {
+        return boardRepository.findBoardListByMember(member);
     }
 
+    /*
     @Override
     public Boolean updateBoard(Board board) {
         Optional<Board> foundBoard = findBoardByBoardId(board.getBoardId());
@@ -66,6 +67,13 @@ public class BoardServiceImpl implements BoardService {
             }
         }
     }
+    */
+
+    @Override
+    public Boolean updateBoard(Board board){
+        return true;
+    }
+
 
     @Override
     public Boolean deleteBoardByBoardId(Long boardId) {

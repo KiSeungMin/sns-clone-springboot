@@ -11,8 +11,6 @@ import afoc.snsclonespringboot.data.DataType;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.view.RedirectView;
@@ -37,48 +35,71 @@ public class BoardController {
 
     @GetMapping(value="/board/new")
     public String uploadBoard(Model model){
-        model.addAttribute("member", memberService.getAuthenticationMember().get());
-        model.addAttribute("boardForm", new BoardForm());
-        return "createBoard";
+
+        try{
+            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
+
+            model.addAttribute("authMember", authenticationMember.get());
+            model.addAttribute("boardForm", new BoardForm());
+            return "createBoard";
+        } catch(Exception e){
+            return "error/500";
+        }
+
     }
 
     @PostMapping(value="/board/new")
     public String uploadBoard(@ModelAttribute BoardForm boardForm, Model model){
 
-        Optional<Member> authenticationMember = memberService.getAuthenticationMember();
-        if (authenticationMember.isEmpty())
-            throw new IllegalStateException();
+        try{
+            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
+            if (authenticationMember.isEmpty())
+                throw new IllegalStateException();
 
-        Long memberId = authenticationMember.get().getId();
+            //String username = authenticationMember.get().getUsername();
+            // Long memberId = authenticationMember.get().getId();
 
-        Board board = Board.builder()
-                .memberId(memberId)
-                .textData(boardForm.getTextData())
-                .date(new Date())
-                .build();
+            List<BoardData> boardDataList = new ArrayList<>();
 
-        Optional<Board> optionalBoard = boardService.upload(board);
-        if(optionalBoard.isEmpty())
-            throw new IllegalStateException();
+            Board board = Board.builder()
+                    .member(authenticationMember.get())
+                    //.memberId(memberId)
+                    //.username(username)
+                    .textData(boardForm.getTextData())
+                    .date(new Date())
+                    .boardDataList(boardDataList)
+                    .build();
 
-        Long boardId = optionalBoard.get().getBoardId();
+            Optional<Board> optionalBoard = boardService.upload(board);
 
-        for (MultipartFile multipartFile : boardForm.getImageFiles()) {
-            if (!multipartFile.isEmpty()){
-                Optional<DataInfo> dataInfo = dataService.save(multipartFile, DataType.Image);
-                if(dataInfo.isEmpty())
-                    throw new IllegalStateException();
-                Long dataInfoId = dataInfo.get().getId();
+            if(optionalBoard.isEmpty())
+                throw new IllegalStateException();
 
-                BoardData boardData = BoardData.builder()
-                        .boardId(boardId)
-                        .dataInfoId(dataInfoId)
-                        .build();
+            Long boardId = optionalBoard.get().getBoardId();
 
-                boardService.uploadBoardData(boardData);
+            for (MultipartFile multipartFile : boardForm.getImageFiles()) {
+                if (!multipartFile.isEmpty()){
+                    Optional<DataInfo> dataInfo = dataService.save(multipartFile, DataType.Image);
+                    if(dataInfo.isEmpty())
+                        throw new IllegalStateException();
+
+                    //Long dataInfoId = dataInfo.get().getId();
+
+                    BoardData boardData = BoardData.builder()
+                            .board(board)
+                            //.dataInfoId(dataInfoId)
+                            .dataInfo(dataInfo.get())
+                            .build();
+
+                    board.getBoardDataList().add(boardData);
+
+                    boardService.uploadBoardData(boardData);
+                }
             }
+            return "redirect:/main";
+        } catch(IllegalStateException e){
+            return "error/500";
         }
-        return "redirect:/main";
     }
 
 //    @GetMapping(value="/board/new")
@@ -116,22 +137,33 @@ public class BoardController {
         try{
             Optional<Member> authenticationMember = memberService.getAuthenticationMember();
 
-            if(authenticationMember.isEmpty()){
-                throw new Exception();
-            }
-
             Board board = boardService.findBoardByBoardId(boardId).get();
+            //Optional<Member> member = memberService.findMemberById(board.getMemberId());
+            Member member = board.getMember();
 
             BoardContentForm boardContentForm = new BoardContentForm();
 
             List<Comment> commentList = boardService.getCommentList(boardId);
 
             boardContentForm.setBoard(board);
-            boardContentForm.setFollowIsPresent(memberService.followIsPresent(authenticationMember.get().getId(), board.getMemberId()));
-            boardContentForm.setLikeIsPresent(boardService.likeIsPresent(board.getMemberId(), authenticationMember.get().getId()));
+
+            //boardContentForm.setFollowIsPresent(memberService.followIsPresent(headerForm.getMemberId(), board.getMemberId()));
+            //boardContentForm.setLikeIsPresent(boardService.likeIsPresent(board.getMemberId(), headerForm.getMemberId()));
+
+            boardContentForm.setFollowIsPresent(memberService.followIsPresent(authenticationMember.get().getId(), member.getId()));
+            boardContentForm.setLikeIsPresent(boardService.likeIsPresent(member.getId(), authenticationMember.get().getId()));
+
+            //Optional<DataInfo> dataInfo = dataService.load(member.get().getImageDataInfoId());
+
+            Optional<DataInfo> dataInfo = dataService.load(member.getImageDataInfoId());
+
+            if(dataInfo.isEmpty()){
+                throw new Exception();
+            }
+            String profileImagePath = dataInfo.get().getSaveDataPath();
 
             model.addAttribute("boardContentForm", boardContentForm);
-            model.addAttribute("member", authenticationMember.get());
+            model.addAttribute("authMember", authenticationMember.get());
             model.addAttribute("commentList", commentList);
             model.addAttribute("likeForm", new LikeForm());
             model.addAttribute("commentForm", new CommentForm());
@@ -164,12 +196,6 @@ public class BoardController {
 
             Optional<Member> authenticationMember = memberService.getAuthenticationMember();
 
-            if(authenticationMember.isEmpty()){
-                throw new Exception();
-            }
-
-            Long memberId = authenticationMember.get().getId();
-
             List<Long> likeIdList = boardService.findLikeMemberList(boardId);
 
             List<FollowForm> followFormList = new ArrayList<>();
@@ -177,7 +203,7 @@ public class BoardController {
             for(Long L : likeIdList){
 
                 Member member = memberService.findMemberById(L).get();
-                Boolean followIsPresent = memberService.followIsPresent(memberId, L);
+                Boolean followIsPresent = memberService.followIsPresent(authenticationMember.get().getId(), L);
 
                 FollowForm followForm = new FollowForm();
 
@@ -187,7 +213,7 @@ public class BoardController {
                 followFormList.add(followForm);
             }
 
-            model.addAttribute("member", memberService.getAuthenticationMember().get());
+            model.addAttribute("authMember", authenticationMember.get());
             model.addAttribute("memberList", followFormList);
 
             return "memberList";
