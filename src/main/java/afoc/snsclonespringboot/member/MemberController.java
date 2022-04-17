@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -111,75 +110,130 @@ public class MemberController {
 
     @GetMapping("/member/{memberId}/followerList")
     public String followerList(@PathVariable("memberId") Long memberId, Model model){
-
-        List<Long> followerIdList = memberService.findFollowers(memberId);
-
-        List<FollowForm> followFormList = new ArrayList<>();
-
-        Long userId = memberService.getAuthenticationMember().get().getId();
-
-        for(Long L : followerIdList){
-
-            Member member = memberService.findMemberById(L).get();
-            Boolean followIsPresent = memberService.followIsPresent(userId, L);
-
-            FollowForm followForm = new FollowForm();
-
-            followForm.setMember(member);
-            followForm.setFollowIsPresent(followIsPresent);
-
-            followFormList.add(followForm);
+        // Get auth member used in header
+        MemberShowForm authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
         }
 
-        model.addAttribute("member", memberService.getAuthenticationMember().get());
-        model.addAttribute("memberList", followFormList);
+        try {
+            List<Long> followerIdList = memberService.findFollowers(memberId);
+
+            List<FollowForm> followFormList = new ArrayList<>();
+
+            Long userId = memberService.getAuthenticationMember().get().getId();
+
+            for(Long L : followerIdList){
+
+                Member member = memberService.findMemberById(L).get();
+                Boolean followIsPresent = memberService.followIsPresent(userId, L);
+
+                FollowForm followForm = new FollowForm();
+
+                followForm.setMember(member);
+                followForm.setFollowIsPresent(followIsPresent);
+
+                followFormList.add(followForm);
+            }
+
+            model.addAttribute("member", authMember);
+            model.addAttribute("memberList", followFormList);
+        } catch (Exception e){
+            return "error/500.html";
+        }
+
+
 
         return "memberList";
     }
 
     @GetMapping("/member/{memberId}/followeeList")
     public String followeeList(@PathVariable("memberId") Long memberId, Model model){
-
-        List<Long> followeeIdList = memberService.findFollowees(memberId);
-
-        List<FollowForm> followFormList = new ArrayList<>();
-
-        Long userId = memberService.getAuthenticationMember().get().getId();
-
-        for(Long L : followeeIdList){
-
-            Member member = memberService.findMemberById(L).get();
-            Boolean followIsPresent = memberService.followIsPresent(userId, L);
-
-            FollowForm followForm = new FollowForm();
-
-            followForm.setMember(member);
-            followForm.setFollowIsPresent(followIsPresent);
-
-            followFormList.add(followForm);
+        // Get auth member used in header
+        MemberShowForm authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
         }
 
-        model.addAttribute("member", memberService.getAuthenticationMember().get());
-        model.addAttribute("memberList", followFormList);
+        try{
+            List<Long> followeeIdList = memberService.findFollowees(memberId);
 
-        return "memberList";
+            List<FollowForm> followFormList = new ArrayList<>();
+
+            Long userId = memberService.getAuthenticationMember().get().getId();
+
+            for(Long L : followeeIdList){
+
+                Member member = memberService.findMemberById(L).get();
+                Boolean followIsPresent = memberService.followIsPresent(userId, L);
+
+                FollowForm followForm = new FollowForm();
+
+                followForm.setMember(member);
+                followForm.setFollowIsPresent(followIsPresent);
+
+                followFormList.add(followForm);
+            }
+
+            model.addAttribute("member", authMember);
+            model.addAttribute("memberList", followFormList);
+
+            return "memberList";
+        } catch (Exception e) {
+            return "error/500.html";
+        }
     }
 
     @GetMapping(value="/member/{memberId}/memberPage")
     public String memberPage(@PathVariable("memberId") Long memberId, Model model){
+        // Get auth member used in header
+        MemberShowForm authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
+        }
 
-        Member member = memberService.findMemberById(memberId).get();
+        try {
+            Member member = memberService.findMemberById(memberId).get();
 
-        List<Board> boardList = boardService.findBoardListByMemberId(memberId);
+            List<Board> boardList = boardService.findBoardListByMemberId(memberId);
 
-        Boolean followIsPresent = memberService.followIsPresent(memberService.getAuthenticationMember().get().getId(), memberId);
+            Boolean followIsPresent = memberService.followIsPresent(memberService.getAuthenticationMember().get().getId(), memberId);
 
-        model.addAttribute("memberPageForm", member);
-        model.addAttribute("boardList", boardList);
-        model.addAttribute("member", memberService.getAuthenticationMember().get());
-        model.addAttribute("followIsPresent", followIsPresent);
+            model.addAttribute("memberPageForm", member);
+            model.addAttribute("boardList", boardList);
+            model.addAttribute("member", authMember);
+            model.addAttribute("followIsPresent", followIsPresent);
 
-        return "memberPage";
+            return "memberPage";
+        } catch (Exception e){
+            return "error/500.html";
+        }
+    }
+
+    public MemberShowForm getAuthMemberShowForm() throws Exception {
+        // Get auth member used in header
+        Optional<Member> authenticationMemberOptional = memberService.getAuthenticationMember();
+        if(authenticationMemberOptional.isEmpty())
+            throw new Exception();
+
+        Member authMember = authenticationMemberOptional.get();
+        Optional<DataInfo> dataInfo = dataService.load(authMember.getImageDataInfoId());
+        if(dataInfo.isEmpty()){
+            throw new Exception();
+        }
+        String profileImagePath = dataInfo.get().getSaveDataPath();
+
+        return MemberShowForm.builder()
+                .id(authMember.getId())
+                .username(authMember.getUsername())
+                .profileImagePath(profileImagePath)
+                .build();
     }
 
 }

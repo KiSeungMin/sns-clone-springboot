@@ -3,18 +3,16 @@ package afoc.snsclonespringboot;
 import afoc.snsclonespringboot.board.Board;
 import afoc.snsclonespringboot.board.BoardService;
 import afoc.snsclonespringboot.board.BoardShowForm;
-import afoc.snsclonespringboot.board.boarddata.BoardData;
 import afoc.snsclonespringboot.data.DataInfo;
 import afoc.snsclonespringboot.data.DataInfoRepository;
 import afoc.snsclonespringboot.data.DataService;
 import afoc.snsclonespringboot.data.DataType;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberService;
+import afoc.snsclonespringboot.member.MemberShowForm;
 import afoc.snsclonespringboot.member.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +42,7 @@ public class HomeController {
             if(!isTest)
                 return "login";
 
-            List<Member> memberList = new ArrayList<Member>();
+            List<Member> memberList = new ArrayList<>();
             for (int i=1;i <= 3; i++){
                 // profile image data
                 DataInfo dataInfo = DataInfo.builder()
@@ -73,7 +71,6 @@ public class HomeController {
             // boards
             for (int i = 0; i < 10; i++) {
                 Board board = Board.builder()
-                        //.textDataId((long) ((i % 2) + 4))
                         .textData("hello " + i)
                         .date(new Date())
 
@@ -91,33 +88,19 @@ public class HomeController {
 
     @GetMapping("/main")
     public String main(Model model) {
+        // Get auth member used in header
+        MemberShowForm member;
         try {
-            // 인증된 객체의 정보 가져옴
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            member = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
+        }
 
-            if(authentication == null){
-                throw new Exception();
-            }
-
-            // getName 메서드를 통해 member의 email을 가져온다. (SecurityConfig 파일에서 username parameter를 email로 설정해서 그런듯)
-            String email = authentication.getName();
-
-            Optional<Member> member = memberService.findMemberByEmail(email);
-            if(member.isEmpty()){
-                throw new Exception();
-            }
-
-            Optional<DataInfo> dataInfo = dataService.load(member.get().getImageDataInfoId());
-            if(dataInfo.isEmpty()){
-                throw new Exception();
-            }
-            String profileImagePath = dataInfo.get().getSaveDataPath();
-
+        try {
+            // Get board list to show
             // TODO - 보여줄 보드 리스트 찾는 서비스 필요
-            // TODO - board의 member가 본인이 아닌 작성자가 나오도록 바꾸기
-            // TODO - 다른 모든 것들도 본인의 member가 model에 들어가도록 바꾸기
             List<BoardShowForm> boardShowFormList = new ArrayList<>();
-            List<Board> boardList = boardService.findBoardListByMemberId(member.get().getId());
+            List<Board> boardList = boardService.findBoardListByMemberId(member.getId());
             for(Board board : boardList){
                 try{
                     // get contents (Board, imgPath)
@@ -131,10 +114,13 @@ public class HomeController {
                         }
                     }
                     // set boardShowForm
+                    Member writer = memberService.findMemberById(board.getMemberId()).get();
+                    String writerProfileImgPath = dataService.load(writer.getImageDataInfoId()).get().getSaveDataPath();
                     BoardShowForm boardShowForm = BoardShowForm.builder()
                             .boardId(board.getBoardId())
                             .memberId(board.getMemberId())
-                            .username(memberService.findMemberById(board.getMemberId()).get().getUsername())
+                            .username(writer.getUsername())
+                            .profileImgPath(writerProfileImgPath)
                             .date(board.getDate())
                             .textData(board.getTextData())
                             .imgPath(boardDataPathList)
@@ -144,9 +130,9 @@ public class HomeController {
                 }
             }
 
+            // Add attribute to model
             model.addAttribute("boardList", boardShowFormList);
-            model.addAttribute("member", member.get());
-            model.addAttribute("profileImagePath", profileImagePath);
+            model.addAttribute("member", member);
 
             return "main.html";
         } catch (Exception e){
@@ -154,5 +140,25 @@ public class HomeController {
             e.printStackTrace();
             return "error/500.html";
         }
+    }
+
+    public MemberShowForm getAuthMemberShowForm() throws Exception {
+        // Get auth member used in header
+        Optional<Member> authenticationMemberOptional = memberService.getAuthenticationMember();
+        if(authenticationMemberOptional.isEmpty())
+            throw new Exception();
+
+        Member authMember = authenticationMemberOptional.get();
+        Optional<DataInfo> dataInfo = dataService.load(authMember.getImageDataInfoId());
+        if(dataInfo.isEmpty()){
+            throw new Exception();
+        }
+        String profileImagePath = dataInfo.get().getSaveDataPath();
+
+        return MemberShowForm.builder()
+                .id(authMember.getId())
+                .username(authMember.getUsername())
+                .profileImagePath(profileImagePath)
+                .build();
     }
 }

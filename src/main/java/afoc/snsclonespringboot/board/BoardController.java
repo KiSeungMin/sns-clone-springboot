@@ -10,6 +10,7 @@ import afoc.snsclonespringboot.data.DataService;
 import afoc.snsclonespringboot.data.DataType;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberService;
+import afoc.snsclonespringboot.member.MemberShowForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,14 +37,22 @@ public class BoardController {
     private final DataService dataService;
 
     @GetMapping(value="/board/new")
-    public String uploadBoard(Model model){
-        model.addAttribute("member", memberService.getAuthenticationMember().get());
+    public String createBoard(Model model){
+        // Get auth member used in header
+        MemberShowForm authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("member", authMember);
         model.addAttribute("boardForm", new BoardForm());
         return "createBoard";
     }
 
     @PostMapping(value="/board/new")
-    public String uploadBoard(@ModelAttribute BoardForm boardForm, Model model){
+    public String createBoard(@ModelAttribute BoardForm boardForm, Model model){
         Optional<Member> authenticationMember = memberService.getAuthenticationMember();
         if (authenticationMember.isEmpty())
             throw new IllegalStateException();
@@ -80,37 +89,16 @@ public class BoardController {
         return "redirect:/main";
     }
 
-//    @GetMapping(value="/board/new")
-//    public String createBoard(Model model){
-//
-//        model.addAttribute("member", memberService.getAuthenticationMember().get());
-//        model.addAttribute("boardForm", new BoardForm());
-//
-//        return "createBoard";
-//    }
-////
-//    @PostMapping(value="/board/new")
-//    public RedirectView createBoard(BoardForm boardForm, Model model){
-//
-//        Optional<Member> authenticationMember = memberService.getAuthenticationMember();
-//        if (authenticationMember.isEmpty())
-//            throw new IllegalStateException();
-//        Member member = authenticationMember.get();
-//
-//        Board board = Board.builder()
-//                .memberId(member.getId())
-//                .username(member.getUsername())
-//                .textData(boardForm.getTextData())
-//                .date(new Date())
-//                .build();
-//
-//        boardService.upload(board);
-//
-//        return new RedirectView("/main");
-//    }
 
     @GetMapping(value="/board/{boardId}/get")
     public String visitBoardForm(@PathVariable("boardId") Long boardId, Model model){
+        // Get auth member used in header
+        MemberShowForm authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
+        }
 
         Optional<Member> member = memberService.getAuthenticationMember();
 
@@ -125,7 +113,7 @@ public class BoardController {
         boardContentForm.setLikeIsPresent(boardService.likeIsPresent(board.getMemberId(), member.get().getId()));
 
         model.addAttribute("boardContentForm", boardContentForm);
-        model.addAttribute("member", member.get());
+        model.addAttribute("member", authMember);
         model.addAttribute("commentList", commentList);
         model.addAttribute("likeForm", new LikeForm());
         model.addAttribute("commentForm", new CommentForm());
@@ -149,6 +137,13 @@ public class BoardController {
     // 좋아요 누른 사람들 조회
     @GetMapping(value = "/board/{boardId}/likeList")
     public String getLikeList(@PathVariable("boardId") Long boardId, Model model){
+        // Get auth member used in header
+        MemberShowForm authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
+        }
 
         List<Long> likeIdList = boardService.findLikeMemberList(boardId);
 
@@ -169,7 +164,7 @@ public class BoardController {
             followFormList.add(followForm);
         }
 
-        model.addAttribute("member", memberService.getAuthenticationMember().get());
+        model.addAttribute("member", authMember);
         model.addAttribute("memberList", followFormList);
 
         return "memberList";
@@ -183,5 +178,25 @@ public class BoardController {
         boardService.addComment(commentForm.getBoardId(), member, commentForm.getContent());
 
         return new RedirectView ("/board/" + commentForm.getBoardId() + "/get");
+    }
+
+    public MemberShowForm getAuthMemberShowForm() throws Exception {
+        // Get auth member used in header
+        Optional<Member> authenticationMemberOptional = memberService.getAuthenticationMember();
+        if(authenticationMemberOptional.isEmpty())
+            throw new Exception();
+
+        Member authMember = authenticationMemberOptional.get();
+        Optional<DataInfo> dataInfo = dataService.load(authMember.getImageDataInfoId());
+        if(dataInfo.isEmpty()){
+            throw new Exception();
+        }
+        String profileImagePath = dataInfo.get().getSaveDataPath();
+
+        return MemberShowForm.builder()
+                .id(authMember.getId())
+                .username(authMember.getUsername())
+                .profileImagePath(profileImagePath)
+                .build();
     }
 }

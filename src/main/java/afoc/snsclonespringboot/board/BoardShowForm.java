@@ -13,6 +13,7 @@ public class BoardShowForm {
     private Long boardId;
     private Long memberId;
     private String username;
+    private String profileImgPath;
     private Date date;
     private String textData;
     private List<String> imgPath;
