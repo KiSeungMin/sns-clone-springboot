@@ -43,11 +43,11 @@ public class HomeController {
                 return "login";
 
             List<Member> memberList = new ArrayList<>();
-            for (int i=1;i <= 3; i++){
+            for (int i=1;i <= 100; i++){
                 // profile image data
                 DataInfo dataInfo = DataInfo.builder()
                         .dataType(DataType.Image)
-                        .saveDataPath(Paths.get("test", "tmp" + i + ".jpg").toString())
+                        .saveDataPath(Paths.get("test", "tmp" + (i%3+1) + ".jpg").toString())
                         .build();
 
                 dataInfoRepository.save(dataInfo);
