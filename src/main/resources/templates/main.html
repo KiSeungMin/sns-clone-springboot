@@ -8,7 +8,7 @@
 <div layout:fragment="content">
 
 <main class="container">
-    <div class="row justify-content-center py-2" th:each="board , status: ${boardList}">
+    <div class="row justify-content-center py-2" th:each="board , boardStatus: ${boardList}">
         <div class="col-8">
             <div class="row border rounded flex-column mb-4 shadow-sm h-md-250 position-relative">
                 <div class="col p-4 d-flex flex-column position-static">
@@ -24,25 +24,25 @@
 
                      <div class="card">
                         <div class="card-img-top">
-                            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                            <div th:id="'myCarousel' + ${boardStatus.index}" class="carousel slide" data-ride="carousel">
                                 <!-- Indicators -->
                                 <ol class="carousel-indicators">
-                                    <li data-target="#myCarousel" th:each="boardImg , status: ${board.imgPath}" th:attr="data-slide-to=${status.index}" th:class="${status.index}== 0  ? 'active':''"></li>
+                                    <li th:attr="data-target='#myCarousel' + ${boardStatus.index}, data-slide-to=${carIndStatus.index}" th:each="boardImg , carIndStatus: ${board.imgPath}" th:class="${carIndStatus.index}== 0  ? 'active':''"></li>
                                 </ol>
 
                                 <!-- Wrapper for slides -->
                                 <div class="carousel-inner">
-                                    <div th:each="boardImg , status: ${board.imgPath}" th:class="${status.index}== 0  ? 'carousel-item active':'carousel-item'">
+                                    <div th:each="boardImg , carInnerStatus: ${board.imgPath}" th:class="${carInnerStatus.index}== 0  ? 'carousel-item active':'carousel-item'">
                                         <img th:src="|/images/${boardImg}|" class="d-block w-100 h-auto">
                                     </div>
                                 </div>
 
                                 <!-- Left and right controls -->
-                                <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+                                <a class="carousel-control-prev" th:href="'#myCarousel' + ${boardStatus.index}" role="button" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="sr-only">Previous</span>
                                 </a>
-                                <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+                                <a class="carousel-control-next" th:href="'#myCarousel' + ${boardStatus.index}" role="button" data-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="sr-only">Next</span>
                                 </a>
