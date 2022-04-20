@@ -15,10 +15,10 @@
 
                     <div class="d-flex overflow-hidden justify-content-start align-items-center mb-3">
 
-                        <a th:href="@{/member/{id}/memberPage (id=${board.memberId})}">
-                            <img th:src="|/images/${board.profileImgPath}|" class="rounded-circle mr-3" style="width: 3rem; height: 3rem;">
+                        <a th:href="@{/member/{id}/memberPage (id=${board.writer.id})}">
+                            <img th:src="|/images/${board.writer.profileImgPath}|" class="rounded-circle mr-3" style="width: 3rem; height: 3rem;">
                         </a>
-                        <h4 class = "ml-2" th:text="${board.username}">username</h4>
+                        <h4 class = "ml-2" th:text="${board.writer.username}">username</h4>
 
                     </div>
 

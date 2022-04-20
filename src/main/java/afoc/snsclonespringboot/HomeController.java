@@ -2,7 +2,7 @@ package afoc.snsclonespringboot;
 
 import afoc.snsclonespringboot.board.Board;
 import afoc.snsclonespringboot.board.BoardService;
-import afoc.snsclonespringboot.board.BoardShowForm;
+import afoc.snsclonespringboot.board.BoardDTO;
 import afoc.snsclonespringboot.board.boarddata.BoardData;
 import afoc.snsclonespringboot.data.DataInfo;
 import afoc.snsclonespringboot.data.DataInfoRepository;
@@ -10,7 +10,7 @@ import afoc.snsclonespringboot.data.DataService;
 import afoc.snsclonespringboot.data.DataType;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberService;
-import afoc.snsclonespringboot.member.MemberShowForm;
+import afoc.snsclonespringboot.member.MemberDTO;
 import afoc.snsclonespringboot.member.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,10 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -43,7 +40,9 @@ public class HomeController {
             if(!isTest)
                 return "login";
 
+            Random rand = new Random();
             // ------ Add test data in dataInfo -------------
+
             System.out.println("Start set dataInfos");
             List<DataInfo> dataInfoList = new ArrayList<>();
             for(int i=0;i<25;i++){
@@ -61,12 +60,12 @@ public class HomeController {
             // ------------ Add 100 members -------------
             System.out.println("Start set members");
             List<Member> memberList = new ArrayList<>();
-            for (int i=1;i <= 100; i++){
+            for (int i=0;i < 100; i++){
                  // member
                 Member member = Member.builder()
-                        .email("test" + i + "@test.com")
+                        .email("test" + (i+1) + "@test.com")
                         .password(passwordEncoder.encode("1234"))
-                        .username("test" + i + "_user")
+                        .username("test" + (i+1) + "_user")
                         .imageDataInfoId(dataInfoList.get(i%25).getId())
                         .role(Role.USER)
                         .build();
@@ -80,8 +79,8 @@ public class HomeController {
             System.out.println("Start set follows");
             int cnt = 0;
             for (Member member1 : memberList){
-                for (int i=0; i<(int)(Math.random()*30); i++){
-                    int j = (int)(Math.random()*memberList.size());
+                for (int i=0; i< rand.nextInt(30); i++){
+                    int j = rand.nextInt(memberList.size());
                     Member member2 = memberList.get(j);
                     memberService.follow(member1.getId(), member2.getId());
                     cnt ++;
@@ -94,7 +93,7 @@ public class HomeController {
             System.out.println("Start set boards");
             List<Board> boardList = new ArrayList<>();
             for (Member member : memberList) {
-                for (int i=0; i<(int)(Math.random()*30); i++){
+                for (int i=0; i < 1+rand.nextInt(29); i++){
                     Board board = Board.builder()
                             .textData(getRandomText(900))
                             .date(new Date())
@@ -103,10 +102,10 @@ public class HomeController {
                     boardService.upload(board);
                     boardList.add(board);
 
-                    for (int j=0; j<1+(int)(Math.random()*5); j++){
+                    for (int j=0; j<1+rand.nextInt(5); j++){
                         BoardData boardData = BoardData.builder()
                                 .boardId(board.getBoardId())
-                                .dataInfoId(dataInfoList.get((int)(Math.random()*25)).getId())
+                                .dataInfoId(dataInfoList.get(rand.nextInt(dataInfoList.size())).getId())
                                 .build();
 
                         boardService.uploadBoardData(boardData);
@@ -120,8 +119,8 @@ public class HomeController {
             System.out.println("Start set like");
             int cnt2 = 0;
             for (Member member : memberList){
-                for(int i=0; i<(int)(Math.random()*50); i++){
-                    int j = (int)(Math.random()*boardList.size());
+                for(int i=0; i< rand.nextInt(50); i++){
+                    int j = rand.nextInt(boardList.size());
                     boardService.likeBoard(boardList.get(j).getBoardId(), member.getId());
                     cnt2 ++;
                 }
@@ -132,16 +131,18 @@ public class HomeController {
             System.out.println("Start set comments");
             int cnt3 = 0;
             for (Board board : boardList){
-                for(int i=0;i<(int)(Math.random()*20);i++){
+                for(int i=0;i< rand.nextInt(20);i++){
                     boardService.addComment(
                             board.getBoardId(),
-                            memberList.get((int)(Math.random()*memberList.size())),
+                            memberList.get(rand.nextInt(memberList.size())),
                             getRandomText(300)
                     );
                     cnt3 ++;
                 }
             }
             System.out.println("Num Comments = " + cnt3);
+
+            System.out.println("Test data is set!");
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -149,83 +150,8 @@ public class HomeController {
         return "test";
     }
 
-    @GetMapping("/main")
-    public String main(Model model) {
-        // Get auth member used in header
-        MemberShowForm member;
-        try {
-            member = getAuthMemberShowForm();
-        } catch (Exception e) {
-            return "redirect:/login";
-        }
-
-        try {
-            // Get board list to show
-            // TODO - 보여줄 보드 리스트 찾는 서비스 필요
-            List<BoardShowForm> boardShowFormList = new ArrayList<>();
-            List<Board> boardList = boardService.findBoardListByMemberId(member.getId());
-            for(Board board : boardList){
-                try{
-                    // get contents (Board, imgPath)
-                    List<Long> boardDataInfoIdList = boardService.findBoardDataInfoIdByBoardId(board.getBoardId());
-                    List<String> boardDataPathList = new ArrayList<>();
-                    for(Long boardDataInfoId : boardDataInfoIdList){
-                        Optional<DataInfo> boardDataInfo = dataService.load(boardDataInfoId);
-                        if(boardDataInfo.isPresent()){
-                            String boardDataPath = boardDataInfo.get().getSaveDataPath();
-                            boardDataPathList.add(boardDataPath);
-                        }
-                    }
-                    // set boardShowForm
-                    Member writer = memberService.findMemberById(board.getMemberId()).get();
-                    String writerProfileImgPath = dataService.load(writer.getImageDataInfoId()).get().getSaveDataPath();
-                    BoardShowForm boardShowForm = BoardShowForm.builder()
-                            .boardId(board.getBoardId())
-                            .memberId(board.getMemberId())
-                            .username(writer.getUsername())
-                            .profileImgPath(writerProfileImgPath)
-                            .date(board.getDate())
-                            .textData(board.getTextData())
-                            .imgPath(boardDataPathList)
-                            .build();
-                    boardShowFormList.add(boardShowForm);
-                } catch (Exception ignored){
-                }
-            }
-
-            // Add attribute to model
-            model.addAttribute("boardList", boardShowFormList);
-            model.addAttribute("member", member);
-
-            return "main.html";
-        } catch (Exception e){
-            System.out.println("HomeController.main e");
-            e.printStackTrace();
-            return "error/500.html";
-        }
-    }
-
-    public MemberShowForm getAuthMemberShowForm() throws Exception {
-        // Get auth member used in header
-        Optional<Member> authenticationMemberOptional = memberService.getAuthenticationMember();
-        if(authenticationMemberOptional.isEmpty())
-            throw new Exception();
-
-        Member authMember = authenticationMemberOptional.get();
-        Optional<DataInfo> dataInfo = dataService.load(authMember.getImageDataInfoId());
-        if(dataInfo.isEmpty()){
-            throw new Exception();
-        }
-        String profileImagePath = dataInfo.get().getSaveDataPath();
-
-        return MemberShowForm.builder()
-                .id(authMember.getId())
-                .username(authMember.getUsername())
-                .profileImagePath(profileImagePath)
-                .build();
-    }
-
     public String getRandomText(int maxLength){
+        Random rand = new Random();
         StringBuilder ret = new StringBuilder();
 
         List<String> paragraph = new ArrayList<>();
@@ -240,8 +166,8 @@ public class HomeController {
         paragraph.add("Sed viverra tincidunt lectus vitae varius. Morbi blandit, nibh elementum vehicula elementum, odio tellus auctor augue, vel eleifend nisl ex ac urna. Duis in malesuada risus. Morbi dapibus sapien at est euismod congue. Vivamus eget pulvinar urna. Vivamus ut metus mollis, volutpat eros sed, tincidunt lorem. Proin hendrerit neque vitae ante pharetra iaculis. Ut malesuada mi sed tempor tempor. Phasellus tincidunt tincidunt neque, ac accumsan ipsum faucibus imperdiet.");
         paragraph.add("Praesent sodales, arcu a egestas gravida, neque velit mattis metus, id feugiat neque urna vitae mi. Aenean gravida nibh aliquet, consectetur mauris ac, fringilla ante. Nunc luctus nulla non ante varius pharetra. Duis nulla augue, fermentum nec nunc ut, sollicitudin mollis nunc. Pellentesque laoreet vitae libero non gravida. Ut rhoncus volutpat leo, a tempus velit hendrerit non. Curabitur laoreet mauris sit amet sem maximus, ut laoreet metus facilisis. Nunc luctus, metus eget dignissim porttitor, augue ex venenatis lacus, nec facilisis elit nisi sit amet metus. Nullam consectetur dignissim nulla id pharetra. Maecenas bibendum quis justo vel aliquam.");
 
-        for(int i = (int)(Math.random() * 5); i>=0 ; i--){
-            int j = (int)(Math.random() * 10);
+        for(int i = rand.nextInt(5); i>=0 ; i--){
+            int j = rand.nextInt(10);
             ret.append(paragraph.get(j));
         }
 

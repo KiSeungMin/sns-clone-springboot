@@ -6,8 +6,8 @@ import lombok.Setter;
 
 @Getter @Setter
 @Builder
-public class MemberShowForm {
+public class MemberDTO {
     private Long id;
     private String username;
-    private String profileImagePath;
+    private String profileImgPath;
 }

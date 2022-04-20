@@ -1,5 +1,6 @@
 package afoc.snsclonespringboot.board;
 
+import afoc.snsclonespringboot.member.MemberDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,11 +10,9 @@ import java.util.List;
 
 @Getter @Setter
 @Builder
-public class BoardShowForm {
+public class BoardDTO {
     private Long boardId;
-    private Long memberId;
-    private String username;
-    private String profileImgPath;
+    private MemberDTO writer;
     private Date date;
     private String textData;
     private List<String> imgPath;

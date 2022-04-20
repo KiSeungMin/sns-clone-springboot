@@ -111,7 +111,7 @@ public class MemberController {
     @GetMapping("/member/{memberId}/followerList")
     public String followerList(@PathVariable("memberId") Long memberId, Model model){
         // Get auth member used in header
-        MemberShowForm authMember;
+        MemberDTO authMember;
         try {
             authMember = getAuthMemberShowForm();
         } catch (Exception e) {
@@ -138,7 +138,7 @@ public class MemberController {
                 followFormList.add(followForm);
             }
 
-            model.addAttribute("member", authMember);
+            model.addAttribute("authMember", authMember);
             model.addAttribute("memberList", followFormList);
         } catch (Exception e){
             return "error/500.html";
@@ -152,7 +152,7 @@ public class MemberController {
     @GetMapping("/member/{memberId}/followeeList")
     public String followeeList(@PathVariable("memberId") Long memberId, Model model){
         // Get auth member used in header
-        MemberShowForm authMember;
+        MemberDTO authMember;
         try {
             authMember = getAuthMemberShowForm();
         } catch (Exception e) {
@@ -179,7 +179,7 @@ public class MemberController {
                 followFormList.add(followForm);
             }
 
-            model.addAttribute("member", authMember);
+            model.addAttribute("authMember", authMember);
             model.addAttribute("memberList", followFormList);
 
             return "memberList";
@@ -191,7 +191,7 @@ public class MemberController {
     @GetMapping(value="/member/{memberId}/memberPage")
     public String memberPage(@PathVariable("memberId") Long memberId, Model model){
         // Get auth member used in header
-        MemberShowForm authMember;
+        MemberDTO authMember;
         try {
             authMember = getAuthMemberShowForm();
         } catch (Exception e) {
@@ -207,7 +207,7 @@ public class MemberController {
 
             model.addAttribute("memberPageForm", member);
             model.addAttribute("boardList", boardList);
-            model.addAttribute("member", authMember);
+            model.addAttribute("authMember", authMember);
             model.addAttribute("followIsPresent", followIsPresent);
 
             return "memberPage";
@@ -216,7 +216,7 @@ public class MemberController {
         }
     }
 
-    public MemberShowForm getAuthMemberShowForm() throws Exception {
+    public MemberDTO getAuthMemberShowForm() throws Exception {
         // Get auth member used in header
         Optional<Member> authenticationMemberOptional = memberService.getAuthenticationMember();
         if(authenticationMemberOptional.isEmpty())
@@ -229,10 +229,10 @@ public class MemberController {
         }
         String profileImagePath = dataInfo.get().getSaveDataPath();
 
-        return MemberShowForm.builder()
+        return MemberDTO.builder()
                 .id(authMember.getId())
                 .username(authMember.getUsername())
-                .profileImagePath(profileImagePath)
+                .profileImgPath(profileImagePath)
                 .build();
     }
 
