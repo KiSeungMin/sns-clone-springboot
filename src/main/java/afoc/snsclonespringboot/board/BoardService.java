@@ -19,6 +19,7 @@ public interface BoardService {
     Optional<Board> upload(Board board);
     Optional<Board> findBoardByBoardId(Long boardId);
     List<Board> findBoardListByMember(Member member);
+    List<Board> findBoardListByMemberId(Long memberId);
     Boolean updateBoard(Board board);
     Boolean deleteBoardByBoardId(Long boardId);
 
@@ -34,4 +35,5 @@ public interface BoardService {
 
     // BoardData functions
     Optional<BoardData> uploadBoardData(BoardData boardData);
+    List<Long> findBoardDataInfoIdByBoard(Board board);
 }

@@ -12,21 +12,21 @@
 <div layout:fragment="content">
 
     <main class="container-fluid mt-5" style="width:90%;">
-        <div class="row row-cols-1 row-cols-md-2 justify-content-center" th:object="${boardContentForm}">
+        <div class="row row-cols-1 row-cols-md-2 justify-content-center" th:object="${boardContentDTO}">
             <div class="col border rounded flex-column mb-4 h-md-250 position-relative">
                 <div class="row">
                     <div class="col p-3 d-flex flex-column position-static">
                         <div class="d-flex justify-content-start align-items-center">
-                            <a th:href="@{/member/{id}/memberPage (id=${boardContentForm.board.member.id})}">
-                                <img th:src="|/images/${boardContentForm.board.member.dataInfo.saveDataPath}|" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
+                            <a th:href="@{/member/{id}/memberPage (id=${boardContentDTO.board.writer.id})}">
+                                <img th:src="|/images/${boardContentDTO.board.writer.profileImgPath}|" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
                             </a>
-                            <h4 class = "ml-3" th:text="${boardContentForm.board.member.username}">username</h4>
+                            <h4 class = "ml-3" th:text="${boardContentDTO.board.writer.username}">username</h4>
 
-                            <form th:action="@{/member/{id}/follow (id=${boardContentForm.board.member.id})}" method="post" target= "hiddenFrame" style="position: absolute; right:1.5rem;">
-                                <span th:if="${boardContentForm.followIsPresent == true}">
+                            <form th:action="@{/member/{id}/follow (id=${boardContentDTO.board.writer.id})}" method="post" target= "hiddenFrame" style="position: absolute; right:1.5rem;">
+                                <span th:if="${boardContentDTO.followIsPresent == true}">
                                     <button class="btn btn-secondary followBtn" type="submit">unfollow</button>
                                 </span>
-                                <span th:unless="${!boardContentForm.followIsPresent == false}">
+                                <span th:unless="${!boardContentDTO.followIsPresent == false}">
                                     <button class="btn btn-primary followBtn" type="submit" >follow</button>
                                 </span>
                             </form>
@@ -34,7 +34,7 @@
                             <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
                         </div>
 
-                        <div th:if="${#lists.size(boardContentForm.board.boardDataList) > 0}">
+                        <div th:if="${#lists.size(boardContentDTO.board.boardDataList) > 0}">
                             <div class="container mt-2">
                                 <div id="myCarousel" class="carousel slide">
                                     <!-- Indicators -->
@@ -68,8 +68,8 @@
 
 
                         <div class="mt-2">
-                            <div class="mb-1 text-muted" th:text = "${boardContentForm.board.date}">DATE</div>
-                            <p class="card-text mb-auto" style="text-decoration:none; color:black;" th:text="${boardContentForm.board.textData}">BODY TEXT</p>
+                            <div class="mb-1 text-muted" th:text = "${boardContentDTO.board.date}">DATE</div>
+                            <p class="card-text mb-auto" style="text-decoration:none; color:black;" th:text="${boardContentDTO.board.textData}">BODY TEXT</p>
                         </div>
                     </div>
                 </div>
@@ -99,12 +99,12 @@
 
                     <div class="col mt-2" style="height:100px;">
                         <div class="d-flex overflow-hidden justify-content-start align-items-center mb-1">
-                            <img th:src="|/images/${authMember.dataInfo.saveDataPath}|" class = "rounded-circle" style="width: 1.5rem; height: 1.5rem;">
+                            <img th:src="|/images/${authMember.profileImgPath}|" class = "rounded-circle" style="width: 1.5rem; height: 1.5rem;">
                             <h6 class = "ml-2" th:text="${authMember.username}">username</h6>
                         </div>
                         <form class="input-group" th:action="@{/board/comment}" th:object="${commentForm}" role="form" method="post" id = "commentForm">
 
-                            <input type="hidden" name ="boardId" th:value="${boardContentForm.board.boardId}">
+                            <input type="hidden" name ="boardId" th:value="${boardContentDTO.board.boardId}">
 
                             <textarea type="text" th:field="*{content}" class="form-control" aria-label="With textarea"></textarea>
 
@@ -120,12 +120,12 @@
 
                             <input type="hidden" name = "memberId" th:value = "${authMember.id}">
 
-                            <input type="hidden" name="boardId" th:value="${boardContentForm.board.boardId}">
+                            <input type="hidden" name="boardId" th:value="${boardContentDTO.board.boardId}">
 
-                            <span class="_heart liked"  th:if="${boardContentForm.likeIsPresent == true}">
+                            <span class="_heart liked"  th:if="${boardContentDTO.likeIsPresent == true}">
                                         <i class="fa fa-heart" aria-hidden="true" ></i>
                                     </span>
-                            <span class="_heart" th:unless="${!boardContentForm.likeIsPresent == false}">
+                            <span class="_heart" th:unless="${!boardContentDTO.likeIsPresent == false}">
                                         <i class="fa fa-heart-o" aria-hidden="true" ></i>
                                     </span>
 
@@ -134,7 +134,7 @@
 
                         </form>
                     </div>
-                    <a href="#" th:href="@{/board/{id}/likeList (id=${boardContentForm.board.boardId})}">
+                    <a href="#" th:href="@{/board/{id}/likeList (id=${boardContentDTO.board.boardId})}">
                         좋아요 누른 사람 보기
                     </a>
                 </div>

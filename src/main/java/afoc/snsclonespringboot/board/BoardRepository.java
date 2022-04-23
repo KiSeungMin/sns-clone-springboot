@@ -14,6 +14,8 @@ public interface BoardRepository {
 
     // Member Id를 이용해 Board List 조회
     List<Board> findBoardListByMember(Member member);
+    List<Board> findBoardListByMemberId(Long memberId);
+
 
     // Board Id 이용해 수정
     // return 값 성공/실패

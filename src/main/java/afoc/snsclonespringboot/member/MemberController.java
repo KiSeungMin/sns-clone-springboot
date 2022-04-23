@@ -5,9 +5,9 @@ import afoc.snsclonespringboot.board.BoardService;
 import afoc.snsclonespringboot.data.DataInfo;
 import afoc.snsclonespringboot.data.DataService;
 import afoc.snsclonespringboot.data.DataType;
+import afoc.snsclonespringboot.member.follow.FollowDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,9 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
 import java.util.Optional;
 
 @Controller
@@ -63,7 +61,7 @@ public class MemberController {
                     .username(memberForm.getUsername())
                     .password(passwordEncoder.encode(memberForm.getPassword()))
                     .email(memberForm.getEmail())
-                    .imageDataInfoId(dataInfo.get().getId())
+                    .dataInfo(dataInfo.get())
                     .role(Role.USER)
                     .build();
 
@@ -125,28 +123,34 @@ public class MemberController {
     @GetMapping("/member/{memberId}/followerList")
     public String followerList(@PathVariable("memberId") Long memberId, Model model){
 
+        // Get auth member used in header
+        MemberDTO authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
+        }
+
         try{
             List<Long> followerIdList = memberService.findFollowers(memberId);
 
-            List<FollowForm> followFormList = new ArrayList<>();
-
-            Optional<Member> authenticationMember =  memberService.getAuthenticationMember();
+            List<FollowDto> followDtoList = new ArrayList<>();
 
             for(Long L : followerIdList){
 
                 Member member = memberService.findMemberById(L).get();
-                Boolean followIsPresent = memberService.followIsPresent(authenticationMember.get().getId(), L);
+                Boolean followIsPresent = memberService.followIsPresent(authMember.getId(), L);
 
-                FollowForm followForm = new FollowForm();
+                FollowDto followDto = new FollowDto();
 
-                followForm.setMember(member);
-                followForm.setFollowIsPresent(followIsPresent);
+                followDto.setMember(member);
+                followDto.setFollowIsPresent(followIsPresent);
 
-                followFormList.add(followForm);
+                followDtoList.add(followDto);
             }
 
-            model.addAttribute("memberList", followFormList);
-            model.addAttribute("authMember", authenticationMember.get());
+            model.addAttribute("memberList", followDtoList);
+            model.addAttribute("authMember", authMember);
 
             return "memberList";
         } catch(Exception e){
@@ -157,39 +161,54 @@ public class MemberController {
     @GetMapping("/member/{memberId}/followeeList")
     public String followeeList(@PathVariable("memberId") Long memberId, Model model){
 
+        // Get auth member used in header
+        MemberDTO authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
+        }
+
         try{
             List<Long> followeeIdList = memberService.findFollowees(memberId);
 
-            List<FollowForm> followFormList = new ArrayList<>();
+            List<FollowDto> followDtoList = new ArrayList<>();
 
-            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
+            Long userId = memberService.getAuthenticationMember().get().getId();
 
             for(Long L : followeeIdList){
 
                 Member member = memberService.findMemberById(L).get();
-                Boolean followIsPresent = memberService.followIsPresent(authenticationMember.get().getId(), L);
+                Boolean followIsPresent = memberService.followIsPresent(userId, L);
 
-                FollowForm followForm = new FollowForm();
+                FollowDto followDto = new FollowDto();
 
-                followForm.setMember(member);
-                followForm.setFollowIsPresent(followIsPresent);
+                followDto.setMember(member);
+                followDto.setFollowIsPresent(followIsPresent);
 
-                followFormList.add(followForm);
+                followDtoList.add(followDto);
             }
 
-            model.addAttribute("authMember", authenticationMember.get());
-            model.addAttribute("memberList", followFormList);
+            model.addAttribute("authMember", authMember);
+            model.addAttribute("memberList", followDtoList);
 
             return "memberList";
-        } catch(Exception e){
-            return "error/500";
+        } catch (Exception e) {
+            return "error/500.html";
         }
     }
 
     @GetMapping(value="/member/{memberId}/memberPage")
-    public String memberPage(@PathVariable("memberId") Long memberId, Model model){
+    public String memberPage(@PathVariable("memberId") Long memberId, Model model) {
+        // Get auth member used in header
+        MemberDTO authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
+        }
 
-        try{
+        try {
             Member member = memberService.findMemberById(memberId).get();
 
             List<Board> boardList = boardService.findBoardListByMember(member);
@@ -200,13 +219,28 @@ public class MemberController {
 
             model.addAttribute("memberPageForm", member);
             model.addAttribute("boardList", boardList);
-            model.addAttribute("authMember", authenticationMember.get());
+            model.addAttribute("authMember", authMember);
             model.addAttribute("followIsPresent", followIsPresent);
 
             return "memberPage";
-        } catch(Exception e){
+        } catch (Exception e) {
             return "error/500";
         }
+    }
 
+    public MemberDTO getAuthMemberShowForm() throws Exception {
+        // Get auth member used in header
+        Optional<Member> authenticationMemberOptional = memberService.getAuthenticationMember();
+        if(authenticationMemberOptional.isEmpty())
+            throw new Exception();
+
+        Member authMember = authenticationMemberOptional.get();
+        String profileImagePath = authMember.getDataInfo().getSaveDataPath();
+
+        return MemberDTO.builder()
+                .id(authMember.getId())
+                .username(authMember.getUsername())
+                .profileImgPath(profileImagePath)
+                .build();
     }
 }

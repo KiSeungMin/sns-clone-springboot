@@ -25,6 +25,7 @@ public class Comment {
     @JoinColumn(name="MEMBER_ID")
     private Member member;
 
+    @Column(length = 650)
     private String content;
 
     private Date date;

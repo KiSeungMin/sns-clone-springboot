@@ -30,8 +30,6 @@ public class Member {
     @Column(nullable = false, name="username")
     private String username;
 
-    private Long imageDataInfoId;
-
     @OneToOne
     @JoinColumn(name = "DATAINFO_ID")
     private DataInfo dataInfo;

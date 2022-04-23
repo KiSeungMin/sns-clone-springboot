@@ -4,6 +4,7 @@
 
 <head>
     <link th:href="@{/css/header.css}" rel="stylesheet">
+    <script th:src="@{/js/main.js}"></script>
 </head>
 
 <div th:fragment="header">
@@ -20,7 +21,7 @@
                 <div class="col-4 d-flex overflow-hidden justify-content-start align-items-center">
 
                     <a th:href="@{/member/{id}/memberPage (id=${authMember.id})}">
-                        <img th:src="|/images/${authMember.dataInfo.saveDataPath}|" class="rounded-circle mr-3" style="width: 3rem; height: 3rem;">
+                        <img th:src="|/images/${authMember.profileImgPath}|" class="rounded-circle mr-3" style="width: 3rem; height: 3rem;">
                     </a>
 
                     <h4 class="h4" sec:authorize="isAnonymous()">로그인 해주세요</h4>

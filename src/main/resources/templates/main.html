@@ -4,69 +4,83 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1.html}">
 
-<head>
-    <link th:href="@{/css/main.css}" rel="stylesheet">
-    <script th:src="@{/js/main.js}"></script>
-</head>
-
 
 <div layout:fragment="content">
 
 <main class="container">
-    <div class="row justify-content-center py-2" th:each="board , status: ${boardList}">
+    <div class="row justify-content-center py-2" th:each="board , boardStatus: ${boardList}">
         <div class="col-8">
             <div class="row border rounded flex-column mb-4 shadow-sm h-md-250 position-relative">
                 <div class="col p-4 d-flex flex-column position-static">
 
                     <div class="d-flex overflow-hidden justify-content-start align-items-center mb-3">
-
-                        <a th:href="@{/member/{id}/memberPage (id=${board.member.id})}">
-                            <img th:src="|/images/${board.member.dataInfo.saveDataPath}|" class="rounded-circle mr-3" style="width: 3rem; height: 3rem;">
+                        <a th:href="@{/member/{id}/memberPage (id=${board.writer.id})}">
+                            <img th:src="|/images/${board.writer.profileImgPath}|" class="rounded-circle mr-3" style="width: 3rem; height: 3rem;">
                         </a>
-                        <h4 class = "ml-2" th:text="${board.member.username}">username</h4>
-
+                        <h4 class = "ml-2" th:text="${board.writer.username}">username</h4>
                     </div>
 
-                    <div th:if="${#lists.size(board.boardDataList) > 0}">
-                        <div class="container">
-                            <div th:id="'myCarousel' + ${status.index}" class="carousel slide">
+<!--                    <div class="card" th:if="${#lists.size(board.boardList) > 0}">-->
+<!--                        <div class="card-img-top">-->
+<!--                            <div th:id="'myCarousel' + ${boardStatus.index}" class="carousel slide">-->
 
+<!--                                <div class="carousel-inner justify-content-center">-->
+
+<!--                                    <div th:attr="class=${status.index == 0 ? 'carousel-item active' : 'carousel-item'}" th:each="boardImage, status:${board.imgPath}">-->
+<!--                                        <img th:src="|/images/${boardImage}|" class="mx-auto img-fluid" style="height:400px;">-->
+<!--                                    </div>-->
+
+<!--                                </div>-->
+
+<!--                                <button class="left carousel-control-prev bg-transparent border-0" type="button" href="#myCarousel"-->
+<!--                                        th:onclick="|javascript:leftClick('${status.index}')|">-->
+<!--                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
+<!--                                    <span class="visually-hidden"></span>-->
+<!--                                </button>-->
+<!--                                <button class="right carousel-control-next bg-transparent border-0" type="button" href="#myCarousel"-->
+<!--                                        th:onclick="|javascript:rightClick('${status.index}')|">-->
+<!--                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
+<!--                                    <span class="sr-only">Next</span>-->
+<!--                                </button>-->
+<!--=======-->
+
+                     <div class="card">
+                        <div class="card-img-top">
+                            <div th:id="'myCarousel' + ${boardStatus.index}" class="carousel slide" data-ride="carousel">
                                 <!-- Indicators -->
-                                <!--
-                                <div class="carousel-indicators" th:each="boardImage, status:${board.boardDataList}">
-                                    <button type="button" class="item1 active" aria-current="true" aria-label="Slide 1"></button>
-                                    <button type="button" class="item2" aria-label="Slide 2"></button>
-                                    <button type="button" class="item3" aria-label="Slide 3"></button>
-                                </div>
-                                -->
+                                <ol class="carousel-indicators">
+                                    <li th:attr="data-target='#myCarousel' + ${boardStatus.index}, data-slide-to=${carIndStatus.index}" th:each="boardImg , carIndStatus: ${board.imgPath}" th:class="${carIndStatus.index}== 0  ? 'active':''"></li>
+                                </ol>
 
-                                <div class="carousel-inner justify-content-center">
-
-                                    <div th:attr="class=${status.index == 0 ? 'carousel-item active' : 'carousel-item'}" th:each="boardImage, status:${board.boardDataList}">
-                                        <img th:src="|/images/${boardImage.dataInfo.saveDataPath}|" class="mx-auto img-fluid" style="height:400px;">
+                                <!-- Wrapper for slides -->
+                                <div class="carousel-inner">
+                                    <div th:each="boardImg , carInnerStatus: ${board.imgPath}" th:class="${carInnerStatus.index}== 0  ? 'carousel-item active':'carousel-item'">
+                                        <img th:src="|/images/${boardImg}|" class="d-block w-100 h-auto">
                                     </div>
-
                                 </div>
 
-                                <button class="left carousel-control-prev bg-transparent border-0" type="button" href="#myCarousel"
-                                        th:onclick="|javascript:leftClick('${status.index}')|">
+                                <!-- Left and right controls -->
+                                <a class="carousel-control-prev" th:href="'#myCarousel' + ${boardStatus.index}" role="button" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden"></span>
-                                </button>
-                                <button class="right carousel-control-next bg-transparent border-0" type="button" href="#myCarousel"
-                                        th:onclick="|javascript:rightClick('${status.index}')|">
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" th:href="'#myCarousel' + ${boardStatus.index}" role="button" data-slide="next">
+
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden"></span>
-                                </button>
+                                    <span class="sr-only">Next</span>
+                                </a>
+<!--&gt;>>>>>> lcm-->
                             </div>
                         </div>
-
-                        <a style= "text-decoration:none;" th:href="@{/board/{id}/get (id=${board.boardId})}">
-                            <div class="mt-3">
-                                <div class="mb-1 text-muted" style="text-decoration: none; color:black;" th:text="${board.date}">DATE</div>
-                                <p class="card-text mb-auto" style="text-decoration: none; color:black;" th:text="${board.textData}">BODY TEXT</p>
-                            </div>
-                        </a>
+                         <div class="card-body">
+                             <a style= "text-decoration:none;" th:href="@{/board/{id}/get (id=${board.boardId})}">
+                                 <div class="mt-3">
+                                     <div class="mb-1 text-muted" style="text-decoration: none; color:black;" th:text="${board.date}">DATE</div>
+                                     <p class="card-text mb-auto" style="text-decoration: none; color:black;" th:text="${board.textData}">BODY TEXT</p>
+                                 </div>
+                             </a>
+                         </div>
+                     </div>
                     </div>
                 </div>
             </div>

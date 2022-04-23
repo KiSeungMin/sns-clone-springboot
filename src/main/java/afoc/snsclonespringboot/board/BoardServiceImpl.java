@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -48,6 +45,11 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<Board> findBoardListByMember(Member member) {
         return boardRepository.findBoardListByMember(member);
+    }
+
+    @Override
+    public List<Board> findBoardListByMemberId(Long memberId) {
+        return boardRepository.findBoardListByMemberId(memberId);
     }
 
     /*
@@ -159,5 +161,15 @@ public class BoardServiceImpl implements BoardService {
             exception.printStackTrace();
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Long> findBoardDataInfoIdByBoard(Board board) {
+        List<Long> retList = new ArrayList<>();
+        List<BoardData> boardDataList = boardDataRepository.findByBoard(board);
+        for(BoardData boardData : boardDataList){
+            retList.add(boardData.getDataInfo().getId());
+        }
+        return retList;
     }
 }

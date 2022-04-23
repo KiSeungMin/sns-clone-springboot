@@ -3,13 +3,14 @@ package afoc.snsclonespringboot.board;
 import afoc.snsclonespringboot.board.Comment.Comment;
 import afoc.snsclonespringboot.board.Comment.CommentForm;
 import afoc.snsclonespringboot.board.like.LikeForm;
-import afoc.snsclonespringboot.member.FollowForm;
+import afoc.snsclonespringboot.member.follow.FollowDto;
 import afoc.snsclonespringboot.board.boarddata.BoardData;
 import afoc.snsclonespringboot.data.DataInfo;
 import afoc.snsclonespringboot.data.DataService;
 import afoc.snsclonespringboot.data.DataType;
 import afoc.snsclonespringboot.member.Member;
 import afoc.snsclonespringboot.member.MemberService;
+import afoc.snsclonespringboot.member.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,23 +34,60 @@ public class BoardController {
     private final MemberService memberService;
     private final DataService dataService;
 
-    @GetMapping(value="/board/new")
-    public String uploadBoard(Model model){
-
-        try{
-            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
-
-            model.addAttribute("authMember", authenticationMember.get());
-            model.addAttribute("boardForm", new BoardForm());
-            return "createBoard";
-        } catch(Exception e){
-            return "error/500";
+    @GetMapping("/main")
+    public String main(Model model) {
+        // Get auth member used in header
+        MemberDTO authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
         }
 
+        try {
+            // Get board list to show
+            // TODO - 보여줄 보드 리스트 찾는 서비스 필요
+            List<BoardDTO> boardDTOList = new ArrayList<>();
+            List<Board> boardList = boardService.findBoardListByMember(memberService.findMemberById(authMember.getId()).get());
+            //List<Board> boardList = boardService.findBoardListByMemberId(authMember.getId());
+
+            // get all boards to show
+            for(Board board : boardList){
+                try{
+                    boardDTOList.add(makeBoardDTO(board));
+                } catch (Exception ignored){
+                }
+            }
+
+            // Add attribute to model
+            model.addAttribute("authMember", authMember);
+            model.addAttribute("boardList", boardDTOList);
+
+            return "main.html";
+        } catch (Exception e){
+            System.out.println("HomeController.main e");
+            e.printStackTrace();
+            return "error/500.html";
+        }
+    }
+
+    @GetMapping(value="/board/new")
+    public String createBoard(Model model){
+        // Get auth member used in header
+        MemberDTO authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("authMember", authMember);
+        model.addAttribute("boardForm", new BoardForm());
+        return "createBoard";
     }
 
     @PostMapping(value="/board/new")
-    public String uploadBoard(@ModelAttribute BoardForm boardForm, Model model){
+    public String createBoard(@ModelAttribute BoardForm boardForm, Model model){
 
         try{
             Optional<Member> authenticationMember = memberService.getAuthenticationMember();
@@ -102,68 +140,33 @@ public class BoardController {
         }
     }
 
-//    @GetMapping(value="/board/new")
-//    public String createBoard(Model model){
-//
-//        model.addAttribute("member", memberService.getAuthenticationMember().get());
-//        model.addAttribute("boardForm", new BoardForm());
-//
-//        return "createBoard";
-//    }
-////
-//    @PostMapping(value="/board/new")
-//    public RedirectView createBoard(BoardForm boardForm, Model model){
-//
-//        Optional<Member> authenticationMember = memberService.getAuthenticationMember();
-//        if (authenticationMember.isEmpty())
-//            throw new IllegalStateException();
-//        Member member = authenticationMember.get();
-//
-//        Board board = Board.builder()
-//                .memberId(member.getId())
-//                .username(member.getUsername())
-//                .textData(boardForm.getTextData())
-//                .date(new Date())
-//                .build();
-//
-//        boardService.upload(board);
-//
-//        return new RedirectView("/main");
-//    }
 
     @GetMapping(value="/board/{boardId}/get")
     public String visitBoardForm(@PathVariable("boardId") Long boardId, Model model){
+        // Get auth member used in header
+        MemberDTO authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
+        }
 
         try{
             Optional<Member> authenticationMember = memberService.getAuthenticationMember();
 
             Board board = boardService.findBoardByBoardId(boardId).get();
-            //Optional<Member> member = memberService.findMemberById(board.getMemberId());
-            Member member = board.getMember();
+            Member boardAuthor = board.getMember();
 
-            BoardContentForm boardContentForm = new BoardContentForm();
+        BoardContentDTO boardContentDTO = BoardContentDTO.builder()
+                .board(makeBoardDTO(board))
+                .followIsPresent(memberService.followIsPresent(authMember.getId(), boardAuthor.getId()))
+                .likeIsPresent(boardService.likeIsPresent(board.getBoardId(), authMember.getId()))
+                .build();
 
             List<Comment> commentList = boardService.getCommentList(boardId);
 
-            boardContentForm.setBoard(board);
-
-            //boardContentForm.setFollowIsPresent(memberService.followIsPresent(headerForm.getMemberId(), board.getMemberId()));
-            //boardContentForm.setLikeIsPresent(boardService.likeIsPresent(board.getMemberId(), headerForm.getMemberId()));
-
-            boardContentForm.setFollowIsPresent(memberService.followIsPresent(authenticationMember.get().getId(), member.getId()));
-            boardContentForm.setLikeIsPresent(boardService.likeIsPresent(member.getId(), authenticationMember.get().getId()));
-
-            //Optional<DataInfo> dataInfo = dataService.load(member.get().getImageDataInfoId());
-
-            Optional<DataInfo> dataInfo = dataService.load(member.getImageDataInfoId());
-
-            if(dataInfo.isEmpty()){
-                throw new Exception();
-            }
-            String profileImagePath = dataInfo.get().getSaveDataPath();
-
-            model.addAttribute("boardContentForm", boardContentForm);
-            model.addAttribute("authMember", authenticationMember.get());
+            model.addAttribute("authMember", authMember);
+            model.addAttribute("boardContentDTO", boardContentDTO);
             model.addAttribute("commentList", commentList);
             model.addAttribute("likeForm", new LikeForm());
             model.addAttribute("commentForm", new CommentForm());
@@ -172,7 +175,6 @@ public class BoardController {
         } catch(Exception e){
             return "error/500.html";
         }
-
     }
 
     // 좋아요 기능 구현(좋아요 버튼 누르면 실행)
@@ -191,6 +193,13 @@ public class BoardController {
     // 좋아요 누른 사람들 조회
     @GetMapping(value = "/board/{boardId}/likeList")
     public String getLikeList(@PathVariable("boardId") Long boardId, Model model){
+        // Get auth member used in header
+        MemberDTO authMember;
+        try {
+            authMember = getAuthMemberShowForm();
+        } catch (Exception e) {
+            return "redirect:/login";
+        }
 
         try{
 
@@ -198,23 +207,23 @@ public class BoardController {
 
             List<Long> likeIdList = boardService.findLikeMemberList(boardId);
 
-            List<FollowForm> followFormList = new ArrayList<>();
+            List<FollowDto> followDtoList = new ArrayList<>();
 
             for(Long L : likeIdList){
 
                 Member member = memberService.findMemberById(L).get();
                 Boolean followIsPresent = memberService.followIsPresent(authenticationMember.get().getId(), L);
 
-                FollowForm followForm = new FollowForm();
+                FollowDto followDto = new FollowDto();
 
-                followForm.setMember(member);
-                followForm.setFollowIsPresent(followIsPresent);
+                followDto.setMember(member);
+                followDto.setFollowIsPresent(followIsPresent);
 
-                followFormList.add(followForm);
+                followDtoList.add(followDto);
             }
 
-            model.addAttribute("authMember", authenticationMember.get());
-            model.addAttribute("memberList", followFormList);
+            model.addAttribute("authMember", authMember);
+            model.addAttribute("memberList", followDtoList);
 
             return "memberList";
         } catch(Exception e){
@@ -239,5 +248,52 @@ public class BoardController {
         } catch(Exception e){
             return new RedirectView("error/500");
         }
+    }
+
+    public MemberDTO getAuthMemberShowForm() throws Exception {
+        // Get auth member used in header
+        Optional<Member> authenticationMemberOptional = memberService.getAuthenticationMember();
+        if(authenticationMemberOptional.isEmpty())
+            throw new Exception();
+
+        Member authMember = authenticationMemberOptional.get();
+        String profileImagePath = authMember.getDataInfo().getSaveDataPath();
+
+        return MemberDTO.builder()
+                .id(authMember.getId())
+                .username(authMember.getUsername())
+                .profileImgPath(profileImagePath)
+                .build();
+    }
+
+    private BoardDTO makeBoardDTO(Board board) {
+        // get contents (Board, imgPath)
+        List<Long> boardDataInfoIdList = boardService.findBoardDataInfoIdByBoard(board);
+        List<String> boardDataPathList = new ArrayList<>();
+        for(Long boardDataInfoId : boardDataInfoIdList){
+            Optional<DataInfo> boardDataInfo = dataService.load(boardDataInfoId);
+            if(boardDataInfo.isPresent()){
+                String boardDataPath = boardDataInfo.get().getSaveDataPath();
+                boardDataPathList.add(boardDataPath);
+            }
+        }
+
+        // find writer's memberDTO
+        Member writer = memberService.findMemberById(board.getMember().getId()).get();
+        String writerProfileImgPath = writer.getDataInfo().getSaveDataPath();
+        MemberDTO memberDTO = MemberDTO.builder()
+                .id(writer.getId())
+                .username(writer.getUsername())
+                .profileImgPath(writerProfileImgPath)
+                .build();
+
+        // return boardDTO
+        return BoardDTO.builder()
+                .boardId(board.getBoardId())
+                .writer(memberDTO)
+                .date(board.getDate())
+                .textData(board.getTextData())
+                .imgPath(boardDataPathList)
+                .build();
     }
 }

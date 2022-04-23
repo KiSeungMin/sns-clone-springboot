@@ -5,7 +5,6 @@ import afoc.snsclonespringboot.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +26,7 @@ public class Board {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @Column(length = 2000)
     private String textData;
 
     private Date date;

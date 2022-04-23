@@ -1,5 +1,6 @@
 package afoc.snsclonespringboot.board.boarddata;
 
+import afoc.snsclonespringboot.board.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -25,15 +26,15 @@ public class JpaBoardDataRepository implements BoardDataRepository {
     }
 
     @Override
-    public List<BoardData> findByBoardId(Long boardId) {
-        return em.createQuery("select b from BoardData b where b.boardId = :boardId", BoardData.class)
-                .setParameter("boardId", boardId)
+    public List<BoardData> findByBoard(Board board) {
+        return em.createQuery("select b from BoardData b where b.board = :board", BoardData.class)
+                .setParameter("board", board)
                 .getResultList();
     }
 
     @Override
-    public Boolean deleteByBoardId(Long boarId) {
-        List<BoardData> boardDataList = findByBoardId(boarId);
+    public Boolean deleteByBoard(Board board) {
+        List<BoardData> boardDataList = findByBoard(board);
         if(boardDataList.isEmpty())
             return false;
 

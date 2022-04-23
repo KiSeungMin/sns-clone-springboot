@@ -41,6 +41,11 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     @Override
+    public List<Board> findBoardListByMemberId(Long memberId) {
+        return null;
+    }
+
+    @Override
     public Boolean updateBoard(Board board) {
         Board returnValue = store.get(board.getBoardId());
         if (returnValue != null) {

@@ -1,5 +1,7 @@
 package afoc.snsclonespringboot.board.boarddata;
 
+import afoc.snsclonespringboot.board.Board;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -8,8 +10,8 @@ public interface BoardDataRepository {
     Optional<BoardData> save(BoardData boardData);
 
     // 찾기
-    List<BoardData> findByBoardId(Long boardId);
+    List<BoardData> findByBoard(Board board);
 
     // 삭제
-    Boolean deleteByBoardId(Long boardId);
+    Boolean deleteByBoard(Board board);
 }
