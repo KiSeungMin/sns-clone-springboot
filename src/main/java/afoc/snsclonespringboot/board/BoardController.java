@@ -203,8 +203,6 @@ public class BoardController {
 
         try{
 
-            Optional<Member> authenticationMember = memberService.getAuthenticationMember();
-
             List<Long> likeIdList = boardService.findLikeMemberList(boardId);
 
             List<FollowDto> followDtoList = new ArrayList<>();
@@ -212,7 +210,7 @@ public class BoardController {
             for(Long L : likeIdList){
 
                 Member member = memberService.findMemberById(L).get();
-                Boolean followIsPresent = memberService.followIsPresent(authenticationMember.get().getId(), L);
+                Boolean followIsPresent = memberService.followIsPresent(authMember.getId(), L);
 
                 FollowDto followDto = new FollowDto();
 

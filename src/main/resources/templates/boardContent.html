@@ -34,50 +34,51 @@
                             <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
                         </div>
 
-                        <div th:if="${#lists.size(boardContentDTO.board.boardDataList) > 0}">
-                            <div class="container mt-2">
-                                <div id="myCarousel" class="carousel slide">
+                        <div class="card mt-1" >
+                            <div class="card-img-top">
+                                <div id="myCarousel" class="carousel slide" data-ride="carousel">
                                     <!-- Indicators -->
-                                    <!--
-                                    <div class="carousel-indicators">
-                                        <button type="button" class="item1 active" aria-current="true" aria-label="Slide 1"></button>
-                                        <button type="button" class="item2" aria-label="Slide 2"></button>
-                                        <button type="button" class="item3" aria-label="Slide 3"></button>
-                                    </div>
-                                    -->
+                                    <ol class="carousel-indicators">
+                                        <li th:attr="data-target='#myCarousel', data-slide-to=${carIndStatus.index}" th:each="boardImg , carIndStatus: ${boardContentDTO.board.imgPath}" th:class="${carIndStatus.index}== 0  ? 'active':''"></li>
+                                    </ol>
 
-                                    <div class="carousel-inner justify-content-center">
-
-                                        <div th:attr="class=${status.index == 0 ? 'carousel-item active' : 'carousel-item'}" th:each="boardImage, status:${boardContentForm.board.boardDataList}">
-                                            <img th:src="|/images/${boardImage.dataInfo.saveDataPath}|" class="mx-auto img-fluid" style="height:400px;">
+                                    <!-- Wrapper for slides -->
+                                    <div class="carousel-inner">
+                                        <div th:each="boardImg , carInnerStatus: ${boardContentDTO.board.imgPath}" th:class="${carInnerStatus.index}== 0  ? 'carousel-item active':'carousel-item'">
+                                            <img th:src="|/images/${boardImg}|" class="d-block w-100 h-auto">
                                         </div>
-
                                     </div>
 
-                                    <button class="left carousel-control-prev bg-transparent border-0" type="button" href="#myCarousel">
+                                    <!-- Left and right controls -->
+                                    <a class="carousel-control-prev" th:href="'#myCarousel'" role="button" data-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden"></span>
-                                    </button>
-                                    <button class="right carousel-control-next bg-transparent border-0" type="button" href="#myCarousel">
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" th:href="'#myCarousel'" role="button" data-slide="next">
+
                                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden"></span>
-                                    </button>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="mt-3">
+                                    <div class="mb-1 text-muted" style="text-decoration: none; color:black;" th:text="${boardContentDTO.board.date}">DATE</div>
+                                    <p class="card-text mb-auto" style="text-decoration: none; color:black;" th:text="${boardContentDTO.board.textData}">BODY TEXT</p>
                                 </div>
                             </div>
                         </div>
-
-
-                        <div class="mt-2">
-                            <div class="mb-1 text-muted" th:text = "${boardContentDTO.board.date}">DATE</div>
-                            <p class="card-text mb-auto" style="text-decoration:none; color:black;" th:text="${boardContentDTO.board.textData}">BODY TEXT</p>
-                        </div>
                     </div>
+
                 </div>
             </div>
 
             <div class="col border rounded flex-column mb-4 shadow-sm h-md-250 position-relative">
-                <div class="row row-cols-1 mt-1" style="height: calc(100% - 40px);">
-                    <div class="col" style="height: calc(100% - 110px);  ">
+                <!--<div class="row row-cols-1 mt-1" style="height: calc(100% - 40px);">-->
+                <div class="row row-cols-1 mt-1">
+                    <!--<div class="col" style="height: calc(100%  - 110px);  ">-->
+                    <div class="col">
+
 
                         <h5 class="mb-2 p-2 border-bottom">comment</h5>
 
