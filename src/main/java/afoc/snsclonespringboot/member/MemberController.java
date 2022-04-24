@@ -174,12 +174,10 @@ public class MemberController {
 
             List<FollowDto> followDtoList = new ArrayList<>();
 
-            Long userId = memberService.getAuthenticationMember().get().getId();
-
             for(Long L : followeeIdList){
 
                 Member member = memberService.findMemberById(L).get();
-                Boolean followIsPresent = memberService.followIsPresent(userId, L);
+                Boolean followIsPresent = memberService.followIsPresent(authMember.getId(), L);
 
                 FollowDto followDto = new FollowDto();
 
