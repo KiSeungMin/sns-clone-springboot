@@ -220,8 +220,11 @@ public class BoardController {
                 followDtoList.add(followDto);
             }
 
+            String titleText = "이 게시물에 좋아요를 누른 사람";
+
             model.addAttribute("authMember", authMember);
             model.addAttribute("memberList", followDtoList);
+            model.addAttribute("titleText", titleText);
 
             return "memberList";
         } catch(Exception e){

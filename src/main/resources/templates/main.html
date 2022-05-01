@@ -4,6 +4,9 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1.html}">
 
+<head>
+    <link th:href="@{/css/boardImage.css}" rel="stylesheet">
+</head>
 
 <div layout:fragment="content">
 
@@ -20,30 +23,6 @@
                         <h4 class = "ml-2" th:text="${board.writer.username}">username</h4>
                     </div>
 
-<!--                    <div class="card" th:if="${#lists.size(board.boardList) > 0}">-->
-<!--                        <div class="card-img-top">-->
-<!--                            <div th:id="'myCarousel' + ${boardStatus.index}" class="carousel slide">-->
-
-<!--                                <div class="carousel-inner justify-content-center">-->
-
-<!--                                    <div th:attr="class=${status.index == 0 ? 'carousel-item active' : 'carousel-item'}" th:each="boardImage, status:${board.imgPath}">-->
-<!--                                        <img th:src="|/images/${boardImage}|" class="mx-auto img-fluid" style="height:400px;">-->
-<!--                                    </div>-->
-
-<!--                                </div>-->
-
-<!--                                <button class="left carousel-control-prev bg-transparent border-0" type="button" href="#myCarousel"-->
-<!--                                        th:onclick="|javascript:leftClick('${status.index}')|">-->
-<!--                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
-<!--                                    <span class="visually-hidden"></span>-->
-<!--                                </button>-->
-<!--                                <button class="right carousel-control-next bg-transparent border-0" type="button" href="#myCarousel"-->
-<!--                                        th:onclick="|javascript:rightClick('${status.index}')|">-->
-<!--                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
-<!--                                    <span class="sr-only">Next</span>-->
-<!--                                </button>-->
-<!--=======-->
-
                      <div class="card">
                         <div class="card-img-top">
                             <div th:id="'myCarousel' + ${boardStatus.index}" class="carousel slide" data-ride="carousel">
@@ -55,7 +34,7 @@
                                 <!-- Wrapper for slides -->
                                 <div class="carousel-inner">
                                     <div th:each="boardImg , carInnerStatus: ${board.imgPath}" th:class="${carInnerStatus.index}== 0  ? 'carousel-item active':'carousel-item'">
-                                        <img th:src="|/images/${boardImg}|" class="d-block w-100 h-auto">
+                                        <img th:src="|/images/${boardImg}|" class="boardImage">
                                     </div>
                                 </div>
 
@@ -69,19 +48,17 @@
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="sr-only">Next</span>
                                 </a>
-<!--&gt;>>>>>> lcm-->
                             </div>
                         </div>
                          <div class="card-body">
                              <a style= "text-decoration:none;" th:href="@{/board/{id}/get (id=${board.boardId})}">
                                  <div class="mt-3">
-                                     <div class="mb-1 text-muted" style="text-decoration: none; color:black;" th:text="${board.date}">DATE</div>
+                                     <div class="mb-1 text-muted" style="text-decoration: none; color:black;">작성일시 : <span th:text="${board.date}">DATE</span></div>
                                      <p class="card-text mb-auto" style="text-decoration: none; color:black;" th:text="${board.textData}">BODY TEXT</p>
                                  </div>
                              </a>
                          </div>
                      </div>
-                    </div>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 $(document).ready(function(){
     // Activate Carousel
-    $(".myCarousel").carousel({interval: false, wrap: true, touch : true});
+    $(".carousel").carousel({interval: false, wrap: true, touch : true});
 
     // Enable Carousel Indicators
     /*
