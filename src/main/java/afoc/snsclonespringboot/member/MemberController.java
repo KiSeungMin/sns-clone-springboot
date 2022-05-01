@@ -1,6 +1,7 @@
 package afoc.snsclonespringboot.member;
 
 import afoc.snsclonespringboot.board.Board;
+import afoc.snsclonespringboot.board.BoardDTO;
 import afoc.snsclonespringboot.board.BoardService;
 import afoc.snsclonespringboot.data.DataInfo;
 import afoc.snsclonespringboot.data.DataService;
@@ -149,8 +150,11 @@ public class MemberController {
                 followDtoList.add(followDto);
             }
 
+            String titleText = memberService.findMemberById(memberId).get().getUsername() + "님의 팔로워 목록";
+
             model.addAttribute("memberList", followDtoList);
             model.addAttribute("authMember", authMember);
+            model.addAttribute("titleText", titleText);
 
             return "memberList";
         } catch(Exception e){
@@ -187,8 +191,11 @@ public class MemberController {
                 followDtoList.add(followDto);
             }
 
+            String titleText = memberService.findMemberById(memberId).get().getUsername() + "님의 팔로잉 목록";
+
             model.addAttribute("authMember", authMember);
             model.addAttribute("memberList", followDtoList);
+            model.addAttribute("titleText", titleText);
 
             return "memberList";
         } catch (Exception e) {
@@ -211,12 +218,44 @@ public class MemberController {
 
             List<Board> boardList = boardService.findBoardListByMember(member);
 
+            List<BoardDTO> boardDTOList = new ArrayList<>();
+
+            for(Board board : boardList){
+
+                MemberDTO writer = MemberDTO.builder()
+                        .id(memberId)
+                        .profileImgPath(member.getDataInfo().getSaveDataPath())
+                        .username(member.getUsername())
+                        .build();
+
+                List<Long> boardDataInfoIdList = boardService.findBoardDataInfoIdByBoard(board);
+                List<String> boardDataPathList = new ArrayList<>();
+                for(Long boardDataInfoId : boardDataInfoIdList){
+                    Optional<DataInfo> boardDataInfo = dataService.load(boardDataInfoId);
+                    if(boardDataInfo.isPresent()){
+                        String boardDataPath = boardDataInfo.get().getSaveDataPath();
+                        boardDataPathList.add(boardDataPath);
+                    }
+                }
+
+                BoardDTO boardDTO = BoardDTO.builder()
+                        .boardId(board.getBoardId())
+                        .date(board.getDate())
+                        .textData(board.getTextData())
+                        .writer(writer)
+                        .imgPath(boardDataPathList)
+                        .build();
+
+
+                boardDTOList.add(boardDTO);
+            }
+
             Optional<Member> authenticationMember = memberService.getAuthenticationMember();
 
             Boolean followIsPresent = memberService.followIsPresent(authenticationMember.get().getId(), memberId);
 
             model.addAttribute("memberPageForm", member);
-            model.addAttribute("boardList", boardList);
+            model.addAttribute("boardDTOList", boardDTOList);
             model.addAttribute("authMember", authMember);
             model.addAttribute("followIsPresent", followIsPresent);
 

@@ -4,19 +4,19 @@
 
 
 <head>
-    <link th:href="@{/css/memberPage.css}" rel="stylesheet">
-    <script th:src="@{/js/memberPage.js}"></script>
+    <!--<link th:href="@{/css/memberPage.css}" rel="stylesheet">-->
+    <link th:href="@{/css/boardImage.css}" rel="stylesheet">
 </head>
 
 <div layout:fragment="content">
     <div class="container">
-        <div class="row row-cols-1 p-1">
+        <div class="row justify-content-center row-cols-1 p-1">
 
-            <div class="col border p-1 mb-2 ">
-                <div class="row">
-                    <div class="col-12  mb-2 d-flex justify-content-center align-items-center">
+            <div class="col-8 border p-1 mb-2 ">
+                <div class="row row-cols-1">
+                    <div class="col mb-2 d-flex justify-content-center align-items-center">
                         <img th:src="|/images/${memberPageForm.dataInfo.saveDataPath}|" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
-                        <h4 class="ml-2" th:text="${memberPageForm.username}">username</h4>
+                        <h3 class="ml-2" th:text="${memberPageForm.username}">username</h3>
                     </div>
 
                     <div class="col">
@@ -43,56 +43,52 @@
                 </div>
             </div>
 
-            <div class="col">
-                <div th:each="board, status: ${boardList}">
+            <div class="col-8">
+                <div th:each="boardDTO, boardStatus: ${boardDTOList}">
                     <div class="justify-content-center">
                         <div class="row border rounded flex-column mb-4 shadow-sm h-md-250 position-relative">
                             <div class="col p-4 d-flex flex-column position-static">
 
                                 <div class="d-flex overflow-hidden justify-content-start align-items-center mb-3">
-                                    <img th:src="|/images/${board.member.dataInfo.saveDataPath}|" class="rounded-circle" style="width: 3rem; height: 3rem;">
-                                    <h4 class = "ml-2" th:text="${board.member.username}">username</h4>
+                                    <img th:src="|/images/${boardDTO.writer.profileImgPath}|" class="rounded-circle" style="width: 3rem; height: 3rem;">
+                                    <h4 class = "ml-2" th:text="${boardDTO.writer.username}">username</h4>
                                 </div>
 
-                                <div th:if="${#lists.size(board.boardDataList) > 0}">
-                                    <div class="container">
-                                        <div th:id="'myCarousel' + ${status.index}" class="carousel slide">
+                                <div class="card mt-1" >
+                                    <div class="card-img-top">
+                                        <div th:id="'myCarousel' + ${boardStatus.index}" class="carousel slide" data-ride="carousel">
                                             <!-- Indicators -->
-                                            <!--
-                                            <div class="carousel-indicators">
-                                                <button type="button" class="item1 active" aria-current="true" aria-label="Slide 1"></button>
-                                                <button type="button" class="item2" aria-label="Slide 2"></button>
-                                                <button type="button" class="item3" aria-label="Slide 3"></button>
-                                            </div>
-                                            -->
+                                            <ol class="carousel-indicators">
+                                                <li th:attr="data-target='#myCarousel' + ${boardStatus.index}, data-slide-to=${carIndStatus.index}" th:each="boardImg , carIndStatus: ${boardDTO.imgPath}" th:class="${carIndStatus.index}== 0  ? 'active':''"></li>
+                                            </ol>
 
-                                            <div class="carousel-inner justify-content-center">
-
-                                                <div th:attr="class=${status.index == 0 ? 'carousel-item active' : 'carousel-item'}" th:each="boardImage, status:${board.boardDataList}">
-                                                    <img th:src="|/images/${boardImage.dataInfo.saveDataPath}|" class="mx-auto img-fluid" style="height:400px;">
+                                            <!-- Wrapper for slides -->
+                                            <div class="carousel-inner">
+                                                <div th:each="boardImg , carInnerStatus: ${boardDTO.imgPath}" th:class="${carInnerStatus.index}== 0  ? 'carousel-item active':'carousel-item'">
+                                                    <img th:src="|/images/${boardImg}|" class="boardImage">
                                                 </div>
-
                                             </div>
 
-                                            <button class="left carousel-control-prev bg-transparent border-0" type="button" href="#myCarousel"
-                                                    th:onclick="|javascript:leftClick('${status.index}')|">
+                                            <!-- Left and right controls -->
+                                            <a class="carousel-control-prev" th:href="'#myCarousel' + ${boardStatus.index}" role="button" data-slide="prev">
                                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                <span class="visually-hidden"></span>
-                                            </button>
-                                            <button class="right carousel-control-next bg-transparent border-0" type="button" href="#myCarousel"
-                                                    th:onclick="|javascript:rightClick('${status.index}')|">
+                                                <span class="sr-only">Previous</span>
+                                            </a>
+                                            <a class="carousel-control-next" th:href="'#myCarousel' + ${boardStatus.index}" role="button" data-slide="next">
+
                                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                <span class="visually-hidden"></span>
-                                            </button>
+                                                <span class="sr-only">Next</span>
+                                            </a>
                                         </div>
                                     </div>
-
-                                    <a style= "text-decoration:none;" th:href="@{/board/{id}/get (id=${board.boardId})}">
-                                        <div class="mt-3">
-                                            <div class="mb-1 text-muted" style="text-decoration: none; color:black;" th:text="${board.date}">DATE</div>
-                                            <p class="card-text mb-auto" style="text-decoration: none; color:black;" th:text="${board.textData}">BODY TEXT</p>
-                                        </div>
-                                    </a>
+                                    <div class="card-body">
+                                        <a style= "text-decoration:none;" th:href="@{/board/{id}/get (id=${boardDTO.boardId})}">
+                                            <div class="mt-3">
+                                                <div class="mb-1 text-muted" style="text-decoration: none; color:black;">작성일시 : <span th:text="${boardDTO.date}">DATE</span></div>
+                                                <p class="card-text mb-auto" style="text-decoration: none; color:black;" th:text="${boardDTO.textData}">BODY TEXT</p>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

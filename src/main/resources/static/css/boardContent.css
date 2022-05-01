@@ -8,28 +8,108 @@
     cursor: pointer;
 }
 
-.carousel-inner > .item > img,
-.carousel-inner > .item > a > img {
-    width: 100%;
-    margin: auto;
-}
-
-
 @media all and (min-width:320px){
-    #commentBox{
-        height: 150px;
+
+    .boardComment{
+        height:200px;
     }
+
+    .boardText{
+        height:100px;
+    }
+
 }
 
 @media all and (min-width: 576px){
-    #commentBox{
-        height: 300px;
+
+    .boardAuthor{
+        height:30px;
+    }
+
+    .boardCommentHeader{
+        height:30px;
+    }
+
+    .boardImage{
+        height:275px;
+    }
+
+    .boardComment{
+        height:345px;
+    }
+
+    .boardText{
+        height:180px;
+    }
+
+    .commentAuthor{
+        height:30px;
+    }
+
+    .boardLike{
+        height:30px;
     }
 }
 
 @media all and (min-width: 768px){
-    #commentBox{
-        height: 90%;
+
+    .boardAuthor{
+        height:40px;
+    }
+
+    .boardCommentHeader{
+        height:40px;
+    }
+
+    .boardImage{
+        height:350px;
+    }
+
+    .boardComment{
+        height:460px;
+    }
+
+    .boardText{
+        height:220px;
+    }
+
+    .commentAuthor{
+        height:30px;
+    }
+
+    .boardLike{
+        height:30px;
+    }
+}
+
+@media all and (min-width: 992px){
+
+    .boardAuthor{
+        height:50px;
+    }
+
+    .boardCommentHeader{
+        height:50px;
+    }
+
+    .boardImage{
+        height:400px;
+    }
+
+    .boardComment{
+        height:540px;
+    }
+
+    .boardText{
+        height:250px;
+    }
+
+    .commentAuthor{
+        height:30px;
+    }
+
+    .boardLike{
+        height:30px;
     }
 }
 

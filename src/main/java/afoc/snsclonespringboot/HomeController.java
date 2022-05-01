@@ -36,6 +36,8 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
+
+        /*
         try {
             if(!isTest)
                 return "login";
@@ -145,6 +147,7 @@ public class HomeController {
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+         */
 
         return "test";
     }

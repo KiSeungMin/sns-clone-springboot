@@ -16,7 +16,7 @@ $(document).ready(function(){
 // 캐러셀 기능 구현 관련 함수
 $(document).ready(function(){
     // Activate Carousel
-    $("#myCarousel").carousel({interval: false, wrap: true, touch : true});
+    $(".carousel").carousel({interval: false, wrap: true, touch : true});
 
     // Enable Carousel Indicators
     $(".item1").click(function(){

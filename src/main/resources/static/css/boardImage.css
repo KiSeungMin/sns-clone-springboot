@@ -1,0 +1,39 @@
+@media all and (min-width:320px){
+    .boardImage{
+        width:100%;
+        height:200px;
+        display:block;
+        margin-left:auto;
+        margin-right:auto;
+    }
+}
+
+@media all and (min-width:576px){
+    .boardImage{
+        width:100%;
+        height:275px;
+        display:block;
+        margin-left:auto;
+        margin-right:auto;
+    }
+}
+
+@media all and (min-width:768px){
+    .boardImage{
+        width:100%;
+        height:350px;
+        display:block;
+        margin-left:auto;
+        margin-right:auto;
+    }
+}
+
+@media all and (min-width:992px){
+    .boardImage{
+        width:100%;
+        height:400px;
+        display:block;
+        margin-left:auto;
+        margin-right:auto;
+    }
+}
