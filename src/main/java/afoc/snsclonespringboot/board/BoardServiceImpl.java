@@ -16,7 +16,7 @@ import java.util.*;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService {
+public class BoardServiceImpl implements BoardService{
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
@@ -50,6 +50,25 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<Board> findBoardListByMemberId(Long memberId) {
         return boardRepository.findBoardListByMemberId(memberId);
+    }
+
+    @Override
+    public List<Board> findFolloweeBoardListByFolloweeList(List<Long> followeeList){
+
+        List<Board> followeeBoardList = new ArrayList<>();
+
+        for(Long L : followeeList){
+
+            List<Board> boardList = boardRepository.findBoardListByMemberId(L);
+
+            for(Board board : boardList){
+                followeeBoardList.add(board);
+            }
+        }
+
+        Collections.sort(followeeBoardList, Collections.reverseOrder(Board::compareTo));
+
+        return followeeBoardList;
     }
 
     /*

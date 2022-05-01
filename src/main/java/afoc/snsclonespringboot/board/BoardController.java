@@ -48,8 +48,13 @@ public class BoardController {
             // Get board list to show
             // TODO - 보여줄 보드 리스트 찾는 서비스 필요
             List<BoardDTO> boardDTOList = new ArrayList<>();
-            List<Board> boardList = boardService.findBoardListByMember(memberService.findMemberById(authMember.getId()).get());
-            //List<Board> boardList = boardService.findBoardListByMemberId(authMember.getId());
+
+            List<Long> followeeList = memberService.findFollowees(authMember.getId());
+
+            // 팔로우하고 있는 유저들의 게시물을 최신순으로 가져옴
+            List<Board> boardList= boardService.findFolloweeBoardListByFolloweeList(followeeList);
+
+            //List<Board> boardList = boardService.findBoardListByMember(memberService.findMemberById(authMember.getId()).get());
 
             // get all boards to show
             for(Board board : boardList){

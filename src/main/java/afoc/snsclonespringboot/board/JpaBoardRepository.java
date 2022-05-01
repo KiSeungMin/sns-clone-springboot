@@ -36,14 +36,14 @@ public class JpaBoardRepository implements BoardRepository {
 
     @Override
     public List<Board> findBoardListByMember(Member member){
-        return em.createQuery("select b from Board b where b.member = :member", Board.class)
+        return em.createQuery("select b from Board b where b.member = :member order by b.date desc", Board.class)
                 .setParameter("member", member)
                 .getResultList();
     }
 
     @Override
     public List<Board> findBoardListByMemberId(Long memberId) {
-        return em.createQuery("select b from Board b where b.member.id = :memberId", Board.class)
+        return em.createQuery("select b from Board b where b.member.id = :memberId order by b.date desc", Board.class)
                 .setParameter("memberId", memberId)
                 .getResultList();
     }
