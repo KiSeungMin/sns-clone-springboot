@@ -1,18 +1,3 @@
-// 좋아요 버튼 기능 구현
-$(document).ready(function(){
-    $("._heart").click(function(){
-        if($("._heart").hasClass("liked")){
-            $("._heart").html('<i class="fa fa-heart-o" aria-hidden="true"></i>');
-            $("._heart").removeClass("liked");
-        }else{
-            $("._heart").html('<i class="fa fa-heart" aria-hidden="true"></i>');
-            $("._heart").addClass("liked");
-        }
-
-        $("#likeForm").submit();
-    });
-});
-
 // 캐러셀 기능 구현 관련 함수
 $(document).ready(function(){
     // Activate Carousel

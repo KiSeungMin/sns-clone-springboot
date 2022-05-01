@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @ToString
 @Table(name = "BOARD")
-public class Board {
+public class Board implements Comparable<Board>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,5 +43,10 @@ public class Board {
         this.member = member;
         this.textData = textData;
         this.date = date;
+    }
+
+    @Override
+    public int compareTo(Board board) {
+        return this.getDate().compareTo(board.getDate());
     }
 }

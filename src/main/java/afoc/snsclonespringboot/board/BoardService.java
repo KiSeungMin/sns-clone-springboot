@@ -20,6 +20,7 @@ public interface BoardService {
     Optional<Board> findBoardByBoardId(Long boardId);
     List<Board> findBoardListByMember(Member member);
     List<Board> findBoardListByMemberId(Long memberId);
+    List<Board> findFolloweeBoardListByFolloweeList(List<Long> followeeList);
     Boolean updateBoard(Board board);
     Boolean deleteBoardByBoardId(Long boardId);
 
