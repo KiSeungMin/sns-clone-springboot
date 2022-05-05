@@ -83,15 +83,6 @@ public class MemberController {
         return "/login";
     }
 
-    /*
-    @GetMapping("/signup-failed")
-    public String signupFailed() {
-        System.out.println("MemberController.signupFailed");
-        return "signup-failed";
-    }
-
-     */
-
     @GetMapping("logout")
     public String logout(){
         System.out.println("MemberController.logout");
