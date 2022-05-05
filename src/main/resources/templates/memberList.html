@@ -32,16 +32,16 @@
     <div id="container" class="container container-fluid">
 
         <div class="m-2 mb-3 border-bottom">
-            <h5 th:text="${titleText}" class="h6" style="font-size: 1.6vw;">titleText</h5>
+            <h4 th:text="${titleText}">titleText</h4>
         </div>
 
         <div class="row row-cols-1 p-2 mt-2" th:each="memberForm, status: ${memberList}">
             <div class="col d-flex align-items-center justify-content-start border-bottom rounded p-2 m-1 h-100">
                 <a th:href="@{/member/{id}/memberPage (id=${memberForm.member.id})}">
-                    <img th:src="|/images/${memberForm.member.dataInfo.saveDataPath}|" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
+                    <img th:src="|/images/${memberForm.member.dataInfo.saveDataPath}|" class = "rounded-circle" style="width: 3rem; height: 3rem;">
                 </a>
 
-                <h5 class = "ml-1" th:text="${memberForm.member.username}" style="font-size: 1.5vw;">username</h5>
+                <h5 class = "ml-1" th:text="${memberForm.member.username}">username</h5>
 
                 <iframe th:name="'hiddenFrame' + ${status.index}" width="0" height="0" border="0" style="display: none;"></iframe>
 

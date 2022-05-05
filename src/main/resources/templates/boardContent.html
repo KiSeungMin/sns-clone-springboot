@@ -13,13 +13,13 @@
 <div layout:fragment="content">
 
     <main class="container-fluid mt-5" style="width:90%;">
-        <div class="row row-cols-1 row-cols-md-2 g-2 justify-content-center" th:object="${boardContentDTO}">
-            <div class="col border rounded flex-column mb-4  h-100 h-md-250 position-relative overflow-auto">
+        <div class="row row-cols-1 row-cols-lg-2 g-2 justify-content-center" th:object="${boardContentDTO}">
+            <div class="col-lg-6 col-12 border rounded flex-column mb-4  h-100 h-md-250 position-relative overflow-auto">
                 <div class="row">
                     <div class="col p-3 d-flex flex-column position-static">
                         <div class="d-flex justify-content-start align-items-center boardAuthor mb-1">
                             <a th:href="@{/member/{id}/memberPage (id=${boardContentDTO.board.writer.id})}">
-                                <img th:src="|/images/${boardContentDTO.board.writer.profileImgPath}|" class = "rounded-circle" style="width: 2.5vw; height: 2.5vw;">
+                                <img th:src="|/images/${boardContentDTO.board.writer.profileImgPath}|" class = "rounded-circle" style="width: 3rem; height: 3rem;">
                             </a>
                             <h4 class = "ml-3" th:text="${boardContentDTO.board.writer.username}">username</h4>
 
@@ -73,7 +73,7 @@
                 </div>
             </div>
 
-            <div class="col border rounded flex-column mb-4 h-100 shadow-sm h-md-250 position-relative overflow-auto">
+            <div class="col-lg-6 col-12 border rounded flex-column mb-4 h-100 shadow-sm h-md-250 position-relative overflow-auto">
                 <!--<div class="row row-cols-1 mt-1" style="height: calc(100% - 40px);">-->
                 <div class="row row-cols-1">
                     <!--<div class="col" style="height: calc(100%  - 110px);  ">-->
@@ -83,7 +83,7 @@
 
                         <div class="overflow-auto boardComment mt-2" style="overflow-y: scroll;">
                             <div th:each="comment, status:${commentList}" >
-                                <div class="border-bottom rounded mb-2 mw-100 h-100 d-flex align-items-center justify-content-start">
+                                <div class="border-bottom rounded mw-100 h-100 d-flex align-items-center justify-content-start">
 
                                     <a class="align-items-center" th:href="@{/member/{id}/memberPage (id=${comment.member.id})}">
                                         <img th:src="|/images/${comment.member.dataInfo.saveDataPath}|" class = "rounded-circle" style="width: 1.8vw; height: 1.8vw;">

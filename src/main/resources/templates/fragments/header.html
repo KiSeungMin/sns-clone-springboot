@@ -35,10 +35,7 @@
                 <a class="p-2 link-secondary" style="text-decoration: none; color:black;" th:href="@{/board/new}">게시물 생성</a>
                 <a class="p-2 link-secondary" style="text-decoration: none; color:black;" th:href="@{/member/{id}/followeeList (id=${authMember.id})}">팔로잉</a>
                 <a class="p-2 link-secondary" style="text-decoration: none; color:black;" th:href="@{/member/{id}/followerList (id=${authMember.id})}">팔로워</a>
-                <div>
-                    <a class="p-2 link-secondary" style="text-decoration: none; color:black;" sec:authorize="isAnonymous()" href="/login">로그인</a>
-                    <a class="p-2 link-secondary" style="text-decoration: none; color:black;" sec:authorize="isAuthenticated()" href="/logout">로그아웃</a>
-                </div>
+                <a class="p-2 link-secondary" style="text-decoration: none; color:black;" sec:authorize="isAuthenticated()" href="/logout">로그아웃</a>
             </nav>
         </div>
     </div>

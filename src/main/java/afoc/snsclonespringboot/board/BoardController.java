@@ -99,15 +99,10 @@ public class BoardController {
             if (authenticationMember.isEmpty())
                 throw new IllegalStateException();
 
-            //String username = authenticationMember.get().getUsername();
-            // Long memberId = authenticationMember.get().getId();
-
             List<BoardData> boardDataList = new ArrayList<>();
 
             Board board = Board.builder()
                     .member(authenticationMember.get())
-                    //.memberId(memberId)
-                    //.username(username)
                     .textData(boardForm.getTextData())
                     .date(new Date())
                     .boardDataList(boardDataList)
@@ -118,19 +113,14 @@ public class BoardController {
             if(optionalBoard.isEmpty())
                 throw new IllegalStateException();
 
-            Long boardId = optionalBoard.get().getBoardId();
-
             for (MultipartFile multipartFile : boardForm.getImageFiles()) {
                 if (!multipartFile.isEmpty()){
                     Optional<DataInfo> dataInfo = dataService.save(multipartFile, DataType.Image);
                     if(dataInfo.isEmpty())
                         throw new IllegalStateException();
 
-                    //Long dataInfoId = dataInfo.get().getId();
-
                     BoardData boardData = BoardData.builder()
                             .board(board)
-                            //.dataInfoId(dataInfoId)
                             .dataInfo(dataInfo.get())
                             .build();
 
