@@ -1,5 +1,28 @@
 ﻿# SNS_Project
 
+Instagram 클론 코딩 프로젝트
+- 개인 백엔드 연습 프로젝트
+
+사용 기술 : Spring, Spring Security, JPA(h2 db), Thymeleaf, Bootstrap 
+
+
+1. 메인 화면
+
+
+![main](./readmepicture/캡처1.JPG)
+
+
+2. 게시글 화면
+
+
+![board](./readmepicture/캡처2.JPG)
+
+
+3. 팔로워 화면
+
+
+![follow](./readmepicture/캡처3.JPG)
+
 ## Member
 - 멤버(유저) 가입 및 로그인 기능
 - 멤버끼리 팔로우(Follow) 기능
@@ -13,7 +36,7 @@
 - 간단한 파일 시스템 이용
 - (미구현) AWS Storage 시스템 이용
 
-## etc
+## Etc
 - Home Controller로 entrypoint 생성
 - Spring Security를 이용하여 로그인 기능 구현
 - (미구현) OAuth2 지원
@@ -28,6 +51,6 @@
 - [x] JPA
 - [x] Spring Security
 - [x] Like, Follow Implement
-- [ ] Front, Thymeleaf, Bootstrap
-- [ ] File Upload
+- [x] Front, Thymeleaf, Bootstrap
+- [x] File Upload
 - [ ] OAuth2
